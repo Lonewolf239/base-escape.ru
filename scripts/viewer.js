@@ -31,7 +31,7 @@ async function loadRoot() {
 
 async function fetchFolderContents(path) {
     if (folderCache[path]) return folderCache[path];
-    const githubPath = `/repos/${GITHUB_OWNER}/${currentRepo}/contents/${path}`;
+    const githubPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentRepo}/contents/${path}`;
 	const url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Ошибка HTTP ${response.status}`);
@@ -183,14 +183,22 @@ async function displayImage(filePath, fileName) {
 
     imageContainer.style.display = 'flex';
 
-    let githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
-	let imageUrl = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
-    let response = await fetch(imageUrl);
+    let imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
+    let response = await fetch(imageUrl, { method: 'HEAD' });
     if (!response.ok) {
-        githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
-		imageUrl = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
-        response = await fetch(imageUrl);
-        if (!response.ok) throw new Error('Failed to upload file');
+        imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
+        response = await fetch(imageUrl, { method: 'HEAD' });
+        if (!response.ok) {
+            imageContainer.innerHTML = `
+                <div class="image-error">
+                    <span>🖼️</span>
+                    <p>Failed to load image</p>
+                    <small>${fileName}</small>
+                    <small>HTTP ${response.status}</small>
+                </div>
+            `;
+            return;
+        }
     }
 
     imageContainer.innerHTML = `

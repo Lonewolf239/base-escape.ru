@@ -60,13 +60,12 @@ nav button:hover {
 	background: rgba(255, 0, 170, 0.25);
 	border-color: #ff00aa;
 	box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
-	transform: scale(1.02);
 }
 
 nav button:active {
-	transform: scale(0.98);
 	background: rgba(255, 0, 170, 0.4);
 }
+
 
 ::-webkit-scrollbar {
 	width: 6px;
@@ -137,23 +136,90 @@ footer a:hover,
 		font-size: 1.4rem;
 	}
 
-	nav {
-		top: 10px;
-		right: 10px;
-		gap: 8px;
-	}
-
-	nav button {
-		width: 40px;
-		height: 40px;
-	}
-
-	nav button img {
-		width: 20px;
-		height: 20px;
-	}
-
 	.project-card p {
 		max-height: 100px;
+	}
+
+	nav {
+		top: 10px;
+		left: 10px;
+		right: auto;
+		background: transparent;
+		backdrop-filter: none;
+		flex-direction: column;
+		gap: 0;
+	}
+
+	.menu-toggle-btn {
+		display: flex;
+		width: 36px;
+		height: 36px;
+		background: rgba(20, 20, 30, 0.5);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 0, 170, 0.4);
+		border-radius: 50%;
+		cursor: pointer;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.25s ease;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		font-size: 22px;
+		font-weight: bold;
+		color: white;
+	}
+
+	.menu-toggle-btn:hover {
+		background: rgba(255, 0, 170, 0.25);
+		border-color: #ff00aa;
+		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+	}
+
+	.nav-menu {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		margin-top: 12px;
+		transform: scaleY(0);
+		opacity: 0;
+		transition: transform 0.3s ease, opacity 0.2s ease;
+		pointer-events: none;
+		transform-origin: top center;
+	}
+
+	.nav-menu.open {
+		transform: scaleY(1);
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	.nav-menu button {
+		width: 36px;
+		height: 36px;
+		background: rgba(20, 20, 30, 0.5);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 0, 170, 0.4);
+		border-radius: 50%;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.25s ease;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	}
+
+	.nav-menu button img {
+		width: 18px;
+		height: 18px;
+		filter: brightness(0) invert(1);
+	}
+
+	.nav-menu button:hover {
+		background: rgba(255, 0, 170, 0.25);
+		border-color: #ff00aa;
+		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+	}
+
+	.nav-menu button:active {
+		background: rgba(255, 0, 170, 0.4);
 	}
 }

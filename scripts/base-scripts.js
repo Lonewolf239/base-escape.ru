@@ -14,6 +14,71 @@ function createButton({ onClick, imgSrc, imgAlt, imgWidth = 24, imgHeight = 24, 
     return button;
 }
 
+let currentMobileMode = null;
+
+function setupMobileMenu() {
+	const nav = document.querySelector('nav');
+	if (!nav) return;
+
+	const isMobile = window.innerWidth <= 768;
+	if (currentMobileMode === isMobile) return;
+	currentMobileMode = isMobile;
+
+	function restoreDesktop() {
+		const allButtons = Array.from(nav.querySelectorAll('button')).filter(btn => !btn.classList.contains('menu-toggle-btn'));
+		const toggleBtn = nav.querySelector('.menu-toggle-btn');
+		const menuDiv = nav.querySelector('.nav-menu');
+		if (toggleBtn) toggleBtn.remove();
+		if (menuDiv) menuDiv.remove();
+		nav.innerHTML = '';
+		allButtons.forEach(btn => nav.appendChild(btn));
+	}
+
+	if (!isMobile) {
+		restoreDesktop();
+		return;
+	}
+
+	if (nav.querySelector('.menu-toggle-btn')) return;
+
+	const buttons = Array.from(nav.children).filter(child => child.tagName === 'BUTTON');
+	if (buttons.length === 0) return;
+
+	const toggleBtn = document.createElement('button');
+	toggleBtn.className = 'menu-toggle-btn';
+	toggleBtn.textContent = '☰';
+	toggleBtn.style.fontWeight = 'bold';
+	toggleBtn.style.color = 'white';
+	
+	const menuDiv = document.createElement('div');
+	menuDiv.className = 'nav-menu';
+	buttons.forEach(btn => menuDiv.appendChild(btn));
+
+	nav.innerHTML = '';
+	nav.appendChild(toggleBtn);
+	nav.appendChild(menuDiv);
+
+	let isOpen = false;
+	toggleBtn.addEventListener('click', () => {
+		isOpen = !isOpen;
+		if (isOpen) {
+			menuDiv.classList.add('open');
+			toggleBtn.textContent = '✕';
+		} else {
+			menuDiv.classList.remove('open');
+			toggleBtn.textContent = '☰';
+		}
+	});
+
+	document.addEventListener('click', function closeMenu(e) {
+		if (isOpen && !nav.contains(e.target)) {
+			menuDiv.classList.remove('open');
+			toggleBtn.textContent = '☰';
+			isOpen = false;
+		}
+	});
+}
+
 function loadProjects() {
 	const projectsGrid = document.querySelector('.projects-grid');
 	if (!projectsGrid) return;
@@ -95,7 +160,7 @@ function loadProjects() {
 
 				if (language && ['C#', 'C++', 'Python', 'JavaScript'].includes(language)) {
 					const langBadge = document.createElement('div');
-					langBadge.className = `project-language-badge language-${language.toLowerCase().replace('#', 'sharp').replace('+', 'p')}`;
+					langBadge.className = `project-language-badge language-${language.toLowerCase().replace('#', 'sharp').replace('++', 'pp')}`;
 					langBadge.textContent = language;
 					topBar.appendChild(langBadge);
 				}
@@ -327,6 +392,8 @@ function loadContent() {
 		
 	    addLastUpdate();
 	}
-	
+
+	setupMobileMenu();
+	window.addEventListener('resize', () => setupMobileMenu());
 	loadProjects();
 }
