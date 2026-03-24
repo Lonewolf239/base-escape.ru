@@ -113,8 +113,9 @@ async function loadPage(pageName) {
         await displayMarkdown(content, pageName);
         updateActivePage(pageName);
     } catch (err) {
-        console.error(err);
-        contentDiv.innerHTML = `<div class="error-message">Page loading error: ${err.message}</div>`;
+		console.error(err);
+		const safeMessage = escapeHtml(err.message);
+		contentDiv.innerHTML = `<div class="error-message">Page loading error: ${safeMessage}</div>`;
     } finally { showLoaderInContent(false); }
 }
 
@@ -147,8 +148,8 @@ function processWikiLinks(markdown) {
         if (matchingNormalized) {
             const index = pagesList.findIndex(p => p === matchingNormalized);
             const displayPageName = index !== -1 ? displayNames[index] : trimmedPage;
-            const escapedPage = displayPageName.replace(/"/g, '&quot;');
-            return `<a href="#" class="wiki-link" data-page="${escapedPage}">${escapeHtml(text)}</a>`;
+            const safePage = escapeHtml(displayPageName);
+            return `<a href="#" class="wiki-link" data-page="${safePage}">${escapeHtml(text)}</a>`;
         } else return `<span class="wiki-link-missing">${escapeHtml(text)}</span>`;
     });
 }

@@ -79,6 +79,16 @@ function setupMobileMenu() {
 	});
 }
 
+function isSafeUrl(url) {
+    if (!url) return false;
+    if (url.startsWith('/') || url.startsWith('?') || url.startsWith('#'))
+        return true;
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch { return false; }
+}
+
 function loadProjects() {
 	const projectsGrid = document.querySelector('.projects-grid');
 	if (!projectsGrid) return;
@@ -217,16 +227,18 @@ function loadProjects() {
 						if (!resolvedUrl) return;
 						
 						const a = document.createElement('a');
-						a.href = resolvedUrl;
+						if (isSafeUrl(resolvedUrl)) {
+							a.href = resolvedUrl;
 						
-						if (openInNewTab) {
-							a.target = '_blank';
-							a.rel = 'noopener noreferrer';
+							if (openInNewTab) {
+								a.target = '_blank';
+								a.rel = 'noopener noreferrer';
+							}
+						
+							const label = (buttonLabels[currentLang] && buttonLabels[currentLang][key]) || key;
+							a.textContent = label;
+							linksDiv.appendChild(a);
 						}
-						
-						const label = (buttonLabels[currentLang] && buttonLabels[currentLang][key]) || key;
-						a.textContent = label;
-						linksDiv.appendChild(a);
 					});
 
 					if (linksDiv.children.length) card.appendChild(linksDiv);

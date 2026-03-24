@@ -166,7 +166,6 @@ async function loadAndShowFile(filePath, fileName) {
 async function displayImage(filePath, fileName) {
     const codeElement = document.getElementById('code-content');
     const currentFileSpan = document.getElementById('current-file');
-    const codeViewer = document.querySelector('.code-viewer');
 
     currentFileSpan.textContent = fileName;
 
@@ -180,21 +179,30 @@ async function displayImage(filePath, fileName) {
 
     const preElement = document.querySelector('.code-viewer pre');
     if (preElement) preElement.style.display = 'none';
-
     imageContainer.style.display = 'flex';
 
-    let imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
-    let response = await fetch(imageUrl, { method: 'HEAD' });
-    if (!response.ok) {
-        imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
-        response = await fetch(imageUrl, { method: 'HEAD' });
-        if (!response.ok) {
+    const safeFileName = escapeHtml(fileName);
+
+    const checkFile = async (branch) => {
+        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/${branch}/${filePath}`;
+        const proxyUrl = `/github-proxy.php?path=${encodeURIComponent(rawUrl)}`;
+        const res = await fetch(proxyUrl, { method: 'HEAD' });
+        if (res.ok) return proxyUrl;
+        throw new Error(`HTTP ${res.status}`);
+    };
+
+    let imageProxyUrl;
+    try { imageProxyUrl = await checkFile('main'); }
+	catch (e) {
+        try {
+            imageProxyUrl = await checkFile('master');
+        } catch (e2) {
             imageContainer.innerHTML = `
                 <div class="image-error">
                     <span>🖼️</span>
                     <p>Failed to load image</p>
-                    <small>${fileName}</small>
-                    <small>HTTP ${response.status}</small>
+                    <small>${safeFileName}</small>
+                    <small>${escapeHtml(e2.message)}</small>
                 </div>
             `;
             return;
@@ -203,31 +211,12 @@ async function displayImage(filePath, fileName) {
 
     imageContainer.innerHTML = `
         <div class="image-wrapper">
-            <img src="${imageUrl}" alt="${fileName}" class="displayed-image" onerror="this.onerror=null; this.parentElement.parentElement.innerHTML='<div class=\'image-error\'><span>🖼️</span><p>Failed to load image</p><small>${fileName}</small></div>'">
+            <img src="${imageProxyUrl}" alt="${safeFileName}" class="displayed-image" onerror="this.onerror=null; this.parentElement.parentElement.innerHTML='<div class=\'image-error\'><span>🖼️</span><p>Failed to load image</p><small>${escapeHtml(fileName)}</small></div>'">
             <div class="image-info">
-                <span class="image-name">${fileName}</span>
-                <span class="image-size" id="image-size">Loading...</span>
+                <span class="image-name">${safeFileName}</span>
             </div>
         </div>
     `;
-
-    fetch(imageUrl, { method: 'HEAD' })
-        .then(response => {
-            const size = response.headers.get('content-length');
-            if (size) {
-                const sizeSpan = document.getElementById('image-size');
-                if (sizeSpan) {
-                    sizeSpan.textContent = formatFileSize(parseInt(size));
-                }
-            } else {
-                const sizeSpan = document.getElementById('image-size');
-                if (sizeSpan) sizeSpan.textContent = 'Размер неизвестен';
-            }
-        })
-        .catch(() => {
-            const sizeSpan = document.getElementById('image-size');
-            if (sizeSpan) sizeSpan.textContent = 'Размер неизвестен';
-        });
 
     codeElement.style.display = 'none';
 }
