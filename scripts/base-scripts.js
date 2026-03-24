@@ -296,6 +296,55 @@ function getLanguageButtonConfig() {
     return configs[lang];
 }
 
+function createScrollTopButton(useNativeSmooth = true) {
+    if (document.querySelector('.scroll-top-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'scroll-top-btn';
+    btn.setAttribute('aria-label', 'Scroll to top');
+    const arrowSpan = document.createElement('span');
+    arrowSpan.className = 'arrow-up';
+    arrowSpan.textContent = '↑';
+    btn.appendChild(arrowSpan);
+    document.body.appendChild(btn);
+
+    let timeoutId = null;
+    function checkScroll() {
+        const scrollY = window.scrollY;
+        const threshold = document.documentElement.scrollHeight * 0.25;
+        if (scrollY > threshold) btn.classList.add('visible');
+        else btn.classList.remove('visible');
+    }
+
+    window.addEventListener('scroll', () => {
+        if (timeoutId) cancelAnimationFrame(timeoutId);
+        timeoutId = requestAnimationFrame(checkScroll);
+    });
+    window.addEventListener('resize', () => {
+        if (timeoutId) cancelAnimationFrame(timeoutId);
+        timeoutId = requestAnimationFrame(checkScroll);
+    });
+    checkScroll();
+
+    function smoothScrollToTop(duration = 500) {
+        const startY = window.scrollY;
+        const startTime = performance.now();
+
+        function step(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            window.scrollTo(0, startY * (1 - easeOut));
+
+            if (progress < 1) requestAnimationFrame(step);
+        }
+
+        requestAnimationFrame(step);
+    }
+
+    btn.addEventListener('click', () => { smoothScrollToTop(); });
+}
+
 document.addEventListener('DOMContentLoaded', loadContent);
 
 function loadContent() {
@@ -408,4 +457,5 @@ function loadContent() {
 	setupMobileMenu();
 	window.addEventListener('resize', () => setupMobileMenu());
 	loadProjects();
+	createScrollTopButton();
 }

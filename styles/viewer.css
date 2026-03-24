@@ -1,6 +1,6 @@
 .ide-container {
 	display: grid;
-	grid-template-columns: 300px 1fr;
+	grid-template-columns: 280px 1fr;
 	gap: 20px;
 	max-width: 1400px;
 	margin: 0 auto;
@@ -94,12 +94,13 @@
 .file-tree {
 	flex: 1;
 	overflow-y: auto;
+	overflow-x: auto;
 	padding: 12px;
 	font-size: 0.9rem;
 }
 
 .tree-node {
-	padding: 6px 8px;
+	padding: 8px 12px;
 	cursor: pointer;
 	display: flex;
 	align-items: center;
@@ -138,9 +139,9 @@
 }
 
 .tree-children {
+	display: block;
 	margin-left: 24px;
 	width: 100%;
-	flex-basis: 100%;
 }
 
 .main-content {
