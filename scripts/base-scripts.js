@@ -322,8 +322,9 @@ function loadContent() {
 				footer.appendChild(lastUpdateSpan);
 			} catch (error) { console.warn('Could not fetch last commit date:', error); }
 		}
+		
+	    addLastUpdate();
 	}
-
-	addLastUpdate();
+	
 	loadProjects();
 }
