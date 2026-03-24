@@ -271,20 +271,59 @@ function loadContent() {
 	const footer = document.querySelector('footer');
 	if (footer) {
 		footer.innerHTML = '';
-	    footer.appendChild(document.createTextNode('By. '));
+		footer.appendChild(document.createTextNode('By. '));
 		const devLink = document.createElement('a');
-	    devLink.href = 'https://github.com/Lonewolf239';
-	    devLink.target = '_blank';
-	    devLink.rel = 'noopener noreferrer';
-	    devLink.textContent = 'Lonewolf239';
-	    footer.appendChild(devLink);
-	    const separator = document.createTextNode(' • ');
+		devLink.href = 'https://github.com/Lonewolf239';
+		devLink.target = '_blank';
+		devLink.rel = 'noopener noreferrer';
+		devLink.textContent = 'Lonewolf239';
+		footer.appendChild(devLink);
+
+		const separator = document.createTextNode(' • ');
 		footer.appendChild(separator);
-	    const copyright = document.createElement('span');
+
+		const copyright = document.createElement('span');
 		const currentYear = new Date().getFullYear();
-	    copyright.textContent = `© ${currentYear}`;
-	    footer.appendChild(copyright);
+		copyright.textContent = `© ${currentYear}`;
+		footer.appendChild(copyright);
+
+		async function addLastUpdate() {
+			try {
+				const response = await fetch('https://api.github.com/repos/Lonewolf239/base-escape.ru/commits?per_page=1');
+				if (!response.ok) throw new Error('GitHub API error');
+				const commits = await response.json();
+				if (!commits.length) throw new Error('No commits found');
+			
+				const commitDate = new Date(commits[0].commit.author.date);
+
+				let currentLang = 'en';
+				const htmlLang = document.documentElement.lang;
+				if (htmlLang && ['ru', 'en', 'de'].includes(htmlLang.split('-')[0]))
+					currentLang = htmlLang.split('-')[0];
+
+				const formattedDate = new Intl.DateTimeFormat(currentLang, {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit'
+				}).format(commitDate);
+
+				const secondSeparator = document.createTextNode(' • ');
+				footer.appendChild(secondSeparator);
+
+				const lastUpdateSpan = document.createElement('span');
+				let updateText = '';
+				switch (currentLang) {
+					case 'ru': updateText = 'Последнее обновление:'; break;
+					case 'de': updateText = 'Letzte Aktualisierung:'; break;
+					default: updateText = 'Last update:';
+				}
+
+				lastUpdateSpan.textContent = `${updateText} ${formattedDate}`;
+				footer.appendChild(lastUpdateSpan);
+			} catch (error) { console.warn('Could not fetch last commit date:', error); }
+		}
 	}
 
+	addLastUpdate();
 	loadProjects();
 }
