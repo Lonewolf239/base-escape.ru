@@ -1,11 +1,13 @@
 RewriteEngine On
 RewriteBase /
 
-RewriteRule ^projects\.json$ - [F]
-
 Options -Indexes
 
 RedirectMatch 403 /\..*$
+
+<Files ".env">
+    Require all denied
+</Files>
 
 <FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak|sql|gitignore|env)$">
     Order Allow,Deny
@@ -23,12 +25,14 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} /$
 RewriteRule ^(.*)/$ /$1 [R=301,L]
 
-RewriteCond %{THE_REQUEST} \s/(.*)\.html/?[\s?] [NC]
-RewriteCond %{REQUEST_URI} !/(403|404|503)\.html$ [NC]
-RewriteRule ^ /%1 [R=301,L]
+RewriteCond %{THE_REQUEST} /ru/wiki\.html [NC]
+RewriteRule ^ru/wiki\.html$ /ru/wiki [R=301,L,NE]
+
+RewriteCond %{THE_REQUEST} /ru/viewer\.html [NC]
+RewriteRule ^ru/viewer\.html$ /ru/viewer [R=301,L,NE]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]+$ [NC]
-RewriteCond %{REQUEST_URI}.html -f
-RewriteRule ^(.*)$ $1.html [L]
+RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}.html -f
+RewriteRule ^(.*)$ $1.html [QSA,L]

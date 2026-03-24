@@ -289,7 +289,9 @@ function loadContent() {
 
 		async function addLastUpdate() {
 			try {
-				const response = await fetch('https://api.github.com/repos/Lonewolf239/base-escape.ru/commits?per_page=1');
+				const githubPath = 'https://api.github.com/repos/Lonewolf239/base-escape.ru/commits?per_page=1';
+				const url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
+				const response = await fetch(url);
 				if (!response.ok) throw new Error('GitHub API error');
 				const commits = await response.json();
 				if (!commits.length) throw new Error('No commits found');

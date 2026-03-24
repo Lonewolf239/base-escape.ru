@@ -31,7 +31,8 @@ async function loadRoot() {
 
 async function fetchFolderContents(path) {
     if (folderCache[path]) return folderCache[path];
-    const url = `https://api.github.com/repos/${GITHUB_OWNER}/${currentRepo}/contents/${path}`;
+    const githubPath = `/repos/${GITHUB_OWNER}/${currentRepo}/contents/${path}`;
+	const url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Ошибка HTTP ${response.status}`);
     const data = await response.json();
@@ -148,12 +149,14 @@ async function loadAndShowFile(filePath, fileName) {
     }
 
     try {
-        let url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
+        let githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
+		let url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
         let response = await fetch(url);
         if (!response.ok) {
-            url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
+            githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
+			url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
             response = await fetch(url);
-            if (!response.ok) throw new Error('Не удалось загрузить файл');
+            if (!response.ok) throw new Error('Failed to upload file');
         }
         const content = await response.text();
         displayCode(content, fileName);
@@ -180,17 +183,19 @@ async function displayImage(filePath, fileName) {
 
     imageContainer.style.display = 'flex';
 
-    let imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
+    let githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
+	let imageUrl = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
     let response = await fetch(imageUrl);
     if (!response.ok) {
-        imageUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
+        githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
+		imageUrl = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
         response = await fetch(imageUrl);
         if (!response.ok) throw new Error('Failed to upload file');
     }
 
     imageContainer.innerHTML = `
         <div class="image-wrapper">
-            <img src="${imageUrl}" alt="${fileName}" class="displayed-image" onerror="this.onerror=null; this.parentElement.parentElement.innerHTML='<div class=\'image-error\'><span>🖼️</span><p>Не удалось загрузить изображение</p><small>${fileName}</small></div>'">
+            <img src="${imageUrl}" alt="${fileName}" class="displayed-image" onerror="this.onerror=null; this.parentElement.parentElement.innerHTML='<div class=\'image-error\'><span>🖼️</span><p>Failed to load image</p><small>${fileName}</small></div>'">
             <div class="image-info">
                 <span class="image-name">${fileName}</span>
                 <span class="image-size" id="image-size">Loading...</span>
@@ -282,7 +287,7 @@ function displayBinaryMessage(fileName) {
     if (preElement) preElement.style.display = 'block';
 
     codeElement.style.display = 'block';
-    codeElement.textContent = '[Бинарный файл — предварительный просмотр недоступен]';
+    codeElement.textContent = '[Binary file - preview unavailable]';
     codeElement.className = 'language-plaintext';
     hljs.highlightElement(codeElement);
 }
@@ -303,7 +308,7 @@ function displayErrorMessage(fileName, errorMsg) {
     if (preElement) preElement.style.display = 'block';
 
     codeElement.style.display = 'block';
-    codeElement.textContent = `Ошибка при загрузке файла: ${errorMsg}`;
+    codeElement.textContent = `Error loading file: ${errorMsg}`;
     codeElement.className = 'language-plaintext';
     hljs.highlightElement(codeElement);
 }
