@@ -35,6 +35,32 @@
 		}
 	},
 	{
+    	"title": {
+    		"ru": "Lonewolf239 Portfolio",
+    		"en": "Lonewolf239 Portfolio",
+    		"de": "Lonewolf239 Portfolio"
+    	},
+    	"description": {
+    		"ru": "Персональный сайт-портфолио с витриной проектов, многоязычной поддержкой, встроенным просмотрщиком кода и адаптивным дизайном.",
+    		"en": "Personal portfolio website showcasing projects, multilingual support, built-in code viewer, and responsive design.",
+    		"de": "Persönliche Portfolio-Website mit Projektübersicht, mehrsprachiger Unterstützung, integrierter Code-Ansicht und responsivem Design."
+    	},
+    	"language": "JavaScript",
+    	"lastRelease": "2026-03-24",
+    	"tags": ["Portfolio", "Website", "Responsive", "Multilingual", "Frontend"],
+    	"links": {
+    		"github": "https://github.com/Lonewolf239/base-escape.ru",
+    		"code": {
+    			"url": {
+    				"ru": "/ru/viewer.html?project=base-escape.ru",
+    				"en": "/en/viewer.html?project=base-escape.ru",
+    				"de": "/de/viewer.html?project=base-escape.ru"
+    			},
+    			"newTab": false
+    		}
+    	}
+    },
+	{
 		"title": {
 			"ru": "SLIL",
 			"en": "SLIL",

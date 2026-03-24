@@ -48,23 +48,11 @@ function loadProjects() {
 		}
 	};
 
-	const languageNames = {
-		ru: {
-			'C#': 'C#',
-			'C++': 'C++',
-			'Python': 'Python'
-		},
-		en: {
-			'C#': 'C#',
-			'C++': 'C++',
-			'Python': 'Python'
-		},
-		de: {
-			'C#': 'C#',
-			'C++': 'C++',
-			'Python': 'Python'
-		}
-	};
+    const languageNames = {
+    	ru: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' },
+    	en: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' },
+    	de: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' }
+    };
 
 	function getLocalizedValue(value, lang) {
 		if (typeof value === 'object' && value !== null)
@@ -105,7 +93,7 @@ function loadProjects() {
 				const topBar = document.createElement('div');
 				topBar.className = 'project-top-bar';
 
-				if (language && ['C#', 'C++', 'Python'].includes(language)) {
+				if (language && ['C#', 'C++', 'Python', 'JavaScript'].includes(language)) {
 					const langBadge = document.createElement('div');
 					langBadge.className = `project-language-badge language-${language.toLowerCase().replace('#', 'sharp').replace('+', 'p')}`;
 					langBadge.textContent = language;
