@@ -1,0 +1,34 @@
+RewriteEngine On
+RewriteBase /
+
+RewriteRule ^projects\.json$ - [F]
+
+Options -Indexes
+
+RedirectMatch 403 /\..*$
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|bak|sql|gitignore|env)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+ErrorDocument 403 /403.html
+ErrorDocument 404 /404.html
+ErrorDocument 503 /503.html
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^(downloads|scripts|styles|images)(/|$) - [F]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} /$
+RewriteRule ^(.*)/$ /$1 [R=301,L]
+
+RewriteCond %{THE_REQUEST} \s/(.*)\.html/?[\s?] [NC]
+RewriteCond %{REQUEST_URI} !/(403|404|503)\.html$ [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]+$ [NC]
+RewriteCond %{REQUEST_URI}.html -f
+RewriteRule ^(.*)$ $1.html [L]

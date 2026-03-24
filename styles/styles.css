@@ -1,0 +1,159 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 0, 170, 0.7) rgba(20, 20, 30, 0.6);
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	user-select: none;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+}
+
+#content-wrapper {
+	flex: 1;
+}
+
+nav {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	display: flex;
+	gap: 12px;
+	z-index: 100;
+}
+
+nav button {
+	background: rgba(20, 20, 30, 0.5);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 0, 170, 0.4);
+	border-radius: 50%;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.25s ease;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+nav button img {
+	width: 24px;
+	height: 24px;
+	filter: brightness(0) invert(1);
+	transition: filter 0.2s;
+}
+
+nav button:hover {
+	background: rgba(255, 0, 170, 0.25);
+	border-color: #ff00aa;
+	box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
+	transform: scale(1.02);
+}
+
+nav button:active {
+	transform: scale(0.98);
+	background: rgba(255, 0, 170, 0.4);
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(20, 20, 30, 0.6);
+	border-radius: 4px;
+	box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(255, 0, 170, 0.7);
+	border-radius: 4px;
+	box-shadow: 0 0 3px rgba(255, 0, 170, 0.5);
+	transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 0, 170, 0.9);
+	box-shadow: 0 0 6px rgba(255, 0, 170, 0.8);
+}
+
+footer {
+	width: 100%;
+	padding: 20px;
+	text-align: center;
+	border-top: 1px solid rgba(255, 0, 170, 0.3);
+	background: rgba(10, 10, 15, 0.8);
+	backdrop-filter: blur(8px);
+	font-size: 0.85rem;
+	color: rgba(255, 255, 255, 0.7);
+	margin-top: auto;
+}
+
+#developer-name {
+	text-align: center;
+	font-size: 0.8rem;
+	color: rgba(255, 255, 255, 0.5);
+	margin-top: 8px;
+	padding-bottom: 16px;
+}
+
+footer a,
+#developer-name a {
+	color: #ff99dd;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+footer a:hover,
+#developer-name a:hover {
+	color: #ff00aa;
+	text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+	.projects-grid {
+		padding: 1rem;
+		gap: 20px;
+	}
+
+	.project-card {
+		padding: 20px;
+	}
+
+	.project-card h3 {
+		font-size: 1.4rem;
+	}
+
+	nav {
+		top: 10px;
+		right: 10px;
+		gap: 8px;
+	}
+
+	nav button {
+		width: 40px;
+		height: 40px;
+	}
+
+	nav button img {
+		width: 20px;
+		height: 20px;
+	}
+
+	.project-card p {
+		max-height: 100px;
+	}
+}

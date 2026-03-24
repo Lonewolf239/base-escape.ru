@@ -1,0 +1,111 @@
+:root {
+	--bg-main: #09090b;
+	--primary: #ff00aa;
+	--primary-glow: rgba(255, 0, 170, 0.4);
+	--text-main: #f4f4f5;
+	--text-muted: #a1a1aa;
+	--card-bg: rgba(30, 30, 35, 0.45);
+}
+
+body {
+	background: var(--bg-main);
+	color: var(--text-main);
+	font-family: 'Inter', system-ui, sans-serif;
+	margin: 0;
+	min-height: 100vh;
+	position: relative;
+	overflow-x: hidden;
+}
+
+.space-dust {
+	position: fixed;
+	inset: -800px;
+	z-index: -3;
+	background-size: 400px 400px;
+	background-repeat: repeat;
+	animation: dustMove 40s linear infinite;
+	opacity: 0.8;
+	pointer-events: none;
+}
+
+@keyframes dustMove {
+	0% {
+		transform: translate3d(0, 0, 0);
+	}
+
+	100% {
+		transform: translate3d(-400px, 400px, 0);
+	}
+}
+
+.retro-sun {
+	position: fixed;
+	bottom: 35%;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 500px;
+	height: 500px;
+	background: linear-gradient(to bottom, #ff0055 0%, #ffaa00 100%);
+	border-radius: 50%;
+	z-index: -2;
+	box-shadow: 0 0 120px #ff0055, 0 0 200px #ffaa00;
+	mask-image: linear-gradient(to bottom, black 50%, transparent 100%), repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
+	-webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%), repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
+	-webkit-mask-composite: source-in;
+	mask-composite: intersect;
+	animation: sunPulse 4s ease-in-out infinite alternate;
+	pointer-events: none;
+}
+
+@keyframes sunPulse {
+	from {
+		filter: brightness(1) drop-shadow(0 0 20px #ff0055);
+	}
+
+	to {
+		filter: brightness(1.2) drop-shadow(0 0 50px #ff0055);
+		transform: translateX(-50%) scale(1.02);
+	}
+}
+
+.bg-grid {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 50vh;
+	z-index: -2;
+	background-color: var(--bg-main);
+	border-top: 2px solid var(--primary);
+	box-shadow: inset 0 20px 50px -10px var(--primary-glow), 0 -5px 20px var(--primary-glow);
+	overflow: hidden;
+}
+
+.bg-grid::before {
+	content: '';
+	position: absolute;
+	bottom: -150%;
+	left: -50%;
+	right: -50%;
+	top: 0;
+	background-size: 60px 60px;
+	background-image:
+		linear-gradient(to right, rgba(255, 0, 170, 0.6) 2px, transparent 2px),
+		linear-gradient(to bottom, rgba(255, 0, 170, 0.6) 2px, transparent 2px);
+	transform: perspective(600px) rotateX(75deg);
+	transform-origin: top center;
+	animation: synthGridMove 3s infinite linear;
+	mask-image: linear-gradient(to bottom, transparent 2%, black 50%);
+	-webkit-mask-image: linear-gradient(to bottom, transparent 2%, black 50%);
+	filter: drop-shadow(0 0 5px var(--primary));
+}
+
+@keyframes synthGridMove {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: 0 60px;
+	}
+}
