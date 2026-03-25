@@ -79,16 +79,6 @@ function setupMobileMenu() {
 	});
 }
 
-function formatDate(dateString, lang) {
-    if (!dateString) return null;
-    try {
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return null;
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', options);
-    } catch { return null; }
-}
-
 function isSafeUrl(url) {
     if (!url) return false;
     if (url.startsWith('/') || url.startsWith('?') || url.startsWith('#'))
@@ -146,14 +136,13 @@ function loadProjects() {
 	}
 
 	function formatDate(dateString, lang) {
-		if (!dateString) return null;
-		try {
-			const date = new Date(dateString);
-			if (isNaN(date.getTime())) return null;
-			
-			const options = { year: 'numeric', month: 'short', day: 'numeric' };
-			return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', options);
-		} catch { return null; }
+	    if (!dateString) return null;
+	    try {
+	        const date = new Date(dateString);
+	        if (isNaN(date.getTime())) return null;
+	        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+	        return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', options);
+	    } catch { return null; }
 	}
 
 	fetch('/projects.json')
@@ -174,13 +163,19 @@ function loadProjects() {
 
                 const topBar = document.createElement('div');
                 topBar.className = 'project-top-bar';
-
-                if (language && ['C#', 'C++', 'Python', 'JavaScript'].includes(language)) {
-                    const langBadge = document.createElement('div');
-                    langBadge.className = `project-language-badge language-${language.toLowerCase().replace('#', 'sharp').replace('++', 'pp')}`;
-                    langBadge.textContent = language;
-                    topBar.appendChild(langBadge);
-                }
+				
+				if (language) {
+					const languages = Array.isArray(language) ? language : [language];
+					languages.forEach(lang => {
+						if (['C#', 'C++', 'Python', 'JavaScript'].includes(lang)) {
+							const langBadge = document.createElement('div');
+							const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+							langBadge.className = `project-language-badge language-${langClass}`;
+							langBadge.textContent = lang;
+							topBar.appendChild(langBadge);
+						}
+					});
+				}
 
                 if (lastRelease) {
                     const formattedDate = formatDate(lastRelease, currentLang);

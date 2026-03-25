@@ -342,5 +342,30 @@
 				"newTab": false
 			}
 		}
+	},
+	{
+		"title": {
+			"ru": "Archive",
+			"en": "Archive",
+			"de": "Archive"
+		},
+		"description": {
+			"ru": "Архив Git 27 проектов Lonewolf239 (2022-2024). Полные клоны с историей Git. Эволюция от ранних экспериментов до первых работающих утилит.",
+			"en": "Git archive of 27 Lonewolf239 projects (2022-2024). Full clones with Git history. Evolution from early experiments to early working utilities.",
+			"de": "Git-Archiv von 27 Lonewolf239-Projekten (2022–2024). Vollständige Klone mit Git-Historie. Entwicklung von frühen Experimenten zu ersten funktionsfähigen Anwendungen."
+		},
+		"language": ["C++", "Python", "C#"],
+		"tags": ["Archive"],
+		"links": {
+			"github": "https://github.com/Lonewolf239/Archive",
+			"code": {
+				"url": {
+					"ru": "/ru/viewer?project=Archive",
+					"en": "/en/viewer?project=Archive",
+					"de": "/de/viewer?project=Archive"
+				},
+				"newTab": false
+			}
+		}
 	}
 ]

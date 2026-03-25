@@ -19,46 +19,96 @@ body {
 
 .space-dust {
 	position: fixed;
-	inset: -800px;
+	inset: 0;
 	z-index: -3;
-	background-repeat: repeat;
-	animation: dustMove 40s linear infinite;
-	opacity: 0.8;
 	pointer-events: none;
-	background-image:
-		radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
-		radial-gradient(circle at 80% 70%, rgba(255, 200, 230, 0.7) 1px, transparent 1px),
-		radial-gradient(circle at 40% 90%, rgba(255, 100, 200, 0.6) 1px, transparent 1px),
-		radial-gradient(circle at 90% 10%, rgba(200, 200, 255, 0.8) 1px, transparent 1px),
-		radial-gradient(circle at 5% 45%, rgba(255, 255, 200, 0.5) 1px, transparent 1px),
-		radial-gradient(circle at 70% 85%, rgba(255, 180, 220, 0.6) 1px, transparent 1px),
-		radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
-	background-size:
-		120px 120px,
-		180px 180px,
-		220px 220px,
-		140px 140px,
-		160px 160px,
-		200px 200px,
-		250px 250px;
-	background-position:
-		0 0,
-		20px 40px,
-		50px 80px,
-		100px 20px,
-		30px 60px,
-		70px 110px,
-		40px 90px;
 }
 
-@keyframes dustMove {
+.space-dust::before,
+.space-dust::after,
+.space-dust {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background-repeat: repeat;
+	pointer-events: none;
+}
+
+.space-dust {
+	background-image:
+		radial-gradient(2px 2px at 15% 30%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+		radial-gradient(1px 1px at 72% 18%, rgba(255, 220, 200, 0.8) 1px, transparent 1px),
+		radial-gradient(1px 1px at 8% 88%, rgba(255, 200, 220, 0.7) 1px, transparent 1px),
+		radial-gradient(2px 2px at 95% 45%, rgba(255, 180, 200, 0.9) 1px, transparent 1px),
+		radial-gradient(1px 1px at 40% 60%, rgba(255, 255, 210, 0.8) 1px, transparent 1px),
+		radial-gradient(2px 2px at 55% 92%, rgba(255, 120, 160, 0.7) 1px, transparent 1px),
+		radial-gradient(1px 1px at 84% 77%, rgba(255, 210, 240, 0.8) 1px, transparent 1px),
+		radial-gradient(2px 2px at 33% 12%, rgba(255, 255, 255, 0.9) 1px, transparent 1px);
+	background-size: 200px 200px;
+	animation: dustDrift 80s linear infinite;
+	opacity: 0.6;
+}
+
+.space-dust::before {
+	background-image:
+		radial-gradient(3px 3px at 20% 50%, rgba(255, 200, 230, 0.9) 1.5px, transparent 1.5px),
+		radial-gradient(2px 2px at 65% 82%, rgba(255, 150, 200, 0.8) 1px, transparent 1px),
+		radial-gradient(4px 4px at 90% 15%, rgba(255, 100, 180, 0.7) 2px, transparent 2px),
+		radial-gradient(2px 2px at 45% 35%, rgba(255, 220, 200, 0.8) 1px, transparent 1px),
+		radial-gradient(3px 3px at 5% 70%, rgba(255, 180, 210, 0.9) 1.5px, transparent 1.5px);
+	background-size: 300px 300px;
+	animation: dustDrift 50s linear infinite reverse;
+	opacity: 0.5;
+}
+
+.space-dust::after {
+	background-image:
+		radial-gradient(1px 1px at 25% 80%, rgba(255, 255, 255, 0.6) 0.5px, transparent 0.5px),
+		radial-gradient(1px 1px at 70% 40%, rgba(255, 210, 210, 0.5) 0.5px, transparent 0.5px),
+		radial-gradient(1px 1px at 10% 15%, rgba(255, 200, 230, 0.6) 0.5px, transparent 0.5px),
+		radial-gradient(1px 1px at 88% 92%, rgba(255, 240, 200, 0.5) 0.5px, transparent 0.5px),
+		radial-gradient(1px 1px at 52% 68%, rgba(255, 180, 220, 0.5) 0.5px, transparent 0.5px);
+	background-size: 180px 180px;
+	animation: dustDrift 120s linear infinite;
+	opacity: 0.4;
+}
+
+@keyframes dustDrift {
 	0% {
-		transform: translate3d(0, 0, 0);
+		background-position: 0 0;
 	}
 
 	100% {
-		transform: translate3d(-400px, 400px, 0);
+		background-position: 500px 500px;
 	}
+}
+
+@keyframes starTwinkle {
+
+	0%,
+	100% {
+		opacity: 0.4;
+	}
+
+	50% {
+		opacity: 0.9;
+	}
+}
+
+.space-dust,
+.space-dust::before,
+.space-dust::after {
+	animation: dustDrift 80s linear infinite, starTwinkle 3s ease-in-out infinite;
+}
+
+.space-dust::before {
+	animation: dustDrift 50s linear infinite reverse, starTwinkle 4s ease-in-out infinite;
+	animation-delay: -1s;
+}
+
+.space-dust::after {
+	animation: dustDrift 120s linear infinite, starTwinkle 5s ease-in-out infinite;
+	animation-delay: -2s;
 }
 
 .retro-sun {
@@ -134,24 +184,43 @@ body {
 }
 
 @media (max-width: 768px) {
-	space-dust {
-		inset: -400px;
-		animation-duration: 80s;
-		opacity: 0.6;
-		will-change: transform;
 
+	.space-dust,
+	.space-dust::before,
+	.space-dust::after {
+		animation: none;
+		opacity: 0.4;
+	}
+
+	.space-dust::before,
+	.space-dust::after {
+		content: none;
+	}
+
+	.space-dust {
 		background-image:
-			radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
-			radial-gradient(circle at 80% 70%, rgba(255, 200, 230, 0.6) 1px, transparent 1px),
-			radial-gradient(circle at 40% 90%, rgba(255, 100, 200, 0.5) 1px, transparent 1px);
-		background-size:
-			140px 140px,
-			180px 180px,
-			200px 200px;
-		background-position:
-			0 0,
-			20px 40px,
-			50px 80px;
+			radial-gradient(1.5px 1.5px at 15% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+			radial-gradient(1px 1px at 72% 18%, rgba(255, 220, 200, 0.7) 1px, transparent 1px),
+			radial-gradient(1px 1px at 8% 88%, rgba(255, 200, 220, 0.6) 1px, transparent 1px),
+			radial-gradient(2px 2px at 95% 45%, rgba(255, 180, 200, 0.8) 1px, transparent 1px),
+			radial-gradient(1px 1px at 40% 60%, rgba(255, 255, 210, 0.7) 1px, transparent 1px),
+			radial-gradient(1.5px 1.5px at 55% 92%, rgba(255, 120, 160, 0.6) 1px, transparent 1px),
+			radial-gradient(1px 1px at 84% 77%, rgba(255, 210, 240, 0.7) 1px, transparent 1px),
+			radial-gradient(2px 2px at 33% 12%, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+		background-size: 160px 160px;
+		background-repeat: repeat;
+		animation: dustDriftMobile 60s linear infinite;
+		opacity: 0.5;
+	}
+
+	@keyframes dustDriftMobile {
+		0% {
+			background-position: 0 0;
+		}
+
+		100% {
+			background-position: 200px 200px;
+		}
 	}
 
 	.retro-sun {
