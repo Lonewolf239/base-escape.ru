@@ -395,9 +395,89 @@ function createScrollTopButton(useNativeSmooth = true) {
     btn.addEventListener('click', () => { smoothScrollToTop(); });
 }
 
+function initBackground() {
+	const backgroundContainer = document.getElementById('background');
+	if (!backgroundContainer) return;
+
+	backgroundContainer.innerHTML = `
+		<div class="space-dust"></div>
+	    <div class="stars-extra"></div>
+	    <div class="shooting-stars-container"></div>
+	    <div class="retro-sun"></div>
+	    <div class="bg-grid"></div>
+	`;
+
+	startComets();
+}
+
+function createComet() {
+	const container = document.querySelector('.shooting-stars-container');
+	if (!container) return;
+
+	const comet = document.createElement('div');
+	comet.className = 'comet';
+
+	const tail = document.createElement('div');
+	tail.className = 'comet-tail';
+	const glow = document.createElement('div');
+	glow.className = 'comet-tail-glow';
+	comet.appendChild(tail);
+	comet.appendChild(glow);
+
+	const startX = Math.random() * 90 + 5;
+	const startY = Math.random() * 35 - 5;
+
+	let deltaX = (Math.random() - 0.5) * 800;
+	if (Math.abs(deltaX) < 50) deltaX = deltaX >= 0 ? 50 : -50;
+	const deltaY = 400 + Math.random() * 300;
+
+	const endX = deltaX;
+	const endY = deltaY;
+
+	const angleRad = Math.atan2(endY, endX);
+	const angleDeg = angleRad * 180 / Math.PI;
+	const tailAngle = angleDeg + 180;
+	const duration = 2.2;
+	const delay = Math.random() * 0.5;
+
+	comet.style.left = `${startX}%`;
+	comet.style.top = `${startY}%`;
+	comet.style.transition = `transform ${duration}s linear, opacity ${duration * 0.3}s ease-out`;
+	comet.style.opacity = '0';
+
+	tail.style.transform = `translate(-0%, -50%) rotate(${tailAngle}deg)`;
+	glow.style.transform = `translate(-0%, -50%) rotate(${tailAngle}deg)`;
+
+	container.appendChild(comet);
+
+	setTimeout(() => {
+		requestAnimationFrame(() => {
+			comet.style.transform = `translate(${endX}px, ${endY}px) scale(0.2)`;
+			comet.style.opacity = '1';
+
+			setTimeout(() => {
+				if (comet.parentNode) comet.style.opacity = '0';
+			}, (duration - 0.3) * 1000);
+		});
+	}, delay * 1000);
+
+	setTimeout(() => {
+		if (comet.parentNode) comet.parentNode.removeChild(comet);
+	}, (duration + delay) * 1000);
+}
+
+function startComets() {
+	for (let i = 0; i < 2; i++) setTimeout(() => createComet(), i * 1200);
+	setInterval(() => {
+		createComet();
+	}, 4000);
+}
+
 document.addEventListener('DOMContentLoaded', loadContent);
 
 function loadContent() {
+	initBackground();
+
 	const nav = document.querySelector('nav');
     if (nav) {
         const githubButton = createButton({

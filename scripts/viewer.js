@@ -249,7 +249,7 @@ function displayCode(content, fileName) {
     const ext = fileName.split('.').pop().toLowerCase();
     const langMap = {
         'js': 'javascript', 'ts': 'typescript', 'html': 'html', 'css': 'css',
-        'py': 'python', 'java': 'java', 'c': 'c', 'cpp': 'cpp', 'cs': 'csharp',
+        'py': 'python', 'java': 'java', 'c': 'c', 'h': 'cpp', 'cpp': 'cpp', 'cs': 'csharp',
         'json': 'json', 'md': 'markdown', 'sh': 'bash', 'yml': 'yaml', 'yaml': 'yaml',
         'xml': 'xml', 'php': 'php', 'rb': 'ruby', 'go': 'go', 'rs': 'rust'
     };
