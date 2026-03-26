@@ -24,6 +24,7 @@ async function loadRoot() {
         const rootItems = await fetchFolderContents('');
         renderTree(rootItems, document.getElementById('file-tree'), '');
         await checkLicense(rootItems);
+        await checkReadme(rootItems);
     }
     catch (err) { showError('Ошибка загрузки репозитория: ' + err.message); }
     finally { showLoader(false); }
@@ -344,4 +345,52 @@ async function checkLicense(items) {
         licenseInfo.style.display = 'flex';
         licenseInfo.onclick = () => loadAndShowFile(licenseFile.path, licenseFile.name);
     } else licenseInfo.style.display = 'none';
+}
+
+async function findReadmeRecursive(path = '') {
+    try {
+        const items = await fetchFolderContents(path);
+        const readme = items.find(item => 
+            item.type === 'file' && 
+            item.name.toLowerCase() === 'readme.md'
+        );
+        if (readme) return readme;
+
+        if (path === '') {
+            const docsFolder = items.find(item => 
+                item.type === 'dir' && 
+                item.name.toLowerCase() === 'docs'
+            );
+            if (docsFolder) {
+                const foundInDocs = await findReadmeRecursive(docsFolder.path);
+                if (foundInDocs) return foundInDocs;
+            }
+        }
+
+        for (const item of items) {
+            if (item.type === 'dir') {
+                if (path === '' && item.name.toLowerCase() === 'docs') continue;
+                const found = await findReadmeRecursive(item.path);
+                if (found) return found;
+            }
+        }
+        return null;
+    } catch (err) {
+        console.error(`Error scanning folder ${path}:`, err);
+        return null;
+    }
+}
+
+async function checkReadme(items) {
+    const readmeInfo = document.getElementById('readme-info');
+    if (!readmeInfo) return;
+
+    const readmeFile = await findReadmeRecursive('');
+
+    if (readmeFile) {
+        const readmeNameSpan = document.getElementById('readme-name');
+        if (readmeNameSpan) readmeNameSpan.textContent = readmeFile.name;
+        readmeInfo.style.display = 'flex';
+        readmeInfo.onclick = () => loadAndShowFile(readmeFile.path, readmeFile.name);
+    } else readmeInfo.style.display = 'none';
 }
