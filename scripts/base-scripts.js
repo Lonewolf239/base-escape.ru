@@ -79,6 +79,12 @@ function setupMobileMenu() {
 	});
 }
 
+function getLocalizedValue(value, lang) {
+	if (typeof value === 'object' && value !== null)
+		return value[lang] || value.en || Object.values(value)[0] || '';
+	return value || '';
+}
+
 function isSafeUrl(url) {
     if (!url) return false;
     if (url.startsWith('/') || url.startsWith('?') || url.startsWith('#'))
@@ -87,6 +93,142 @@ function isSafeUrl(url) {
         const parsed = new URL(url);
         return parsed.protocol === 'http:' || parsed.protocol === 'https:';
     } catch { return false; }
+}
+
+function createSubprojectCard(subproject, lang, buttonLabels) {
+    const subCard = document.createElement('div');
+    subCard.className = 'subproject-card';
+
+    const title = getLocalizedValue(subproject.title, lang) || 'Untitled';
+    const h4 = document.createElement('h4');
+    h4.textContent = title;
+    subCard.appendChild(h4);
+
+    const description = getLocalizedValue(subproject.description, lang) || '';
+    if (description) {
+        const p = document.createElement('p');
+        p.textContent = description;
+        subCard.appendChild(p);
+    }
+
+    if (subproject.tags && subproject.tags.length) {
+        const tagsDiv = document.createElement('div');
+        tagsDiv.className = 'subproject-tags';
+        subproject.tags.forEach(tag => {
+            const span = document.createElement('span');
+            span.className = 'subproject-tag';
+            span.textContent = tag;
+            tagsDiv.appendChild(span);
+        });
+        subCard.appendChild(tagsDiv);
+    }
+
+    if (subproject.language) {
+        const topBar = document.createElement('div');
+        topBar.className = 'project-top-bar';
+        topBar.style.marginBottom = '8px';
+
+        const languages = Array.isArray(subproject.language) ? subproject.language : [subproject.language];
+        languages.forEach(langCode => {
+            if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(langCode)) {
+                const langBadge = document.createElement('div');
+                const langClass = langCode.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+                langBadge.className = `project-language-badge language-${langClass}`;
+                langBadge.style.fontSize = '0.65rem';
+                langBadge.style.padding = '2px 10px';
+                langBadge.textContent = langCode;
+                topBar.appendChild(langBadge);
+            }
+        });
+
+        if (topBar.children.length) subCard.insertBefore(topBar, subCard.firstChild);
+    }
+
+    if (subproject.links && Object.keys(subproject.links).length) {
+        const linksDiv = document.createElement('div');
+        linksDiv.className = 'subproject-links';
+
+        Object.entries(subproject.links).forEach(([key, url]) => {
+            if (!url) return;
+            let resolvedUrl = null;
+            let openInNewTab = true;
+
+            if (typeof url === 'object' && url !== null) {
+                resolvedUrl = getLocalizedValue(url.url, lang) || getLocalizedValue(url, lang);
+                openInNewTab = url.newTab !== false;
+            } else resolvedUrl = getLocalizedValue(url, lang);
+
+            if (!resolvedUrl) return;
+
+            const a = document.createElement('a');
+            if (isSafeUrl(resolvedUrl)) {
+                a.href = resolvedUrl;
+                if (openInNewTab) {
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                }
+                const label = (buttonLabels[lang] && buttonLabels[lang][key]) || key;
+                a.textContent = label;
+                linksDiv.appendChild(a);
+            }
+        });
+
+        if (linksDiv.children.length) subCard.appendChild(linksDiv);
+    }
+
+    return subCard;
+}
+
+function createSubprojectsSection(subprojects, lang, buttonLabels) {
+    const container = document.createElement('div');
+    container.className = 'project-subprojects';
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'subprojects-toggle';
+
+    const toggleText = document.createElement('span');
+    const subprojectsCount = subprojects.length;
+    const subprojectsText = {
+        ru: `${subprojectsCount} подпроект${subprojectsCount === 1 ? '' : subprojectsCount < 5 ? 'а' : 'ов'}`,
+        en: `${subprojectsCount} subproject${subprojectsCount === 1 ? '' : 's'}`,
+        de: `${subprojectsCount} Unterprojekt${subprojectsCount === 1 ? '' : 'e'}`
+    };
+    toggleText.textContent = subprojectsText[lang] || subprojectsText.en;
+
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'subprojects-toggle-icon';
+    toggleIcon.textContent = '▼';
+    toggleIcon.style.fontSize = '0.7rem';
+
+    toggleBtn.appendChild(toggleText);
+    toggleBtn.appendChild(toggleIcon);
+
+    const subprojectsList = document.createElement('div');
+    subprojectsList.className = 'subprojects-list';
+
+    subprojects.forEach(subproject => {
+        const subCard = createSubprojectCard(subproject, lang, buttonLabels);
+        subprojectsList.appendChild(subCard);
+    });
+
+    container.appendChild(toggleBtn);
+    container.appendChild(subprojectsList);
+
+    let isOpen = false;
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+
+        if (isOpen) {
+            subprojectsList.classList.add('open');
+            toggleBtn.classList.add('open');
+        } else {
+            subprojectsList.classList.remove('open');
+            toggleBtn.classList.remove('open');
+        }
+    });
+
+    return container;
 }
 
 function loadProjects() {
@@ -129,12 +271,6 @@ function loadProjects() {
 		de: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' }
 	};
 
-	function getLocalizedValue(value, lang) {
-		if (typeof value === 'object' && value !== null)
-			return value[lang] || value.en || Object.values(value)[0] || '';
-		return value || '';
-	}
-
 	function formatDate(dateString, lang) {
 	    if (!dateString) return null;
 	    try {
@@ -157,6 +293,7 @@ function loadProjects() {
                 const links = project.links || {};
                 const language = project.language || null;
                 const lastRelease = project.lastRelease || null;
+                const subprojects = project.subprojects || [];
 
                 const card = document.createElement('div');
                 card.className = 'project-card';
@@ -235,6 +372,11 @@ function loadProjects() {
                         }
                     });
                     if (linksDiv.children.length) card.appendChild(linksDiv);
+                }
+
+                if (subprojects.length > 0) {
+                    const subprojectsSection = createSubprojectsSection(subprojects, currentLang, buttonLabels);
+                    card.appendChild(subprojectsSection);
                 }
 
                 projectsGrid.appendChild(card);

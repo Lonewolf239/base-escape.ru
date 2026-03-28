@@ -158,7 +158,34 @@
 				},
 				"newTab": false
 			}
-		}
+		},
+	    "subprojects": [
+		    {
+	            "title": {
+	                "ru": "PlazaSupportBot",
+	                "en": "PlazaSupportBot",
+	                "de": "PlazaSupportBot"
+	            },
+	            "description": {
+					"ru": "Отдельный Telegram‑бот для технической поддержки пользователей PlazaBot. Обработка тикетов, управление обращениями.",
+	                "en": "Standalone Telegram bot for PlazaBot user support. Ticket handling, inquiry management.",
+	                "de": "Eigenständiger Telegram-Bot für den Benutzersupport von PlazaBot. Ticketbearbeitung, Anfragenmanagement."
+	            },
+	            "language": "Python",
+				"tags": ["Telegram Bot", "Support", "aiogram", "Ticketing System"],
+	            "links": {
+	                "github": "https://github.com/Lonewolf239/PlazaSupportBot",
+					"code": {
+						"url": {
+							"ru": "/ru/viewer?project=PlazaSupportBot",
+							"en": "/en/viewer?project=PlazaSupportBot",
+							"de": "/de/viewer?project=PlazaSupportBot"
+						},
+						"newTab": false
+					}
+	            }
+			}
+		]
 	},
 	{
 		"title": {
