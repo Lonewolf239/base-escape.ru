@@ -44,7 +44,7 @@
     		"en": "Personal portfolio website showcasing projects, multilingual support, built-in code viewer, and responsive design.",
     		"de": "Persönliche Portfolio-Website mit Projektübersicht, mehrsprachiger Unterstützung, integrierter Code-Ansicht und responsivem Design."
     	},
-    	"language": "JavaScript",
+    	"language": ["JavaScript", "HTML", "CSS"],
     	"tags": ["Portfolio", "Website", "Responsive", "Multilingual", "Frontend"],
     	"links": {
     		"github": "https://github.com/Lonewolf239/base-escape.ru",

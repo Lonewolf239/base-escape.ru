@@ -197,7 +197,9 @@
 .language-csharp,
 .language-cpp,
 .language-python,
-.language-javascript {
+.language-javascript,
+.language-html,
+.language-css {
 	border-width: 1px;
 	border-style: solid;
 	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
@@ -209,7 +211,9 @@
 .language-csharp:hover,
 .language-cpp:hover,
 .language-python:hover,
-.language-javascript:hover {
+.language-javascript:hover,
+.language-html:hover,
+.language-css:hover {
 	box-shadow: 0 0 24px currentColor, 0 4px 15px rgba(0, 0, 0, 0.4);
 	color: #ffffff;
 	transform: translateY(-1px);
@@ -273,6 +277,36 @@
 	background: linear-gradient(135deg, rgba(247, 223, 30, 0.35), rgba(247, 223, 30, 0.12));
 	box-shadow: 0 0 24px rgba(247, 223, 30, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4);
 	text-shadow: 0 0 12px #ffea70, 0 0 4px #f7df1e;
+}
+
+.language-html {
+	border-color: #e44d26;
+	background: linear-gradient(135deg, rgba(228, 77, 38, 0.2), rgba(228, 77, 38, 0.05));
+	color: #ffaa88;
+	text-shadow: 0 0 6px #e44d26, 0 0 2px rgba(228, 77, 38, 0.6);
+}
+
+.language-html:hover {
+	background: linear-gradient(135deg, rgba(228, 77, 38, 0.35), rgba(228, 77, 38, 0.12));
+	border-color: #ff7043;
+	box-shadow: 0 0 24px #e44d26, 0 4px 15px rgba(0, 0, 0, 0.4);
+	color: #ffffff;
+	text-shadow: 0 0 12px #e44d26, 0 0 4px #e44d26;
+}
+
+.language-css {
+	border-color: #264de4;
+	background: linear-gradient(135deg, rgba(38, 77, 228, 0.18), rgba(38, 77, 228, 0.04));
+	color: #88aaff;
+	text-shadow: 0 0 6px #264de4, 0 0 2px rgba(38, 77, 228, 0.6);
+}
+
+.language-css:hover {
+	background: linear-gradient(135deg, rgba(38, 77, 228, 0.32), rgba(38, 77, 228, 0.1));
+	border-color: #5a7cff;
+	box-shadow: 0 0 24px #264de4, 0 4px 15px rgba(0, 0, 0, 0.4);
+	color: #e0e8ff;
+	text-shadow: 0 0 12px #264de4, 0 0 4px #264de4;
 }
 
 .project-release-date {

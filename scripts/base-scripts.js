@@ -123,11 +123,11 @@ function loadProjects() {
 		}
 	};
 
-    const languageNames = {
-    	ru: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' },
-    	en: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' },
-    	de: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript' }
-    };
+	const languageNames = {
+		ru: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' },
+		en: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' },
+		de: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' }
+	};
 
 	function getLocalizedValue(value, lang) {
 		if (typeof value === 'object' && value !== null)
@@ -167,7 +167,7 @@ function loadProjects() {
 				if (language) {
 					const languages = Array.isArray(language) ? language : [language];
 					languages.forEach(lang => {
-						if (['C#', 'C++', 'Python', 'JavaScript'].includes(lang)) {
+						if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(lang)) {
 							const langBadge = document.createElement('div');
 							const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
 							langBadge.className = `project-language-badge language-${langClass}`;
