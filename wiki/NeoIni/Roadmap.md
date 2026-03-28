@@ -59,10 +59,9 @@ Long-term development plan. NeoIni evolves from a single-file INI reader to a un
 |---------|--------|-------------|
 | 3.1 | ✅ | **Improvement of IEncryptionProvider**: Transferring encryption logic from `NeoIniFileProvider` (see [[Migration Guide]]). |
 | 3.2 | ✅ | **.NET Standard 2.0 support**: enable usage on .NET Framework 4.6.2+ and other legacy platforms by backporting async/await and other modern features. |
-| 3.3 | 🔵 Under consideration | **Streaming provider support**: allow large configurations to be read/written incrementally without loading the entire dataset into memory. |
-| 3.4 | 🔵 Under consideration | **Extended source generator**: support for nested objects, collections, and validation attributes (e.g., `[Range]`, `[Required]`) in the generated mapping code. |
+| 3.3 | ✅ | **Batch operations**: methods like `SetValuesAsync` to update multiple keys in a single atomic operation, reducing auto‑save overhead. |
+| 3.4 | 🔵 Under consideration | **Streaming provider support**: allow large configurations to be read/written incrementally without loading the entire dataset into memory. |
 | 3.5 | 🔵 Under consideration | **Memory-mapped I/O**: optionally use memory-mapped files for very large INI files to improve performance and reduce memory footprint. |
-| 3.6 | 🔵 Under consideration | **Batch operations**: methods like `SetValuesAsync` to update multiple keys in a single atomic operation, reducing auto‑save overhead. |
 
 </details>
 

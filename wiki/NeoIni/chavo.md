@@ -16,9 +16,9 @@
 </details>
 
 <details>
-<summary>❓ Какие версии .NET поддерживаются? <b>.NET 6+ и .NET Standard 2.0</b> (нажмите, чтобы развернуть)</summary>
+<summary>❓ Какие версии .NET поддерживаются? <b>.NET 5+ и .NET Standard 2.0</b> (нажмите, чтобы развернуть)</summary>
 
-NeoIni поддерживает **.NET 6, 7, 8, 9, 10** и **.NET Standard 2.0**. Это обеспечивает совместимость с .NET Framework 4.6.2+, .NET Core 2.x и другими платформами, реализующими .NET Standard 2.0.
+NeoIni поддерживает **.NET 5, 6, 7, 8, 9, 10** и **.NET Standard 2.0**. Это обеспечивает совместимость с .NET Framework 4.6.2+, .NET Core 2.x и другими платформами, реализующими .NET Standard 2.0.
 
 </details>
 

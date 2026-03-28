@@ -323,11 +323,11 @@
 			"en": "Base_Escape",
 			"de": "Base_Escape"
 		},
-		"description": {
-			"ru": "Моя самая первая игра (~15k строк спагетти-кода), которую я писал больше года, постоянно улучшая. Захватывающая текстовая игра, в которой вам предстоит сражаться с кровожадным маньяком и, возможно, целым культом, чтобы выжить.",
-			"en": "My very first game (~15k lines of spaghetti code), which I worked on for over a year, constantly improving. Exciting text-based game where you must fight against a bloodthirsty maniac and possibly an entire cult in order to survive.",
-			"de": "Mein allererstes Spiel (~15k Zeilen Spaghetti-Code), an dem ich über ein Jahr lang kontinuierlich gearbeitet habe. Spannendes textbasiertes Spiel, in dem du gegen einen blutrünstigen Wahnsinnigen und möglicherweise einen ganzen Kult kämpfen musst, um zu überleben."
-		},
+        "description": {
+            "ru": "Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
+            "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
+            "de": "Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr gearbeitet wurde."
+        },
 		"language": "C++",
 		"tags": ["Text Adventure", "Quest", "Console Game", "Interactive Fiction"],
 		"links": {

@@ -16,9 +16,9 @@ This ensures safe use from multiple threads without additional synchronization i
 </details>
 
 <details>
-<summary>❓ Which .NET versions are supported? <b>.NET 6+ and .NET Standard 2.0</b> (click to expand)</summary>
+<summary>❓ Which .NET versions are supported? <b>.NET 5+ and .NET Standard 2.0</b> (click to expand)</summary>
 
-NeoIni targets **.NET 6, 7, 8, 9, 10** and **.NET Standard 2.0**. This enables compatibility with .NET Framework 4.6.2+, .NET Core 2.x, and other platforms implementing .NET Standard 2.0.
+NeoIni targets **.NET 5, 6, 7, 8, 9, 10** and **.NET Standard 2.0**. This enables compatibility with .NET Framework 4.6.2+, .NET Core 2.x, and other platforms implementing .NET Standard 2.0.
 
 </details>
 

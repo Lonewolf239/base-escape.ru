@@ -386,7 +386,7 @@ async function checkReadme(items) {
     if (!readmeInfo) return;
 
     const readmeFile = await findReadmeRecursive('');
-
+    
     if (readmeFile) {
         const readmeNameSpan = document.getElementById('readme-name');
         if (readmeNameSpan) readmeNameSpan.textContent = readmeFile.name;
