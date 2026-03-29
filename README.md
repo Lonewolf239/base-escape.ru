@@ -33,8 +33,10 @@ Personal developer portfolio with multilingual support (RU/EN/DE), embedded GitH
 ├── 403.html            # 403 redirect (language detection)
 ├── 404.html            # 404 redirect (language detection)
 ├── 503.html            # 503 redirect (language detection)
+├── github-proxy.php    # CORS proxy for GitHub API requests (handles rate limits, authentication, and error responses)
 ├── projects.json       # Projects database (blocked from direct access)
 ├── .htaccess           # Apache security rules
+├── .env                # Environment configuration (GitHub API token)
 ├── ru/                 # Russian version
 ├── en/                 # English version
 ├── de/                 # German version
