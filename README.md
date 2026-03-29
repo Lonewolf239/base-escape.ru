@@ -30,6 +30,9 @@ Personal developer portfolio with multilingual support (RU/EN/DE), embedded GitH
 ```
 /
 ├── index.html          # Root redirect (language detection)
+├── 403.html            # 403 redirect (language detection)
+├── 404.html            # 404 redirect (language detection)
+├── 503.html            # 503 redirect (language detection)
 ├── projects.json       # Projects database (blocked from direct access)
 ├── .htaccess           # Apache security rules
 ├── ru/                 # Russian version
