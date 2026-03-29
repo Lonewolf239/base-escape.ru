@@ -93,7 +93,34 @@ Edit `projects.json`:
             },
             "newTab": false
         }
-    }
+    },
+    "subprojects": [
+        {
+            "title": {
+	            "ru": "Название",
+                "en": "Title",
+	            "de": "Titel"
+            },
+	        "description": {
+			    "ru": "Описание на русском",
+	            "en": "Description in English",
+	            "de": "Beschreibung auf Deutsch"
+            },
+	        "language": ["Python", "C++"],
+            "tags": ["Tag1", "Tag2"],
+	        "links": {
+                "github": "https://github.com/...",
+				"code": {
+				    "url": {
+                        "ru": "/ru/viewer?project=RepoName",
+                        "en": "/en/viewer?project=RepoName",
+                        "de": "/de/viewer?project=RepoName"
+                    },
+					"newTab": false
+                }
+            }
+        }
+    ]
 }
 ```
 
