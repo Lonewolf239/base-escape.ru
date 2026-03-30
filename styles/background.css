@@ -270,51 +270,7 @@ body {
 		clip-path: inset(0 0 50% 0);
 	}
 
-	@keyframes sunPulseMobile {
-		0% {
-			filter: brightness(0.9);
-			transform: translateX(-50%) scale(1);
-			box-shadow: 0 0 40px 10px rgba(255, 51, 102, 0.6), 0 0 70px 20px rgba(255, 102, 51, 0.4);
-		}
-
-		100% {
-			filter: brightness(1.2);
-			transform: translateX(-50%) scale(1.02);
-			box-shadow: 0 0 80px 20px rgba(255, 51, 102, 1), 0 0 120px 35px rgba(255, 102, 51, 0.8);
-		}
-	}
-
 	.bg-grid::before {
 		animation: none;
-		transform: perspective(600px) rotateX(75deg);
-		background-size: 50px 50px;
-		background-image:
-			linear-gradient(to right, rgba(255, 0, 170, 0.4) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(255, 0, 170, 0.4) 1px, transparent 1px);
-	}
-
-	.shooting-star {
-		width: 5px;
-		height: 5px;
-	}
-
-	.shooting-star::before {
-		width: 90px;
-		height: 2px;
-	}
-
-	.shooting-star:nth-child(1) {
-		--end-x: 200px;
-		--end-y: 400px;
-	}
-
-	.shooting-star:nth-child(2) {
-		--end-x: 150px;
-		--end-y: 380px;
-	}
-
-	.shooting-star:nth-child(3) {
-		--end-x: -100px;
-		--end-y: 350px;
 	}
 }

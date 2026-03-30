@@ -33,6 +33,28 @@ if (isset($parsedUrl['port']) && $parsedUrl['port'] != 443) {
     exit;
 }
 
+$path = ltrim($parsedUrl['path'] ?? '', '/');
+
+if (strpos($path, '/../') !== false || strpos($path, '\\') !== false || preg_match('/(^|\/)\.\.(\/|$)/', $path)) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Path traversal not allowed']);
+    exit;
+}
+
+if ($parsedUrl['host'] === 'api.github.com') {
+    if (!preg_match('#^repos/Lonewolf239/[^/]+(?:/.*)?$#', $path)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Access denied: only repos of Lonewolf239 are allowed']);
+        exit;
+    }
+} elseif ($parsedUrl['host'] === 'raw.githubusercontent.com') {
+    if (!preg_match('#^Lonewolf239/[^/]+(?:/.*)?$#', $path)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Access denied: only raw content from Lonewolf239 repos is allowed']);
+        exit;
+    }
+}
+
 $envPath = __DIR__ . '/.env';
 if (file_exists($envPath)) {
     $lines = file($envPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

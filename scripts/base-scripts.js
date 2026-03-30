@@ -231,6 +231,88 @@ function createSubprojectsSection(subprojects, lang, buttonLabels) {
     return container;
 }
 
+function renderAbout(aboutData) {
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (!projectsGrid) return;
+
+    const htmlLang = document.documentElement.lang || 'en';
+    let currentLang = 'ru';
+    if (htmlLang.startsWith('en')) currentLang = 'en';
+    else if (htmlLang.startsWith('de')) currentLang = 'de';
+    else currentLang = 'ru';
+
+    if (document.querySelector('.about-section')) return;
+
+    const aboutContainer = document.createElement('div');
+    aboutContainer.className = 'about-section';
+
+    const avatar = document.createElement('img');
+    avatar.src = aboutData.avatar || '/images/avatar.png';
+    avatar.alt = 'Avatar';
+    avatar.className = 'about-avatar';
+    aboutContainer.appendChild(avatar);
+
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'about-content';
+
+    const title = document.createElement('h2');
+    title.textContent = getLocalizedValue(aboutData.title, currentLang);
+    title.className = 'about-title';
+    contentDiv.appendChild(title);
+
+    const description = document.createElement('p');
+    description.textContent = getLocalizedValue(aboutData.description, currentLang);
+    description.className = 'about-description';
+    contentDiv.appendChild(description);
+
+    if (aboutData.techStack && aboutData.techStack.length) {
+        const techDiv = document.createElement('div');
+        techDiv.className = 'about-tech';
+        const techLabel = document.createElement('span');
+        techLabel.className = 'about-tech-label';
+        techLabel.textContent = currentLang === 'ru' ? 'Технологии:' : (currentLang === 'de' ? 'Technologien:' : 'Tech stack:');
+        techDiv.appendChild(techLabel);
+
+        const tagsDiv = document.createElement('div');
+        tagsDiv.className = 'about-tags';
+        aboutData.techStack.forEach(tech => {
+            const tag = document.createElement('span');
+            tag.className = 'about-tag';
+            tag.textContent = tech;
+            tagsDiv.appendChild(tag);
+        });
+        techDiv.appendChild(tagsDiv);
+        contentDiv.appendChild(techDiv);
+    }
+
+    if (aboutData.contacts && Object.keys(aboutData.contacts).length) {
+        const contactsDiv = document.createElement('div');
+        contactsDiv.className = 'about-contacts';
+        const contactsLabel = document.createElement('span');
+        contactsLabel.className = 'about-contacts-label';
+        contactsLabel.textContent = currentLang === 'ru' ? 'Связаться:' : (currentLang === 'de' ? 'Kontakt:' : 'Contact:');
+        contactsDiv.appendChild(contactsLabel);
+
+        const linksDiv = document.createElement('div');
+        linksDiv.className = 'about-links';
+        Object.entries(aboutData.contacts).forEach(([key, url]) => {
+            if (!url) return;
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}`;
+            linksDiv.appendChild(a);
+        });
+        contactsDiv.appendChild(linksDiv);
+        contentDiv.appendChild(contactsDiv);
+    }
+
+    aboutContainer.appendChild(contentDiv);
+
+    projectsGrid.parentNode.insertBefore(aboutContainer, projectsGrid);
+}
+
 function loadProjects() {
 	const projectsGrid = document.querySelector('.projects-grid');
 	if (!projectsGrid) return;
@@ -283,9 +365,12 @@ function loadProjects() {
 
 	fetch('/projects.json')
         .then(response => response.json())
-        .then(projects => {
+        .then(data => {
             projectsGrid.innerHTML = '';
 
+			if (data.about) renderAbout(data.about);
+
+			const projects = data.projects || [];
             projects.forEach(project => {
                 const title = getLocalizedValue(project.title, currentLang) || 'Untitled';
                 const description = getLocalizedValue(project.description, currentLang) || '';
