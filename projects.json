@@ -112,7 +112,14 @@
                 "de":"Eine leistungsstarke .NET-Bibliothek zum Erstellen ansprechender Konsolenanwendungen mit Unterstützung für echte Farben, plattformübergreifender Zwischenablage, erweiterter Fensteranpassung und einer übersichtlichen Black-Box-API."
             },
             "language":"C#",
-            "tags":[],
+            "tags":[
+                ".NET",
+                "Console",
+                "Terminal",
+                "True-color",
+                "UI",
+                "Library"
+            ],
             "links":{
                 "github":"https://github.com/Lonewolf239/BeautifulConsole",
                 "nuget":"https://www.nuget.org/packages/BeautifulConsole",
