@@ -1,42 +1,42 @@
 {
-    "about":{
-        "avatar":"/images/icon.svg",
-        "title":{
-            "ru":"Привет, я Lonewolf239",
-            "en":"Hi, I'm Lonewolf239",
-            "de":"Hallo, ich bin Lonewolf239"
+    "about": {
+        "avatar": "/images/icon.svg",
+        "title": {
+            "ru": "Привет, я Lonewolf239",
+            "en": "Hi, I'm Lonewolf239",
+            "de": "Hallo, ich bin Lonewolf239"
         },
-        "description":{
-            "ru":"Разработчик, создаю проекты на C#, C++, Python, JavaScript и других технологиях. Увлекаюсь разработкой игр, веб-приложений и инструментов. Открыт для сотрудничества и новых идей.",
-            "en":"Developer, creating projects in C#, C++, Python, JavaScript and other technologies. Passionate about game development, web apps, and tools. Open to collaboration and new ideas.",
-            "de":"Entwickler, erstelle Projekte in C#, C++, Python, JavaScript und anderen Technologien. Leidenschaftlich für Spieleentwicklung, Web-Apps und Tools. Offen für Zusammenarbeit und neue Ideen."
+        "description": {
+            "ru": "Разработчик, создаю проекты на C#, C++, Python, JavaScript и других технологиях. Увлекаюсь разработкой игр, веб-приложений и инструментов. Открыт для сотрудничества и новых идей.",
+            "en": "Developer, creating projects in C#, C++, Python, JavaScript and other technologies. Passionate about game development, web apps, and tools. Open to collaboration and new ideas.",
+            "de": "Entwickler, erstelle Projekte in C#, C++, Python, JavaScript und anderen Technologien. Leidenschaftlich für Spieleentwicklung, Web-Apps und Tools. Offen für Zusammenarbeit und neue Ideen."
         },
-        "techStack":[
+        "techStack": [
             "C#",
             "C++",
             "Python",
             "JavaScript",
             "HTML/CSS"
         ],
-        "contacts":{
-            "github":"https://github.com/Lonewolf239",
-            "telegram":"https://t.me/an1onime"
+        "contacts": {
+            "github": "https://github.com/Lonewolf239",
+            "telegram": "https://t.me/an1onime"
         }
     },
-    "projects":[
+    "projects": [
         {
-            "title":{
-                "ru":"NeoIni",
-                "en":"NeoIni",
-                "de":"NeoIni"
+            "title": {
+                "ru": "NeoIni",
+                "en": "NeoIni",
+                "de": "NeoIni"
             },
-            "description":{
-                "ru":"Безопасная, потокобезопасная библиотека конфигурации INI для .NET со встроенной проверкой целостности, AES-256 шифрованием и подключаемой архитектурой провайдеров.",
-                "en":"Secure, thread-safe INI configuration library for .NET with built-in integrity checking, AES-256 encryption, and a pluggable provider architecture.",
-                "de":"Sichere, threadsichere INI-Konfigurationsbibliothek für .NET mit integrierter Integritätsprüfung, AES-256-Verschlüsselung und einer austauschbaren Provider-Architektur."
+            "description": {
+                "ru": "Безопасная, потокобезопасная библиотека конфигурации INI для .NET со встроенной проверкой целостности, AES-256 шифрованием и подключаемой архитектурой провайдеров.",
+                "en": "Secure, thread-safe INI configuration library for .NET with built-in integrity checking, AES-256 encryption, and a pluggable provider architecture.",
+                "de": "Sichere, threadsichere INI-Konfigurationsbibliothek für .NET mit integrierter Integritätsprüfung, AES-256-Verschlüsselung und einer austauschbaren Provider-Architektur."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 ".NET",
                 "INI",
                 "Configuration",
@@ -44,75 +44,113 @@
                 "Encryption",
                 "Thread-Safe"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/NeoIni",
-                "nuget":"https://www.nuget.org/packages/NeoIni",
-                "wiki":{
-                    "url":{
-                        "ru":"/ru/wiki?project=NeoIni",
-                        "en":"/en/wiki?project=NeoIni",
-                        "de":"/de/wiki?project=NeoIni"
+            "links": {
+                "github": "https://github.com/Lonewolf239/NeoIni",
+                "nuget": "https://www.nuget.org/packages/NeoIni",
+                "wiki": {
+                    "url": {
+                        "ru": "/ru/wiki?project=NeoIni",
+                        "en": "/en/wiki?project=NeoIni",
+                        "de": "/de/wiki?project=NeoIni"
                     },
-                    "newTab":false
+                    "newTab": false
                 },
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=NeoIni",
-                        "en":"/en/viewer?project=NeoIni",
-                        "de":"/de/viewer?project=NeoIni"
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=NeoIni",
+                        "en": "/en/viewer?project=NeoIni",
+                        "de": "/de/viewer?project=NeoIni"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
-            }
+            },
+            "subprojects": [
+                {
+                    "title": {
+                        "ru": "AsyncReaderWriterLock",
+                        "en": "AsyncReaderWriterLock",
+                        "de": "AsyncReaderWriterLock"
+                    },
+                    "description": {
+                        "ru": "Легковесная кроссплатформенная асинхронная блокировка чтения-записи для .NET с поддержкой синхронного/асинхронного режимов, возможностью отмены и справедливой организацией очереди.",
+                        "en": "A lightweight, cross-platform asynchronous reader‑writer lock for .NET with sync/async support, cancellation, and fair queuing.",
+                        "de": "Ein leichtgewichtiger, plattformübergreifender asynchroner Leser-Schreiber-Lock für .NET mit synchroner/asynchroner Unterstützung, Abbruchfunktion und fairer Warteschlangenverwaltung."
+                    },
+                    "language": "C#",
+                    "tags": [
+                        ".NET",
+                        "Asynchronous",
+                        "Reader-writer-lock",
+                        "Thread-safety",
+                        "Concurrency",
+                        "Synchronization",
+                        "Async-lock",
+                        "Fair-queue",
+                        "Cancellation-token"
+                    ],
+                    "links": {
+                        "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
+                        "nuget": "https://www.nuget.org/packages/AsyncReaderWriterLock",
+                        "code": {
+                            "url": {
+                                "ru": "/ru/viewer?project=AsyncReaderWriterLock",
+                                "en": "/en/viewer?project=AsyncReaderWriterLock",
+                                "de": "/de/viewer?project=AsyncReaderWriterLock"
+                            },
+                            "newTab": false
+                        }
+                    }
+                }
+            ]
         },
         {
-            "title":{
-                "ru":"Lonewolf239 Portfolio",
-                "en":"Lonewolf239 Portfolio",
-                "de":"Lonewolf239 Portfolio"
+            "title": {
+                "ru": "Lonewolf239 Portfolio",
+                "en": "Lonewolf239 Portfolio",
+                "de": "Lonewolf239 Portfolio"
             },
-            "description":{
-                "ru":"Персональный сайт-портфолио с витриной проектов, многоязычной поддержкой, встроенным просмотрщиком кода и адаптивным дизайном.",
-                "en":"Personal portfolio website showcasing projects, multilingual support, built-in code viewer, and responsive design.",
-                "de":"Persönliche Portfolio-Website mit Projektübersicht, mehrsprachiger Unterstützung, integrierter Code-Ansicht und responsivem Design."
+            "description": {
+                "ru": "Персональный сайт-портфолио с витриной проектов, многоязычной поддержкой, встроенным просмотрщиком кода и адаптивным дизайном.",
+                "en": "Personal portfolio website showcasing projects, multilingual support, built-in code viewer, and responsive design.",
+                "de": "Persönliche Portfolio-Website mit Projektübersicht, mehrsprachiger Unterstützung, integrierter Code-Ansicht und responsivem Design."
             },
-            "language":[
+            "language": [
                 "JavaScript",
                 "HTML",
                 "CSS"
             ],
-            "tags":[
+            "tags": [
                 "Portfolio",
                 "Website",
                 "Responsive",
                 "Multilingual",
                 "Frontend"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/base-escape.ru",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer.html?project=base-escape.ru",
-                        "en":"/en/viewer.html?project=base-escape.ru",
-                        "de":"/de/viewer.html?project=base-escape.ru"
+            "links": {
+                "github": "https://github.com/Lonewolf239/base-escape.ru",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer.html?project=base-escape.ru",
+                        "en": "/en/viewer.html?project=base-escape.ru",
+                        "de": "/de/viewer.html?project=base-escape.ru"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"BeautifulConsole",
-                "en":"BeautifulConsole",
-                "de":"BeautifulConsole"
+            "title": {
+                "ru": "BeautifulConsole",
+                "en": "BeautifulConsole",
+                "de": "BeautifulConsole"
             },
-            "description":{
-                "ru":"Мощная .NET-библиотека для создания красивых консольных приложений с поддержкой настоящего цвета (true‑color), кроссплатформенным буфером обмена, расширенной настройкой окна и чистым API в стиле «чёрного ящика».",
-                "en":"A powerful .NET library for building beautiful console applications with true‑color support, cross‑platform clipboard, advanced window customization, and a clean, black‑box API.",
-                "de":"Eine leistungsstarke .NET-Bibliothek zum Erstellen ansprechender Konsolenanwendungen mit Unterstützung für echte Farben, plattformübergreifender Zwischenablage, erweiterter Fensteranpassung und einer übersichtlichen Black-Box-API."
+            "description": {
+                "ru": "Мощная .NET-библиотека для создания красивых консольных приложений с поддержкой настоящего цвета (true‑color), кроссплатформенным буфером обмена, расширенной настройкой окна и чистым API в стиле «чёрного ящика».",
+                "en": "A powerful .NET library for building beautiful console applications with true‑color support, cross‑platform clipboard, advanced window customization, and a clean, black‑box API.",
+                "de": "Eine leistungsstarke .NET-Bibliothek zum Erstellen ansprechender Konsolenanwendungen mit Unterstützung für echte Farben, plattformübergreifender Zwischenablage, erweiterter Fensteranpassung und einer übersichtlichen Black-Box-API."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 ".NET",
                 "Console",
                 "Terminal",
@@ -120,63 +158,64 @@
                 "UI",
                 "Library"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/BeautifulConsole",
-                "nuget":"https://www.nuget.org/packages/BeautifulConsole",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=BeautifulConsole",
-                        "en":"/en/viewer?project=BeautifulConsole",
-                        "de":"/de/viewer?project=BeautifulConsole"
+            "links": {
+                "github": "https://github.com/Lonewolf239/BeautifulConsole",
+                "nuget": "https://www.nuget.org/packages/BeautifulConsole",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=BeautifulConsole",
+                        "en": "/en/viewer?project=BeautifulConsole",
+                        "de": "/de/viewer?project=BeautifulConsole"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"SLIL",
-                "en":"SLIL",
-                "de":"SLIL"
+            "title": {
+                "ru": "SLIL",
+                "en": "SLIL",
+                "de": "SLIL"
             },
-            "description":{
-                "ru":"DOOM-подобный шутер с кастомным движком рейкастинга, смещением камеры по Y и DirectX 10.",
-                "en":"DOOM-like shooter with a custom raycasting engine, Y‑axis camera offset and DirectX 10.",
-                "de":"DOOM-ähnlicher Shooter mit eigener Raycasting-Engine, Y‑Kamera-Offset und DirectX 10."
+            "description": {
+                "ru": "DOOM-подобный шутер с кастомным движком рейкастинга, смещением камеры по Y и DirectX 10.",
+                "en": "DOOM-like shooter with a custom raycasting engine, Y‑axis camera offset and DirectX 10.",
+                "de": "DOOM-ähnlicher Shooter mit eigener Raycasting-Engine, Y‑Kamera-Offset und DirectX 10."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "WinForms",
                 "Game",
-                "RPG",
+                "Shooter",
                 "First-Person",
+                "Raycasting",
                 "Procedural Generation"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/SLIL",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=SLIL",
-                        "en":"/en/viewer?project=SLIL",
-                        "de":"/de/viewer?project=SLIL"
+            "links": {
+                "github": "https://github.com/Lonewolf239/SLIL",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=SLIL",
+                        "en": "/en/viewer?project=SLIL",
+                        "de": "/de/viewer?project=SLIL"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"CryptoLockX",
-                "en":"CryptoLockX",
-                "de":"CryptoLockX"
+            "title": {
+                "ru": "CryptoLockX",
+                "en": "CryptoLockX",
+                "de": "CryptoLockX"
             },
-            "description":{
-                "ru":"Консольная утилита для шифрования и упаковки файлов с использованием AES-256, Brotli и защитой паролем.",
-                "en":"Console utility for encrypting and packing files using AES-256, Brotli, and password protection.",
-                "de":"Konsolenprogramm zum Verschlüsseln und Packen von Dateien mit AES-256, Brotli und Passwortschutz."
+            "description": {
+                "ru": "Консольная утилита для шифрования и упаковки файлов с использованием AES-256, Brotli и защитой паролем.",
+                "en": "Console utility for encrypting and packing files using AES-256, Brotli, and password protection.",
+                "de": "Konsolenprogramm zum Verschlüsseln und Packen von Dateien mit AES-256, Brotli und Passwortschutz."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "Encryption",
                 "AES-256",
                 "Brotli",
@@ -184,64 +223,64 @@
                 "Console",
                 "File Archiver"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/CryptoLockX",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=CryptoLockX",
-                        "en":"/en/viewer?project=CryptoLockX",
-                        "de":"/de/viewer?project=CryptoLockX"
+            "links": {
+                "github": "https://github.com/Lonewolf239/CryptoLockX",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=CryptoLockX",
+                        "en": "/en/viewer?project=CryptoLockX",
+                        "de": "/de/viewer?project=CryptoLockX"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"PasswordManager",
-                "en":"PasswordManager",
-                "de":"PasswordManager"
+            "title": {
+                "ru": "PasswordManager",
+                "en": "PasswordManager",
+                "de": "PasswordManager"
             },
-            "description":{
-                "ru":"Консольный менеджер паролей с AES-256 шифрованием, мастер-паролем, поиском, синхронизацией и автоматическим обновлением.",
-                "en":"Console password manager with AES-256 encryption, master password, search, synchronization, and automatic updates.",
-                "de":"Konsolen-Passwort-Manager mit AES-256-Verschlüsselung, Master-Passwort, Suche, Synchronisierung und automatischen Updates."
+            "description": {
+                "ru": "Консольный менеджер паролей с AES-256 шифрованием, мастер-паролем, поиском, синхронизацией и автоматическим обновлением.",
+                "en": "Console password manager with AES-256 encryption, master password, search, synchronization, and automatic updates.",
+                "de": "Konsolen-Passwort-Manager mit AES-256-Verschlüsselung, Master-Passwort, Suche, Synchronisierung und automatischen Updates."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "Password Manager",
                 "Security",
                 "AES-256",
                 "Console",
                 "Linux"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/PasswordManager",
-                "download":"https://github.com/Lonewolf239/PasswordManager/releases/download/v1.1/PasswordManager",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=PasswordManager",
-                        "en":"/en/viewer?project=PasswordManager",
-                        "de":"/de/viewer?project=PasswordManager"
+            "links": {
+                "github": "https://github.com/Lonewolf239/PasswordManager",
+                "download": "https://github.com/Lonewolf239/PasswordManager/releases/download/v1.1/PasswordManager",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=PasswordManager",
+                        "en": "/en/viewer?project=PasswordManager",
+                        "de": "/de/viewer?project=PasswordManager"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"PlazaBot",
-                "en":"PlazaBot",
-                "de":"PlazaBot"
+            "title": {
+                "ru": "PlazaBot",
+                "en": "PlazaBot",
+                "de": "PlazaBot"
             },
-            "description":{
-                "ru":"ИСКЛЮЧИТЕЛЬНО УЧЕБНЫЙ ПРОЕКТ! Telegram‑бот (~15k строк кода) для демонстрации архитектуры игровых приложений: 8+ игр, интеграция криптоплатежей (Crypto Pay), реферальная система с клонированием ботов, админ-панель.",
-                "en":"EDUCATIONAL PROJECT ONLY! Telegram bot (~15k lines of code) demonstrating casino game architecture: 8+ games, crypto payment integration (Crypto Pay), referral system with bot cloning, admin panel.",
-                "de":"NUR ZU BILDUNGSZWECKEN! Telegram-Bot (~15k Codezeilen) zur Demonstration der Architektur von Spielanwendungen: 8+ Spiele, Kryptozahlungsintegration (Crypto Pay), Empfehlungssystem mit Bot-Klonen, Admin-Panel."
+            "description": {
+                "ru": "ИСКЛЮЧИТЕЛЬНО УЧЕБНЫЙ ПРОЕКТ! Telegram‑бот (~15k строк кода) для демонстрации архитектуры игровых приложений: 8+ игр, интеграция криптоплатежей (Crypto Pay), реферальная система с клонированием ботов, админ-панель.",
+                "en": "EDUCATIONAL PROJECT ONLY! Telegram bot (~15k lines of code) demonstrating casino game architecture: 8+ games, crypto payment integration (Crypto Pay), referral system with bot cloning, admin panel.",
+                "de": "NUR ZU BILDUNGSZWECKEN! Telegram-Bot (~15k Codezeilen) zur Demonstration der Architektur von Spielanwendungen: 8+ Spiele, Kryptozahlungsintegration (Crypto Pay), Empfehlungssystem mit Bot-Klonen, Admin-Panel."
             },
-            "language":"Python",
-            "lastRelease":"2025-11-14",
-            "tags":[
+            "language": "Python",
+            "lastRelease": "2025-11-14",
+            "tags": [
                 "Telegram Bot",
                 "Educational",
                 "aiogram",
@@ -249,63 +288,63 @@
                 "Referral System",
                 "SQLite"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/PlazaBot",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=PlazaBot",
-                        "en":"/en/viewer?project=PlazaBot",
-                        "de":"/de/viewer?project=PlazaBot"
+            "links": {
+                "github": "https://github.com/Lonewolf239/PlazaBot",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=PlazaBot",
+                        "en": "/en/viewer?project=PlazaBot",
+                        "de": "/de/viewer?project=PlazaBot"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             },
-            "subprojects":[
+            "subprojects": [
                 {
-                    "title":{
-                        "ru":"PlazaSupportBot",
-                        "en":"PlazaSupportBot",
-                        "de":"PlazaSupportBot"
+                    "title": {
+                        "ru": "PlazaSupportBot",
+                        "en": "PlazaSupportBot",
+                        "de": "PlazaSupportBot"
                     },
-                    "description":{
-                        "ru":"Отдельный Telegram‑бот для технической поддержки пользователей PlazaBot. Обработка тикетов, управление обращениями.",
-                        "en":"Standalone Telegram bot for PlazaBot user support. Ticket handling, inquiry management.",
-                        "de":"Eigenständiger Telegram-Bot für den Benutzersupport von PlazaBot. Ticketbearbeitung, Anfragenmanagement."
+                    "description": {
+                        "ru": "Отдельный Telegram‑бот для технической поддержки пользователей PlazaBot. Обработка тикетов, управление обращениями.",
+                        "en": "Standalone Telegram bot for PlazaBot user support. Ticket handling, inquiry management.",
+                        "de": "Eigenständiger Telegram-Bot für den Benutzersupport von PlazaBot. Ticketbearbeitung, Anfragenmanagement."
                     },
-                    "language":"Python",
-                    "tags":[
+                    "language": "Python",
+                    "tags": [
                         "Telegram Bot",
                         "Support",
                         "aiogram",
                         "Ticketing System"
                     ],
-                    "links":{
-                        "github":"https://github.com/Lonewolf239/PlazaSupportBot",
-                        "code":{
-                            "url":{
-                                "ru":"/ru/viewer?project=PlazaSupportBot",
-                                "en":"/en/viewer?project=PlazaSupportBot",
-                                "de":"/de/viewer?project=PlazaSupportBot"
+                    "links": {
+                        "github": "https://github.com/Lonewolf239/PlazaSupportBot",
+                        "code": {
+                            "url": {
+                                "ru": "/ru/viewer?project=PlazaSupportBot",
+                                "en": "/en/viewer?project=PlazaSupportBot",
+                                "de": "/de/viewer?project=PlazaSupportBot"
                             },
-                            "newTab":false
+                            "newTab": false
                         }
                     }
                 }
             ]
         },
         {
-            "title":{
-                "ru":"PCtoNormal",
-                "en":"PCtoNormal",
-                "de":"PCtoNormal"
+            "title": {
+                "ru": "PCtoNormal",
+                "en": "PCtoNormal",
+                "de": "PCtoNormal"
             },
-            "description":{
-                "ru":"Утилита для принудительной настройки рабочего стола на заблокированных системах: тёмная тема Windows, обои, настройки Visual Studio.",
-                "en":"Utility for forcing desktop settings on locked systems: Windows dark theme, wallpaper, Visual Studio configuration.",
-                "de":"Dienstprogramm zum Erzwingen von Desktop-Einstellungen auf gesperrten Systemen: Windows-Dark-Theme, Hintergrundbild, Visual Studio-Konfiguration."
+            "description": {
+                "ru": "Утилита для принудительной настройки рабочего стола на заблокированных системах: тёмная тема Windows, обои, настройки Visual Studio.",
+                "en": "Utility for forcing desktop settings on locked systems: Windows dark theme, wallpaper, Visual Studio configuration.",
+                "de": "Dienstprogramm zum Erzwingen von Desktop-Einstellungen auf gesperrten Systemen: Windows-Dark-Theme, Hintergrundbild, Visual Studio-Konfiguration."
             },
-            "language":"C++",
-            "tags":[
+            "language": "C++",
+            "tags": [
                 "Windows",
                 "Utility",
                 "Dark Theme",
@@ -313,64 +352,64 @@
                 "Visual Studio",
                 "WinAPI"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/PCtoNormal",
-                "download":"https://github.com/Lonewolf239/PCtoNormal/releases/download/0.4/Release.v0.4.zip",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=PCtoNormal",
-                        "en":"/en/viewer?project=PCtoNormal",
-                        "de":"/de/viewer?project=PCtoNormal"
+            "links": {
+                "github": "https://github.com/Lonewolf239/PCtoNormal",
+                "download": "https://github.com/Lonewolf239/PCtoNormal/releases/download/0.4/Release.v0.4.zip",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=PCtoNormal",
+                        "en": "/en/viewer?project=PCtoNormal",
+                        "de": "/de/viewer?project=PCtoNormal"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"Terraria Randomizer",
-                "en":"Terraria Randomizer",
-                "de":"Terraria Randomizer"
+            "title": {
+                "ru": "Terraria Randomizer",
+                "en": "Terraria Randomizer",
+                "de": "Terraria Randomizer"
             },
-            "description":{
-                "ru":"Terraria Randomizer мгновенно генерирует полные наборы персонажей для вашего следующего приключения в Terraria.",
-                "en":"Terraria Randomizer instantly generates complete character presets for your next Terraria adventure. ",
-                "de":"Terraria Randomizer generiert im Handumdrehen komplette Charakter-Voreinstellungen für dein nächstes Terraria-Abenteuer."
+            "description": {
+                "ru": "Terraria Randomizer мгновенно генерирует полные наборы персонажей для вашего следующего приключения в Terraria.",
+                "en": "Terraria Randomizer instantly generates complete character presets for your next Terraria adventure.",
+                "de": "Terraria Randomizer generiert im Handumdrehen komplette Charakter-Voreinstellungen für dein nächstes Terraria-Abenteuer."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "Terraria",
                 "Calamity",
                 "Randomizer",
                 ".NET",
                 "Console"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/terraria-randomizer",
-                "download":"https://github.com/Lonewolf239/terraria-randomizer/releases/tag/v0.5.2",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=terraria-randomizer",
-                        "en":"/en/viewer?project=terraria-randomizer",
-                        "de":"/de/viewer?project=terraria-randomizer"
+            "links": {
+                "github": "https://github.com/Lonewolf239/terraria-randomizer",
+                "download": "https://github.com/Lonewolf239/terraria-randomizer/releases/tag/v0.5.2",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=terraria-randomizer",
+                        "en": "/en/viewer?project=terraria-randomizer",
+                        "de": "/de/viewer?project=terraria-randomizer"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"7DtD_HP",
-                "en":"7DtD_HP",
-                "de":"7DtD_HP"
+            "title": {
+                "ru": "7DtD_HP",
+                "en": "7DtD_HP",
+                "de": "7DtD_HP"
             },
-            "description":{
-                "ru":"Небольшая утилита для быстрого и удобного редактирования характеристик зомби в игре 7 Days to Die через конфигурационный файл игры.",
-                "en":"A small utility for quickly and easily editing zombie stats in 7 Days to Die via the game's configuration file.",
-                "de":"Ein kleines Hilfsprogramm zum schnellen und einfachen Bearbeiten der Zombie-Statistiken in 7 Days to Die über die Konfigurationsdatei des Spiels."
+            "description": {
+                "ru": "Небольшая утилита для быстрого и удобного редактирования характеристик зомби в игре 7 Days to Die через конфигурационный файл игры.",
+                "en": "A small utility for quickly and easily editing zombie stats in 7 Days to Die via the game's configuration file.",
+                "de": "Ein kleines Hilfsprogramm zum schnellen und einfachen Bearbeiten der Zombie-Statistiken in 7 Days to Die über die Konfigurationsdatei des Spiels."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "7 Days to Die",
                 "Zombie",
                 "Modding",
@@ -379,175 +418,175 @@
                 "Entity Classes",
                 "HP Editor"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/7DtD_HP",
-                "download":"https://github.com/Lonewolf239/7DtD_HP/releases/download/0.2.1/7DtD.Zombie.HP.Changer.exe",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=7DtD_HP",
-                        "en":"/en/viewer?project=7DtD_HP",
-                        "de":"/de/viewer?project=7DtD_HP"
+            "links": {
+                "github": "https://github.com/Lonewolf239/7DtD_HP",
+                "download": "https://github.com/Lonewolf239/7DtD_HP/releases/download/0.2.1/7DtD.Zombie.HP.Changer.exe",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=7DtD_HP",
+                        "en": "/en/viewer?project=7DtD_HP",
+                        "de": "/de/viewer?project=7DtD_HP"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"WPM",
-                "en":"WPM",
-                "de":"WPM"
+            "title": {
+                "ru": "WPM",
+                "en": "WPM",
+                "de": "WPM"
             },
-            "description":{
-                "ru":"Менеджер планов электропитания для Windows на основе консоли с регулировкой яркости.",
-                "en":"Console-based power plan manager for Windows with brightness control.",
-                "de":"Konsolenbasierter Energiesparplan-Manager für Windows mit Helligkeitssteuerung."
+            "description": {
+                "ru": "Менеджер планов электропитания для Windows на основе консоли с регулировкой яркости.",
+                "en": "Console-based power plan manager for Windows with brightness control.",
+                "de": "Konsolenbasierter Energiesparplan-Manager für Windows mit Helligkeitssteuerung."
             },
-            "language":"C++",
-            "lastRelease":"2024-11-24",
-            "tags":[
+            "language": "C++",
+            "lastRelease": "2024-11-24",
+            "tags": [
                 "Windows",
                 "Power Management",
                 "Console",
                 "Brightness Control",
                 "WinAPI"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/WPM",
-                "download":"https://github.com/Lonewolf239/WPM/releases/tag/1.3",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=WPM",
-                        "en":"/en/viewer?project=WPM",
-                        "de":"/de/viewer?project=WPM"
+            "links": {
+                "github": "https://github.com/Lonewolf239/WPM",
+                "download": "https://github.com/Lonewolf239/WPM/releases/tag/1.3",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=WPM",
+                        "en": "/en/viewer?project=WPM",
+                        "de": "/de/viewer?project=WPM"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"mini-games",
-                "en":"mini-games",
-                "de":"mini-games"
+            "title": {
+                "ru": "mini-games",
+                "en": "mini-games",
+                "de": "mini-games"
             },
-            "description":{
-                "ru":"Коллекция из 16 офлайн мини-игр: головоломки, аркады, стратегии. Поддержка масштабирования, звука, автообновления и рекордов.",
-                "en":"Collection of 16 offline mini-games: puzzles, arcade, strategy. Supports scaling, sound, auto-updates, and high scores.",
-                "de":"Sammlung von 16 Offline-Minispielen: Puzzles, Arcade, Strategie. Unterstützt Skalierung, Sound, Auto-Updates und Highscores."
+            "description": {
+                "ru": "Коллекция из 16 офлайн мини-игр: головоломки, аркады, стратегии. Поддержка масштабирования, звука, автообновления и рекордов.",
+                "en": "Collection of 16 offline mini-games: puzzles, arcade, strategy. Supports scaling, sound, auto-updates, and high scores.",
+                "de": "Sammlung von 16 Offline-Minispielen: Puzzles, Arcade, Strategie. Unterstützt Skalierung, Sound, Auto-Updates und Highscores."
             },
-            "language":"C#",
-            "tags":[
+            "language": "C#",
+            "tags": [
                 "WinForms",
                 "Game Collection",
                 "Mini-Games",
                 "Puzzle",
                 "Arcade"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/mini-games",
-                "download":"/downloads/Setup_Mini_Games.exe",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=mini-games",
-                        "en":"/en/viewer?project=mini-games",
-                        "de":"/de/viewer?project=mini-games"
+            "links": {
+                "github": "https://github.com/Lonewolf239/mini-games",
+                "download": "/downloads/Setup_Mini_Games.exe",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=mini-games",
+                        "en": "/en/viewer?project=mini-games",
+                        "de": "/de/viewer?project=mini-games"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"GAAGA",
-                "en":"GAAGA",
-                "de":"GAAGA"
+            "title": {
+                "ru": "GAAGA",
+                "en": "GAAGA",
+                "de": "GAAGA"
             },
-            "description":{
-                "ru":"Аркадный шутер в стиле Galaga на Python с поддержкой двух игроков, бонусами, улучшениями оружия и динамической сложностью.",
-                "en":"Arcade shooter in the style of Galaga in Python with two-player support, bonuses, weapon upgrades, and dynamic difficulty.",
-                "de":"Arcade-Shooter im Galaga-Stil in Python mit Zwei-Spieler-Unterstützung, Boni, Waffen-Upgrades und dynamischem Schwierigkeitsgrad."
+            "description": {
+                "ru": "Аркадный шутер в стиле Galaga на Python с поддержкой двух игроков, бонусами, улучшениями оружия и динамической сложностью.",
+                "en": "Arcade shooter in the style of Galaga in Python with two-player support, bonuses, weapon upgrades, and dynamic difficulty.",
+                "de": "Arcade-Shooter im Galaga-Stil in Python mit Zwei-Spieler-Unterstützung, Boni, Waffen-Upgrades und dynamischem Schwierigkeitsgrad."
             },
-            "language":"Python",
-            "tags":[
+            "language": "Python",
+            "tags": [
                 "Pygame",
                 "Tkinter",
                 "Galaga",
                 "Arcade",
                 "Shooter"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/GAAGA",
-                "download":"https://github.com/Lonewolf239/GAAGA/releases/download/1.0/GAAGA.exe",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=GAAGA",
-                        "en":"/en/viewer?project=GAAGA",
-                        "de":"/de/viewer?project=GAAGA"
+            "links": {
+                "github": "https://github.com/Lonewolf239/GAAGA",
+                "download": "https://github.com/Lonewolf239/GAAGA/releases/download/1.0/GAAGA.exe",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=GAAGA",
+                        "en": "/en/viewer?project=GAAGA",
+                        "de": "/de/viewer?project=GAAGA"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"Base_Escape",
-                "en":"Base_Escape",
-                "de":"Base_Escape"
+            "title": {
+                "ru": "Base_Escape",
+                "en": "Base_Escape",
+                "de": "Base_Escape"
             },
-            "description":{
-                "ru":"Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
-                "en":"A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
-                "de":"Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr gearbeitet wurde."
+            "description": {
+                "ru": "Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
+                "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
+                "de": "Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr gearbeitet wurde."
             },
-            "language":"C++",
-            "tags":[
+            "language": "C++",
+            "tags": [
                 "Text Adventure",
                 "Quest",
                 "Console Game",
                 "Interactive Fiction"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/base_escape_v3.9",
-                "download":"/downloads/Base_escape_setup.exe",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=base_escape_v3.9",
-                        "en":"/en/viewer?project=base_escape_v3.9",
-                        "de":"/de/viewer?project=base_escape_v3.9"
+            "links": {
+                "github": "https://github.com/Lonewolf239/base_escape_v3.9",
+                "download": "/downloads/Base_escape_setup.exe",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=base_escape_v3.9",
+                        "en": "/en/viewer?project=base_escape_v3.9",
+                        "de": "/de/viewer?project=base_escape_v3.9"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         },
         {
-            "title":{
-                "ru":"Archive",
-                "en":"Archive",
-                "de":"Archive"
+            "title": {
+                "ru": "Archive",
+                "en": "Archive",
+                "de": "Archive"
             },
-            "description":{
-                "ru":"Архив Git 27 проектов Lonewolf239 (2022-2024). Полные клоны с историей Git. Эволюция от ранних экспериментов до первых работающих утилит.",
-                "en":"Git archive of 27 Lonewolf239 projects (2022-2024). Full clones with Git history. Evolution from early experiments to early working utilities.",
-                "de":"Git-Archiv von 27 Lonewolf239-Projekten (2022–2024). Vollständige Klone mit Git-Historie. Entwicklung von frühen Experimenten zu ersten funktionsfähigen Anwendungen."
+            "description": {
+                "ru": "Архив Git 27 проектов Lonewolf239 (2022-2024). Полные клоны с историей Git. Эволюция от ранних экспериментов до первых работающих утилит.",
+                "en": "Git archive of 27 Lonewolf239 projects (2022-2024). Full clones with Git history. Evolution from early experiments to early working utilities.",
+                "de": "Git-Archiv von 27 Lonewolf239-Projekten (2022–2024). Vollständige Klone mit Git-Historie. Entwicklung von frühen Experimenten zu ersten funktionsfähigen Anwendungen."
             },
-            "language":[
+            "language": [
                 "C++",
                 "Python",
                 "C#"
             ],
-            "tags":[
+            "tags": [
                 "Archive"
             ],
-            "links":{
-                "github":"https://github.com/Lonewolf239/Archive",
-                "code":{
-                    "url":{
-                        "ru":"/ru/viewer?project=Archive",
-                        "en":"/en/viewer?project=Archive",
-                        "de":"/de/viewer?project=Archive"
+            "links": {
+                "github": "https://github.com/Lonewolf239/Archive",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=Archive",
+                        "en": "/en/viewer?project=Archive",
+                        "de": "/de/viewer?project=Archive"
                     },
-                    "newTab":false
+                    "newTab": false
                 }
             }
         }
