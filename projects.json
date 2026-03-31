@@ -34,16 +34,16 @@
                 "de": "NeoIni"
             },
             "description": {
-                "ru": "Безопасная, потокобезопасная библиотека конфигурации INI для .NET со встроенной проверкой целостности, AES-256 шифрованием и подключаемой архитектурой провайдеров.",
-                "en": "Secure, thread-safe INI configuration library for .NET with built-in integrity checking, AES-256 encryption, and a pluggable provider architecture.",
-                "de": "Sichere, threadsichere INI-Konfigurationsbibliothek für .NET mit integrierter Integritätsprüfung, AES-256-Verschlüsselung und einer austauschbaren Provider-Architektur."
+                "ru": "Библиотека конфигурации INI для .NET. Поддерживает потокобезопасность, AES-256 шифрование и подключаемую архитектуру провайдеров.",
+                "en": "INI configuration library for .NET. Supports thread safety, AES-256 encryption, and a pluggable provider architecture.",
+                "de": "INI-Konfigurationsbibliothek für .NET. Unterstützt Threadsicherheit, AES-256-Verschlüsselung und eine austauschbare Provider-Architektur."
             },
             "language": "C#",
             "tags": [
+                "Library",
                 ".NET",
                 "INI",
                 "Configuration",
-                "Security",
                 "Encryption",
                 "Thread-Safe"
             ],
@@ -75,21 +75,17 @@
                         "de": "AsyncReaderWriterLock"
                     },
                     "description": {
-                        "ru": "Легковесная кроссплатформенная асинхронная блокировка чтения-записи для .NET с поддержкой синхронного/асинхронного режимов, возможностью отмены и справедливой организацией очереди.",
-                        "en": "A lightweight, cross-platform asynchronous reader‑writer lock for .NET with sync/async support, cancellation, and fair queuing.",
-                        "de": "Ein leichtgewichtiger, plattformübergreifender asynchroner Leser-Schreiber-Lock für .NET mit synchroner/asynchroner Unterstützung, Abbruchfunktion und fairer Warteschlangenverwaltung."
+                        "ru": "Асинхронная блокировка чтения-записи для .NET. Легковесная, кроссплатформенная, с поддержкой отмены операций и справедливой очередью.",
+                        "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
+                        "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
                     },
                     "language": "C#",
                     "tags": [
+                        "Library",
                         ".NET",
-                        "Asynchronous",
-                        "Reader-writer-lock",
-                        "Thread-safety",
                         "Concurrency",
-                        "Synchronization",
-                        "Async-lock",
-                        "Fair-queue",
-                        "Cancellation-token"
+                        "Async",
+                        "Thread-Safe"
                     ],
                     "links": {
                         "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
@@ -113,9 +109,9 @@
                 "de": "Lonewolf239 Portfolio"
             },
             "description": {
-                "ru": "Персональный сайт-портфолио с витриной проектов, многоязычной поддержкой, встроенным просмотрщиком кода и адаптивным дизайном.",
-                "en": "Personal portfolio website showcasing projects, multilingual support, built-in code viewer, and responsive design.",
-                "de": "Persönliche Portfolio-Website mit Projektübersicht, mehrsprachiger Unterstützung, integrierter Code-Ansicht und responsivem Design."
+                "ru": "Персональный сайт-портфолио. Включает витрину проектов, многоязычную поддержку, встроенный просмотрщик кода и адаптивный дизайн.",
+                "en": "Personal portfolio website. Includes project showcase, multilingual support, built-in code viewer, and responsive design.",
+                "de": "Persönliche Portfolio-Website. Enthält Projektübersicht, mehrsprachige Unterstützung, integrierte Code-Ansicht und responsives Design."
             },
             "language": [
                 "JavaScript",
@@ -123,8 +119,8 @@
                 "CSS"
             ],
             "tags": [
-                "Portfolio",
                 "Website",
+                "Portfolio",
                 "Responsive",
                 "Multilingual",
                 "Frontend"
@@ -133,9 +129,9 @@
                 "github": "https://github.com/Lonewolf239/base-escape.ru",
                 "code": {
                     "url": {
-                        "ru": "/ru/viewer.html?project=base-escape.ru",
-                        "en": "/en/viewer.html?project=base-escape.ru",
-                        "de": "/de/viewer.html?project=base-escape.ru"
+                        "ru": "/ru/viewer?project=base-escape.ru",
+                        "en": "/en/viewer?project=base-escape.ru",
+                        "de": "/de/viewer?project=base-escape.ru"
                     },
                     "newTab": false
                 }
@@ -148,18 +144,17 @@
                 "de": "BeautifulConsole"
             },
             "description": {
-                "ru": "Мощная .NET-библиотека для создания красивых консольных приложений с поддержкой настоящего цвета (true‑color), кроссплатформенным буфером обмена, расширенной настройкой окна и чистым API в стиле «чёрного ящика».",
-                "en": "A powerful .NET library for building beautiful console applications with true‑color support, cross‑platform clipboard, advanced window customization, and a clean, black‑box API.",
-                "de": "Eine leistungsstarke .NET-Bibliothek zum Erstellen ansprechender Konsolenanwendungen mit Unterstützung für echte Farben, plattformübergreifender Zwischenablage, erweiterter Fensteranpassung und einer übersichtlichen Black-Box-API."
+                "ru": "Библиотека для создания красивых консольных приложений на .NET. Поддерживает true-color, кроссплатформенный буфер обмена и расширенную настройку окна.",
+                "en": "Library for building beautiful console applications on .NET. Supports true-color, cross-platform clipboard, and advanced window customization.",
+                "de": "Bibliothek zum Erstellen ansprechender Konsolenanwendungen auf .NET. Unterstützt True-Color, plattformübergreifende Zwischenablage und erweiterte Fensteranpassung."
             },
             "language": "C#",
             "tags": [
+                "Library",
                 ".NET",
                 "Console",
                 "Terminal",
-                "True-color",
-                "UI",
-                "Library"
+                "TrueColor"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/BeautifulConsole",
@@ -181,18 +176,17 @@
                 "de": "SLIL"
             },
             "description": {
-                "ru": "DOOM-подобный шутер с кастомным движком рейкастинга, смещением камеры по Y и DirectX 10.",
-                "en": "DOOM-like shooter with a custom raycasting engine, Y‑axis camera offset and DirectX 10.",
-                "de": "DOOM-ähnlicher Shooter mit eigener Raycasting-Engine, Y‑Kamera-Offset und DirectX 10."
+                "ru": "DOOM-подобный шутер на C# и WinForms. Использует кастомный движок рейкастинга, DirectX 10 и смещение камеры по Y.",
+                "en": "DOOM-like shooter in C# and WinForms. Uses a custom raycasting engine, DirectX 10, and Y-axis camera offset.",
+                "de": "DOOM-ähnlicher Shooter in C# und WinForms. Verwendet eine eigene Raycasting-Engine, DirectX 10 und Y-Achsen-Kamera-Offset."
             },
             "language": "C#",
             "tags": [
-                "WinForms",
                 "Game",
-                "Shooter",
-                "First-Person",
+                "WinForms",
                 "Raycasting",
-                "Procedural Generation"
+                "FPS",
+                "DirectX"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/SLIL",
@@ -213,18 +207,17 @@
                 "de": "CryptoLockX"
             },
             "description": {
-                "ru": "Консольная утилита для шифрования и упаковки файлов с использованием AES-256, Brotli и защитой паролем.",
-                "en": "Console utility for encrypting and packing files using AES-256, Brotli, and password protection.",
-                "de": "Konsolenprogramm zum Verschlüsseln und Packen von Dateien mit AES-256, Brotli und Passwortschutz."
+                "ru": "Консольная утилита для шифрования и упаковки файлов. Использует AES-256 и сжатие Brotli.",
+                "en": "Console utility for encrypting and packing files. Uses AES-256 and Brotli compression.",
+                "de": "Konsolenprogramm zum Verschlüsseln und Packen von Dateien. Verwendet AES-256 und Brotli-Kompression."
             },
             "language": "C#",
             "tags": [
+                "Utility",
+                "Console",
                 "Encryption",
                 "AES-256",
-                "Brotli",
-                "Security",
-                "Console",
-                "File Archiver"
+                "Compression"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/CryptoLockX",
@@ -245,16 +238,17 @@
                 "de": "PasswordManager"
             },
             "description": {
-                "ru": "Консольный менеджер паролей с AES-256 шифрованием, мастер-паролем, поиском, синхронизацией и автоматическим обновлением.",
-                "en": "Console password manager with AES-256 encryption, master password, search, synchronization, and automatic updates.",
-                "de": "Konsolen-Passwort-Manager mit AES-256-Verschlüsselung, Master-Passwort, Suche, Synchronisierung und automatischen Updates."
+                "ru": "Консольный менеджер паролей. Хранит данные в зашифрованном виде, поддерживает поиск, синхронизацию и автоматическое обновление.",
+                "en": "Console password manager. Stores data encrypted, supports search, synchronization, and automatic updates.",
+                "de": "Konsolen-Passwort-Manager. Speichert Daten verschlüsselt, unterstützt Suche, Synchronisierung und automatische Updates."
             },
             "language": "C#",
             "tags": [
-                "Password Manager",
-                "Security",
-                "AES-256",
+                "Utility",
                 "Console",
+                "Security",
+                "Password Manager",
+                "AES-256",
                 "Linux"
             ],
             "links": {
@@ -277,19 +271,18 @@
                 "de": "PlazaBot"
             },
             "description": {
-                "ru": "ИСКЛЮЧИТЕЛЬНО УЧЕБНЫЙ ПРОЕКТ! Telegram‑бот (~15k строк кода) для демонстрации архитектуры игровых приложений: 8+ игр, интеграция криптоплатежей (Crypto Pay), реферальная система с клонированием ботов, админ-панель.",
-                "en": "EDUCATIONAL PROJECT ONLY! Telegram bot (~15k lines of code) demonstrating casino game architecture: 8+ games, crypto payment integration (Crypto Pay), referral system with bot cloning, admin panel.",
-                "de": "NUR ZU BILDUNGSZWECKEN! Telegram-Bot (~15k Codezeilen) zur Demonstration der Architektur von Spielanwendungen: 8+ Spiele, Kryptozahlungsintegration (Crypto Pay), Empfehlungssystem mit Bot-Klonen, Admin-Panel."
+                "ru": "Учебный Telegram-бот (~15k строк кода) для демонстрации архитектуры игровых приложений. Включает 8+ игр, интеграцию криптоплатежей, реферальную систему и админ-панель.",
+                "en": "Educational Telegram bot (~15k lines of code) demonstrating casino game architecture. Includes 8+ games, crypto payment integration, referral system, and admin panel.",
+                "de": "Pädagogischer Telegram-Bot (~15k Codezeilen) zur Demonstration der Spielarchitektur. Enthält 8+ Spiele, Kryptozahlungsintegration, Empfehlungssystem und Admin-Panel."
             },
             "language": "Python",
             "lastRelease": "2025-11-14",
             "tags": [
-                "Telegram Bot",
+                "Bot",
+                "Telegram",
                 "Educational",
-                "aiogram",
                 "Crypto Payments",
-                "Referral System",
-                "SQLite"
+                "Referral System"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PlazaBot",
@@ -310,16 +303,16 @@
                         "de": "PlazaSupportBot"
                     },
                     "description": {
-                        "ru": "Отдельный Telegram‑бот для технической поддержки пользователей PlazaBot. Обработка тикетов, управление обращениями.",
-                        "en": "Standalone Telegram bot for PlazaBot user support. Ticket handling, inquiry management.",
-                        "de": "Eigenständiger Telegram-Bot für den Benutzersupport von PlazaBot. Ticketbearbeitung, Anfragenmanagement."
+                        "ru": "Telegram-бот для технической поддержки пользователей PlazaBot. Обрабатывает тикеты и управляет обращениями.",
+                        "en": "Telegram bot for PlazaBot user support. Handles tickets and manages inquiries.",
+                        "de": "Telegram-Bot für den Benutzersupport von PlazaBot. Bearbeitet Tickets und verwaltet Anfragen."
                     },
                     "language": "Python",
                     "tags": [
-                        "Telegram Bot",
+                        "Bot",
+                        "Telegram",
                         "Support",
-                        "aiogram",
-                        "Ticketing System"
+                        "Ticketing"
                     ],
                     "links": {
                         "github": "https://github.com/Lonewolf239/PlazaSupportBot",
@@ -342,18 +335,17 @@
                 "de": "PCtoNormal"
             },
             "description": {
-                "ru": "Утилита для принудительной настройки рабочего стола на заблокированных системах: тёмная тема Windows, обои, настройки Visual Studio.",
-                "en": "Utility for forcing desktop settings on locked systems: Windows dark theme, wallpaper, Visual Studio configuration.",
-                "de": "Dienstprogramm zum Erzwingen von Desktop-Einstellungen auf gesperrten Systemen: Windows-Dark-Theme, Hintergrundbild, Visual Studio-Konfiguration."
+                "ru": "Утилита для настройки рабочего стола на заблокированных системах. Применяет тёмную тему Windows, обои и настройки Visual Studio.",
+                "en": "Utility for configuring the desktop on locked systems. Applies Windows dark theme, wallpaper, and Visual Studio settings.",
+                "de": "Dienstprogramm zum Konfigurieren des Desktops auf gesperrten Systemen. Wendet Windows-Dark-Theme, Hintergrundbild und Visual Studio-Einstellungen an."
             },
             "language": "C++",
             "tags": [
-                "Windows",
                 "Utility",
-                "Dark Theme",
-                "Wallpaper",
-                "Visual Studio",
-                "WinAPI"
+                "Windows",
+                "WinAPI",
+                "Desktop",
+                "Configuration"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PCtoNormal",
@@ -375,17 +367,17 @@
                 "de": "Terraria Randomizer"
             },
             "description": {
-                "ru": "Terraria Randomizer мгновенно генерирует полные наборы персонажей для вашего следующего приключения в Terraria.",
-                "en": "Terraria Randomizer instantly generates complete character presets for your next Terraria adventure.",
-                "de": "Terraria Randomizer generiert im Handumdrehen komplette Charakter-Voreinstellungen für dein nächstes Terraria-Abenteuer."
+                "ru": "Генератор персонажей для Terraria. Мгновенно создаёт полные наборы для новых приключений.",
+                "en": "Character generator for Terraria. Instantly creates complete presets for new adventures.",
+                "de": "Charakter-Generator für Terraria. Erstellt im Handumdrehen komplette Voreinstellungen für neue Abenteuer."
             },
             "language": "C#",
             "tags": [
+                "Tool",
+                "Console",
                 "Terraria",
-                "Calamity",
                 "Randomizer",
-                ".NET",
-                "Console"
+                "Modding"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/terraria-randomizer",
@@ -407,19 +399,17 @@
                 "de": "7DtD_HP"
             },
             "description": {
-                "ru": "Небольшая утилита для быстрого и удобного редактирования характеристик зомби в игре 7 Days to Die через конфигурационный файл игры.",
-                "en": "A small utility for quickly and easily editing zombie stats in 7 Days to Die via the game's configuration file.",
-                "de": "Ein kleines Hilfsprogramm zum schnellen und einfachen Bearbeiten der Zombie-Statistiken in 7 Days to Die über die Konfigurationsdatei des Spiels."
+                "ru": "Утилита для редактирования характеристик зомби в 7 Days to Die. Работает через конфигурационный файл игры.",
+                "en": "Utility for editing zombie stats in 7 Days to Die. Works through the game's configuration file.",
+                "de": "Dienstprogramm zum Bearbeiten der Zombie-Statistiken in 7 Days to Die. Arbeitet über die Konfigurationsdatei des Spiels."
             },
             "language": "C#",
             "tags": [
-                "7 Days to Die",
-                "Zombie",
-                "Modding",
+                "Tool",
                 "WinForms",
-                "Game Config",
-                "Entity Classes",
-                "HP Editor"
+                "7 Days to Die",
+                "Modding",
+                "Game Config"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/7DtD_HP",
@@ -441,18 +431,18 @@
                 "de": "WPM"
             },
             "description": {
-                "ru": "Менеджер планов электропитания для Windows на основе консоли с регулировкой яркости.",
-                "en": "Console-based power plan manager for Windows with brightness control.",
-                "de": "Konsolenbasierter Energiesparplan-Manager für Windows mit Helligkeitssteuerung."
+                "ru": "Консольный менеджер планов электропитания для Windows. Поддерживает регулировку яркости.",
+                "en": "Console power plan manager for Windows. Supports brightness control.",
+                "de": "Konsolen-Energiesparplan-Manager für Windows. Unterstützt Helligkeitssteuerung."
             },
             "language": "C++",
             "lastRelease": "2024-11-24",
             "tags": [
-                "Windows",
-                "Power Management",
+                "Utility",
                 "Console",
-                "Brightness Control",
-                "WinAPI"
+                "Windows",
+                "WinAPI",
+                "Power Management"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/WPM",
@@ -474,17 +464,17 @@
                 "de": "mini-games"
             },
             "description": {
-                "ru": "Коллекция из 16 офлайн мини-игр: головоломки, аркады, стратегии. Поддержка масштабирования, звука, автообновления и рекордов.",
-                "en": "Collection of 16 offline mini-games: puzzles, arcade, strategy. Supports scaling, sound, auto-updates, and high scores.",
-                "de": "Sammlung von 16 Offline-Minispielen: Puzzles, Arcade, Strategie. Unterstützt Skalierung, Sound, Auto-Updates und Highscores."
+                "ru": "Коллекция из 16 офлайн мини-игр. Включает головоломки, аркады и стратегии с поддержкой звука, рекордов и автообновления.",
+                "en": "Collection of 16 offline mini-games. Includes puzzles, arcade, and strategy games with sound support, high scores, and auto-updates.",
+                "de": "Sammlung von 16 Offline-Minispielen. Enthält Puzzles, Arcade- und Strategiespiele mit Soundunterstützung, Highscores und Auto-Updates."
             },
             "language": "C#",
             "tags": [
+                "Game",
                 "WinForms",
-                "Game Collection",
-                "Mini-Games",
-                "Puzzle",
-                "Arcade"
+                "Collection",
+                "Arcade",
+                "Puzzle"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/mini-games",
@@ -506,17 +496,17 @@
                 "de": "GAAGA"
             },
             "description": {
-                "ru": "Аркадный шутер в стиле Galaga на Python с поддержкой двух игроков, бонусами, улучшениями оружия и динамической сложностью.",
-                "en": "Arcade shooter in the style of Galaga in Python with two-player support, bonuses, weapon upgrades, and dynamic difficulty.",
-                "de": "Arcade-Shooter im Galaga-Stil in Python mit Zwei-Spieler-Unterstützung, Boni, Waffen-Upgrades und dynamischem Schwierigkeitsgrad."
+                "ru": "Аркадный шутер в стиле Galaga на Python. Поддерживает двух игроков, бонусы, улучшения оружия и динамическую сложность.",
+                "en": "Arcade shooter in the style of Galaga in Python. Supports two players, bonuses, weapon upgrades, and dynamic difficulty.",
+                "de": "Arcade-Shooter im Galaga-Stil in Python. Unterstützt zwei Spieler, Boni, Waffen-Upgrades und dynamischen Schwierigkeitsgrad."
             },
             "language": "Python",
             "tags": [
-                "Pygame",
-                "Tkinter",
-                "Galaga",
+                "Game",
                 "Arcade",
-                "Shooter"
+                "Shooter",
+                "Pygame",
+                "Galaga"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/GAAGA",
@@ -544,9 +534,9 @@
             },
             "language": "C++",
             "tags": [
+                "Game",
+                "Console",
                 "Text Adventure",
-                "Quest",
-                "Console Game",
                 "Interactive Fiction"
             ],
             "links": {
@@ -569,9 +559,9 @@
                 "de": "Archive"
             },
             "description": {
-                "ru": "Архив Git 27 проектов Lonewolf239 (2022-2024). Полные клоны с историей Git. Эволюция от ранних экспериментов до первых работающих утилит.",
-                "en": "Git archive of 27 Lonewolf239 projects (2022-2024). Full clones with Git history. Evolution from early experiments to early working utilities.",
-                "de": "Git-Archiv von 27 Lonewolf239-Projekten (2022–2024). Vollständige Klone mit Git-Historie. Entwicklung von frühen Experimenten zu ersten funktionsfähigen Anwendungen."
+                "ru": "Архив Git 27 проектов (2022-2024). Полные клоны с историей — от ранних экспериментов до первых работающих утилит.",
+                "en": "Git archive of 27 projects (2022-2024). Full clones with history — from early experiments to first working utilities.",
+                "de": "Git-Archiv von 27 Projekten (2022-2024). Vollständige Klone mit Historie — von frühen Experimenten bis zu ersten funktionsfähigen Anwendungen."
             },
             "language": [
                 "C++",
@@ -579,7 +569,9 @@
                 "C#"
             ],
             "tags": [
-                "Archive"
+                "Archive",
+                "Collection",
+                "Legacy"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/Archive",
