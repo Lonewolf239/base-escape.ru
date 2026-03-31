@@ -2,9 +2,9 @@
     "about": {
         "avatar": "/images/icon.svg",
         "title": {
-            "ru": "Привет, я Lonewolf239",
-            "en": "Hi, I'm Lonewolf239",
-            "de": "Hallo, ich bin Lonewolf239"
+            "ru": "Hello, World!",
+            "en": "Hello, World!",
+            "de": "Hello, World!"
         },
         "description": {
             "ru": "Разработчик, создаю проекты на C#, C++, Python, JavaScript и других технологиях. Увлекаюсь разработкой игр, веб-приложений и инструментов. Открыт для сотрудничества и новых идей.",
@@ -20,7 +20,8 @@
         ],
         "contacts": {
             "github": "https://github.com/Lonewolf239",
-            "telegram": "https://t.me/an1onime"
+            "telegram": "https://t.me/an1onime",
+			"email": "mailto:neoinilicense@gmail.com"
         }
     },
     "projects": [
