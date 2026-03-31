@@ -41,7 +41,6 @@
 	border-color: rgba(255, 0, 170, 0.9);
 	box-shadow: 0 20px 40px rgba(255, 0, 170, 0.25), 0 0 25px rgba(255, 0, 170, 0.2);
 	background: rgba(20, 20, 30, 0.5);
-	transform: translateY(-4px);
 }
 
 .project-card:hover::before {
@@ -74,8 +73,6 @@
 	max-height: 120px;
 	overflow-y: auto;
 	padding-right: 6px;
-	scrollbar-width: thin;
-	scrollbar-color: #ff00aa rgba(255, 255, 255, 0.1);
 }
 
 .project-card p::-webkit-scrollbar {
@@ -523,7 +520,6 @@
 	border-color: rgba(255, 0, 170, 0.9);
 	box-shadow: 0 20px 40px rgba(255, 0, 170, 0.25), 0 0 25px rgba(255, 0, 170, 0.2);
 	background: rgba(20, 20, 30, 0.5);
-	transform: translateY(-4px);
 }
 
 .about-section:hover::before {

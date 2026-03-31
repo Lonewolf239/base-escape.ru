@@ -7,21 +7,23 @@
             "de": "Hello, World!"
         },
         "description": {
-            "ru": "Разработчик, создаю проекты на C#, C++, Python, JavaScript и других технологиях. Увлекаюсь разработкой игр, веб-приложений и инструментов. Открыт для сотрудничества и новых идей.",
-            "en": "Developer, creating projects in C#, C++, Python, JavaScript and other technologies. Passionate about game development, web apps, and tools. Open to collaboration and new ideas.",
-            "de": "Entwickler, erstelle Projekte in C#, C++, Python, JavaScript und anderen Technologien. Leidenschaftlich für Spieleentwicklung, Web-Apps und Tools. Offen für Zusammenarbeit und neue Ideen."
+            "ru": "Разработчик с фокусом на экосистему .NET (C#). Создаю библиотеки, консольные утилиты и инструменты для разработчиков. В портфолио — 15+ проектов: от конфигурационных библиотек до игр. Также имею опыт с C++, Python и фронтендом.",
+            "en": "Developer focused on the .NET ecosystem (C#). Building libraries, console utilities, and developer tools. Portfolio includes 15+ projects — from configuration libraries to games. Also experienced with C++, Python, and frontend.",
+            "de": "Entwickler mit Fokus auf das .NET-Ökosystem (C#). Erstelle Bibliotheken, Konsolentools und Entwicklerwerkzeuge. Portfolio umfasst 15+ Projekte — von Konfigurationsbibliotheken bis zu Spielen. Auch Erfahrung mit C++, Python und Frontend."
         },
         "techStack": [
             "C#",
+            ".NET",
             "C++",
             "Python",
             "JavaScript",
-            "HTML/CSS"
+            "HTML/CSS",
+            "WinForms"
         ],
         "contacts": {
             "github": "https://github.com/Lonewolf239",
             "telegram": "https://t.me/an1onime",
-			"email": "mailto:neoinilicense@gmail.com"
+            "email": "mailto:neoinilicense@gmail.com"
         }
     },
     "projects": [
