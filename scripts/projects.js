@@ -14,9 +14,50 @@ function isSafeUrl(url) {
     } catch { return false; }
 }
 
+function formatDate(dateString, lang) {
+    if (!dateString) return null;
+    try {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return null;
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', options);
+    } catch { return null; }
+}
+
 function createSubprojectCard(subproject, lang, buttonLabels) {
     const subCard = document.createElement('div');
     subCard.className = 'subproject-card';
+
+    const topBar = document.createElement('div');
+    topBar.className = 'subproject-top-bar';
+
+    if (subproject.language) {
+        const languages = Array.isArray(subproject.language) ? subproject.language : [subproject.language];
+        languages.forEach(langCode => {
+            if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(langCode)) {
+                const langBadge = document.createElement('div');
+                const langClass = langCode.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+                langBadge.className = `project-language-badge language-${langClass}`;
+                langBadge.style.fontSize = '0.65rem';
+                langBadge.style.padding = '2px 10px';
+                langBadge.textContent = langCode;
+                topBar.appendChild(langBadge);
+            }
+        });
+    }
+
+    let lastRelease = subproject.lastRelease || null;
+    if (lastRelease) {
+        const formattedDate = formatDate(lastRelease, lang);
+        if (formattedDate) {
+            const releaseDate = document.createElement('div');
+            releaseDate.className = 'subproject-release-date';
+            releaseDate.textContent = formattedDate;
+            topBar.appendChild(releaseDate);
+        }
+    }
+
+    if (topBar.children.length) subCard.appendChild(topBar);
 
     const title = getLocalizedValue(subproject.title, lang) || 'Untitled';
     const h4 = document.createElement('h4');
@@ -40,27 +81,6 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
             tagsDiv.appendChild(span);
         });
         subCard.appendChild(tagsDiv);
-    }
-
-    if (subproject.language) {
-        const topBar = document.createElement('div');
-        topBar.className = 'project-top-bar';
-        topBar.style.marginBottom = '8px';
-
-        const languages = Array.isArray(subproject.language) ? subproject.language : [subproject.language];
-        languages.forEach(langCode => {
-            if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(langCode)) {
-                const langBadge = document.createElement('div');
-                const langClass = langCode.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
-                langBadge.className = `project-language-badge language-${langClass}`;
-                langBadge.style.fontSize = '0.65rem';
-                langBadge.style.padding = '2px 10px';
-                langBadge.textContent = langCode;
-                topBar.appendChild(langBadge);
-            }
-        });
-
-        if (topBar.children.length) subCard.insertBefore(topBar, subCard.firstChild);
     }
 
     if (subproject.links && Object.keys(subproject.links).length) {
@@ -98,6 +118,62 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
     return subCard;
 }
 
+async function updateSubprojectDateFromGitHub(subproject, subCard, lang) {
+    if (!subproject.links || !subproject.links.github) return;
+    const githubUrl = subproject.links.github;
+    const match = githubUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+    if (!match) return;
+
+    const owner = match[1];
+    const repo = match[2];
+
+    function updateDateElement(dateString) {
+        const formattedDate = formatDate(dateString, lang);
+        if (!formattedDate) return;
+
+        let topBar = subCard.querySelector('.subproject-top-bar');
+        if (!topBar) {
+            topBar = document.createElement('div');
+            topBar.className = 'subproject-top-bar';
+            subCard.insertBefore(topBar, subCard.firstChild);
+        }
+
+        let releaseDate = topBar.querySelector('.subproject-release-date');
+        if (!releaseDate) {
+            releaseDate = document.createElement('div');
+            releaseDate.className = 'subproject-release-date';
+            topBar.appendChild(releaseDate);
+        }
+        releaseDate.textContent = formattedDate;
+    }
+
+    try {
+        const releaseApiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
+        const response = await fetch(`/github-proxy.php?path=${encodeURIComponent(releaseApiUrl)}`);
+
+        if (response.ok) {
+            const release = await response.json();
+            const releaseDate = release.published_at || release.created_at;
+            if (releaseDate) {
+                updateDateElement(releaseDate);
+                return;
+            }
+        }
+    } catch (error) { console.warn(`Could not fetch release for ${owner}/${repo}:`, error); }
+
+    try {
+        const commitsApiUrl = `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`;
+        const response = await fetch(`/github-proxy.php?path=${encodeURIComponent(commitsApiUrl)}`);
+
+        if (!response.ok) throw new Error('GitHub API error');
+        const commits = await response.json();
+        if (!commits.length) throw new Error('No commits');
+
+        const commitDate = commits[0].commit.author.date;
+        updateDateElement(commitDate);
+    } catch (error) { console.warn(`Could not fetch commit date for ${owner}/${repo}:`, error); }
+}
+
 function createSubprojectsSection(subprojects, lang, buttonLabels) {
     const container = document.createElement('div');
     container.className = 'project-subprojects';
@@ -128,6 +204,9 @@ function createSubprojectsSection(subprojects, lang, buttonLabels) {
     subprojects.forEach(subproject => {
         const subCard = createSubprojectCard(subproject, lang, buttonLabels);
         subprojectsList.appendChild(subCard);
+
+        if (!subproject.lastRelease && subproject.links && subproject.links.github)
+            updateSubprojectDateFromGitHub(subproject, subCard, lang);
     });
 
     container.appendChild(toggleBtn);
@@ -144,6 +223,76 @@ function createSubprojectsSection(subprojects, lang, buttonLabels) {
         } else {
             subprojectsList.classList.remove('open');
             toggleBtn.classList.remove('open');
+        }
+    });
+
+    return container;
+}
+
+function createDescriptionToggle(project, lang, buttonLabels) {
+    const shortDesc = getLocalizedValue(project.shortDescription, lang);
+    const fullDesc = getLocalizedValue(project.description, lang);
+
+    if (!fullDesc) return null;
+
+    const container = document.createElement('div');
+    container.className = 'project-description-wrapper';
+
+    const shortDescBlock = document.createElement('div');
+    shortDescBlock.className = 'project-description-short';
+
+    const shortText = document.createElement('p');
+    shortText.textContent = shortDesc || (fullDesc.length > 120 ? fullDesc.substring(0, 120) + '...' : fullDesc);
+    shortDescBlock.appendChild(shortText);
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'description-toggle-btn';
+
+    const btnText = document.createElement('span');
+    const toggleLabels = {
+        ru: { more: 'Подробнее', less: 'Свернуть' },
+        en: { more: 'Read more', less: 'Show less' },
+        de: { more: 'Mehr erfahren', less: 'Weniger anzeigen' }
+    };
+    const labels = toggleLabels[lang] || toggleLabels.en;
+    btnText.textContent = labels.more;
+
+    const btnIcon = document.createElement('span');
+    btnIcon.className = 'description-toggle-icon';
+    btnIcon.textContent = '▼';
+    btnIcon.style.fontSize = '0.65rem';
+    btnIcon.style.marginLeft = '6px';
+    btnIcon.style.transition = 'transform 0.3s ease';
+
+    toggleBtn.appendChild(btnText);
+    toggleBtn.appendChild(btnIcon);
+
+    const fullDescBlock = document.createElement('div');
+    fullDescBlock.className = 'project-description-full';
+
+    const fullText = document.createElement('p');
+    fullText.textContent = fullDesc;
+    fullDescBlock.appendChild(fullText);
+
+    container.appendChild(shortDescBlock);
+    container.appendChild(toggleBtn);
+    container.appendChild(fullDescBlock);
+
+    let isOpen = false;
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isOpen = !isOpen;
+
+        if (isOpen) {
+            fullDescBlock.classList.add('open');
+            toggleBtn.classList.add('open');
+            btnText.textContent = labels.less;
+            btnIcon.style.transform = 'rotate(180deg)';
+        } else {
+            fullDescBlock.classList.remove('open');
+            toggleBtn.classList.remove('open');
+            btnText.textContent = labels.more;
+            btnIcon.style.transform = 'rotate(0deg)';
         }
     });
 
@@ -233,8 +382,8 @@ function renderAbout(aboutData) {
 }
 
 function loadProjects() {
-	const projectsGrid = document.querySelector('.projects-grid');
-	if (!projectsGrid) return;
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (!projectsGrid) return;
 
     const htmlLang = document.documentElement.lang || 'en';
     let currentLang = 'ru';
@@ -242,57 +391,40 @@ function loadProjects() {
     else if (htmlLang.startsWith('de')) currentLang = 'de';
     else currentLang = 'ru';
 
-	const buttonLabels = {
-		ru: {
-			github: 'GitHub',
-			nuget: 'NuGet',
-			wiki: 'Вики',
-			code: 'Код',
-			download: 'Скачать'
-		},
-		en: {
-			github: 'GitHub',
-			nuget: 'NuGet',
-			wiki: 'Wiki',
-			code: 'Code',
-			download: 'Download'
-		},
-		de: {
-			github: 'GitHub',
-			nuget: 'NuGet',
-			wiki: 'Wiki',
-			code: 'Code',
-			download: 'Herunterladen'
-		}
-	};
+    const buttonLabels = {
+        ru: {
+            github: 'GitHub',
+            nuget: 'NuGet',
+            wiki: 'Вики',
+            code: 'Код',
+            download: 'Скачать'
+        },
+        en: {
+            github: 'GitHub',
+            nuget: 'NuGet',
+            wiki: 'Wiki',
+            code: 'Code',
+            download: 'Download'
+        },
+        de: {
+            github: 'GitHub',
+            nuget: 'NuGet',
+            wiki: 'Wiki',
+            code: 'Code',
+            download: 'Herunterladen'
+        }
+    };
 
-	const languageNames = {
-		ru: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' },
-		en: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' },
-		de: { 'C#': 'C#', 'C++': 'C++', 'Python': 'Python', 'JavaScript': 'JavaScript', 'HTML': 'HTML', 'CSS': 'CSS' }
-	};
-
-	function formatDate(dateString, lang) {
-	    if (!dateString) return null;
-	    try {
-	        const date = new Date(dateString);
-	        if (isNaN(date.getTime())) return null;
-	        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-	        return date.toLocaleDateString(lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', options);
-	    } catch { return null; }
-	}
-
-	fetch('/projects.json')
+    fetch('/projects.json')
         .then(response => response.json())
         .then(data => {
             projectsGrid.innerHTML = '';
 
-			if (data.about) renderAbout(data.about);
+            if (data.about) renderAbout(data.about);
 
-			const projects = data.projects || [];
+            const projects = data.projects || [];
             projects.forEach(project => {
                 const title = getLocalizedValue(project.title, currentLang) || 'Untitled';
-                const description = getLocalizedValue(project.description, currentLang) || '';
                 const tags = Array.isArray(project.tags) ? project.tags : [];
                 const links = project.links || {};
                 const language = project.language || null;
@@ -304,19 +436,19 @@ function loadProjects() {
 
                 const topBar = document.createElement('div');
                 topBar.className = 'project-top-bar';
-				
-				if (language) {
-					const languages = Array.isArray(language) ? language : [language];
-					languages.forEach(lang => {
-						if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(lang)) {
-							const langBadge = document.createElement('div');
-							const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
-							langBadge.className = `project-language-badge language-${langClass}`;
-							langBadge.textContent = lang;
-							topBar.appendChild(langBadge);
-						}
-					});
-				}
+
+                if (language) {
+                    const languages = Array.isArray(language) ? language : [language];
+                    languages.forEach(lang => {
+                        if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(lang)) {
+                            const langBadge = document.createElement('div');
+                            const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+                            langBadge.className = `project-language-badge language-${langClass}`;
+                            langBadge.textContent = lang;
+                            topBar.appendChild(langBadge);
+                        }
+                    });
+                }
 
                 if (lastRelease) {
                     const formattedDate = formatDate(lastRelease, currentLang);
@@ -334,9 +466,10 @@ function loadProjects() {
                 h3.textContent = title;
                 card.appendChild(h3);
 
-                const p = document.createElement('p');
-                p.textContent = description;
-                card.appendChild(p);
+                const descriptionToggle = createDescriptionToggle(project, currentLang, buttonLabels);
+                if (descriptionToggle) {
+                    card.appendChild(descriptionToggle);
+                }
 
                 if (tags.length) {
                     const tagsDiv = document.createElement('div');

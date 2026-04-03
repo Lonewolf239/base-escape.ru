@@ -33,6 +33,11 @@
                 "en": "NeoIni",
                 "de": "NeoIni"
             },
+            "shortDescription": {
+                "ru": "INI-библиотека для .NET с AES-256 шифрованием",
+                "en": ".NET INI library with AES-256 encryption",
+                "de": ".NET INI-Bibliothek mit AES-256-Verschlüsselung"
+            },
             "description": {
                 "ru": "Библиотека конфигурации INI для .NET. Поддерживает потокобезопасность, AES-256 шифрование и подключаемую архитектуру провайдеров.",
                 "en": "INI configuration library for .NET. Supports thread safety, AES-256 encryption, and a pluggable provider architecture.",
@@ -108,6 +113,11 @@
                 "en": "Lonewolf239 Portfolio",
                 "de": "Lonewolf239 Portfolio"
             },
+            "shortDescription": {
+                "ru": "Персональный сайт-портфолио с просмотром кода",
+                "en": "Personal portfolio website with code viewer",
+                "de": "Persönliche Portfolio-Website mit Code-Viewer"
+            },
             "description": {
                 "ru": "Персональный сайт-портфолио. Включает витрину проектов, многоязычную поддержку, встроенный просмотрщик кода и адаптивный дизайн.",
                 "en": "Personal portfolio website. Includes project showcase, multilingual support, built-in code viewer, and responsive design.",
@@ -143,6 +153,11 @@
                 "en": "BeautifulConsole",
                 "de": "BeautifulConsole"
             },
+            "shortDescription": {
+                "ru": "Библиотека для красивых консольных приложений",
+                "en": "Library for beautiful console apps",
+                "de": "Bibliothek für ansprechende Konsolen-Apps"
+            },
             "description": {
                 "ru": "Библиотека для создания красивых консольных приложений на .NET. Поддерживает true-color, кроссплатформенный буфер обмена и расширенную настройку окна.",
                 "en": "Library for building beautiful console applications on .NET. Supports true-color, cross-platform clipboard, and advanced window customization.",
@@ -175,6 +190,11 @@
                 "en": "SLIL",
                 "de": "SLIL"
             },
+            "shortDescription": {
+                "ru": "DOOM-подобный шутер на C# и WinForms",
+                "en": "DOOM-like shooter in C# and WinForms",
+                "de": "DOOM-ähnlicher Shooter in C# und WinForms"
+            },
             "description": {
                 "ru": "DOOM-подобный шутер на C# и WinForms. Использует кастомный движок рейкастинга, DirectX 10 и смещение камеры по Y.",
                 "en": "DOOM-like shooter in C# and WinForms. Uses a custom raycasting engine, DirectX 10, and Y-axis camera offset.",
@@ -206,6 +226,11 @@
                 "en": "CryptoLockX",
                 "de": "CryptoLockX"
             },
+            "shortDescription": {
+                "ru": "Шифрование файлов AES-256 и сжатие Brotli",
+                "en": "AES-256 file encryption with Brotli compression",
+                "de": "AES-256-Dateiverschlüsselung mit Brotli-Kompression"
+            },
             "description": {
                 "ru": "Консольная утилита для шифрования и упаковки файлов. Использует AES-256 и сжатие Brotli.",
                 "en": "Console utility for encrypting and packing files. Uses AES-256 and Brotli compression.",
@@ -236,6 +261,11 @@
                 "ru": "PasswordManager",
                 "en": "PasswordManager",
                 "de": "PasswordManager"
+            },
+            "shortDescription": {
+                "ru": "Консольный менеджер паролей с шифрованием",
+                "en": "Console password manager with encryption",
+                "de": "Konsolen-Passwort-Manager mit Verschlüsselung"
             },
             "description": {
                 "ru": "Консольный менеджер паролей. Хранит данные в зашифрованном виде, поддерживает поиск, синхронизацию и автоматическое обновление.",
@@ -269,6 +299,11 @@
                 "ru": "PlazaBot",
                 "en": "PlazaBot",
                 "de": "PlazaBot"
+            },
+            "shortDescription": {
+                "ru": "Telegram-бот с 8+ играми и криптоплатежами",
+                "en": "Telegram bot with 8+ games and crypto payments",
+                "de": "Telegram-Bot mit 8+ Spielen und Kryptozahlungen"
             },
             "description": {
                 "ru": "Учебный Telegram-бот (~15k строк кода) для демонстрации архитектуры игровых приложений. Включает 8+ игр, интеграцию криптоплатежей, реферальную систему и админ-панель.",
@@ -308,6 +343,7 @@
                         "de": "Telegram-Bot für den Benutzersupport von PlazaBot. Bearbeitet Tickets und verwaltet Anfragen."
                     },
                     "language": "Python",
+					"lastRelease": "2025-11-7",
                     "tags": [
                         "Bot",
                         "Telegram",
@@ -333,6 +369,11 @@
                 "ru": "PCtoNormal",
                 "en": "PCtoNormal",
                 "de": "PCtoNormal"
+            },
+            "shortDescription": {
+                "ru": "Настройка рабочего стола на заблокированных системах",
+                "en": "Desktop configuration on locked systems",
+                "de": "Desktop-Konfiguration auf gesperrten Systemen"
             },
             "description": {
                 "ru": "Утилита для настройки рабочего стола на заблокированных системах. Применяет тёмную тему Windows, обои и настройки Visual Studio.",
@@ -366,6 +407,11 @@
                 "en": "Terraria Randomizer",
                 "de": "Terraria Randomizer"
             },
+            "shortDescription": {
+                "ru": "Генератор персонажей для Terraria",
+                "en": "Character generator for Terraria",
+                "de": "Charakter-Generator für Terraria"
+            },
             "description": {
                 "ru": "Генератор персонажей для Terraria. Мгновенно создаёт полные наборы для новых приключений.",
                 "en": "Character generator for Terraria. Instantly creates complete presets for new adventures.",
@@ -398,6 +444,11 @@
                 "en": "7DtD_HP",
                 "de": "7DtD_HP"
             },
+            "shortDescription": {
+                "ru": "Редактор здоровья зомби в 7 Days to Die",
+                "en": "Zombie health editor for 7 Days to Die",
+                "de": "Zombie-Gesundheitseditor für 7 Days to Die"
+            },
             "description": {
                 "ru": "Утилита для редактирования характеристик зомби в 7 Days to Die. Работает через конфигурационный файл игры.",
                 "en": "Utility for editing zombie stats in 7 Days to Die. Works through the game's configuration file.",
@@ -429,6 +480,11 @@
                 "ru": "WPM",
                 "en": "WPM",
                 "de": "WPM"
+            },
+            "shortDescription": {
+                "ru": "Менеджер планов электропитания Windows",
+                "en": "Windows power plan manager",
+                "de": "Windows-Energiesparplan-Manager"
             },
             "description": {
                 "ru": "Консольный менеджер планов электропитания для Windows. Поддерживает регулировку яркости.",
@@ -463,6 +519,11 @@
                 "en": "mini-games",
                 "de": "mini-games"
             },
+            "shortDescription": {
+                "ru": "16 офлайн мини-игр в одной коллекции",
+                "en": "16 offline mini-games in one collection",
+                "de": "16 Offline-Minispiele in einer Sammlung"
+            },
             "description": {
                 "ru": "Коллекция из 16 офлайн мини-игр. Включает головоломки, аркады и стратегии с поддержкой звука, рекордов и автообновления.",
                 "en": "Collection of 16 offline mini-games. Includes puzzles, arcade, and strategy games with sound support, high scores, and auto-updates.",
@@ -494,6 +555,11 @@
                 "ru": "GAAGA",
                 "en": "GAAGA",
                 "de": "GAAGA"
+            },
+            "shortDescription": {
+                "ru": "Аркадный шутер в стиле Galaga",
+                "en": "Galaga-style arcade shooter",
+                "de": "Galaga-artiger Arcade-Shooter"
             },
             "description": {
                 "ru": "Аркадный шутер в стиле Galaga на Python. Поддерживает двух игроков, бонусы, улучшения оружия и динамическую сложность.",
@@ -527,6 +593,11 @@
                 "en": "Base_Escape",
                 "de": "Base_Escape"
             },
+            "shortDescription": {
+                "ru": "Текстовая игра о маньяке и культе",
+                "en": "Text-based game about a maniac and a cult",
+                "de": "Textbasiertes Spiel über einen Wahnsinnigen und einen Kult"
+            },
             "description": {
                 "ru": "Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
                 "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
@@ -557,6 +628,11 @@
                 "ru": "Archive",
                 "en": "Archive",
                 "de": "Archive"
+            },
+            "shortDescription": {
+                "ru": "Git-архив 27 проектов (2022-2024)",
+                "en": "Git archive of 27 projects (2022-2024)",
+                "de": "Git-Archiv von 27 Projekten (2022-2024)"
             },
             "description": {
                 "ru": "Архив Git 27 проектов (2022-2024). Полные клоны с историей — от ранних экспериментов до первых работающих утилит.",
