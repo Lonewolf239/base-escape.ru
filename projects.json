@@ -149,6 +149,45 @@
         },
         {
             "title": {
+                "ru": "InformantTGBot",
+                "en": "InformantTGBot",
+                "de": "InformantTGBot"
+            },
+            "shortDescription": {
+                "ru": "Telegram-бот с локальным ИИ, мемами и RP",
+                "en": "Telegram bot with local AI, memes and RP",
+                "de": "Telegram-Bot mit lokaler KI, Memes und RP"
+            },
+            "description": {
+                "ru": "Асинхронный Telegram-бот для бизнес-чатов. Включает локальный ИИ (Ollama), мемы/анекдоты, погоду, RP-команды (SFW/NSFW), режим «отошёл» с автоответом и сохранение ссылок. Полная статистика и панель владельца.",
+                "en": "Asynchronous Telegram bot for business chats. Features local AI (Ollama), memes/jokes, weather, RP commands (SFW/NSFW), away mode with auto-reply, and link saving. Full statistics and owner panel.",
+                "de": "Asynchroner Telegram-Bot für Geschäftschats. Bietet lokale KI (Ollama), Memes/Witze, Wetter, RP-Befehle (SFW/NSFW), Abwesenheitsmodus mit Auto-Antwort und Link-Speicherung. Vollständige Statistiken und Admin-Panel."
+            },
+            "language": "Python",
+            "lastRelease": "2025",
+            "tags": [
+                "Bot",
+                "Telegram",
+                "AI",
+                "Ollama",
+                "Memes",
+                "RP",
+                "Assistant"
+            ],
+            "links": {
+                "github": "https://github.com/Lonewolf239/InformantTGBot",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=InformantTGBot",
+                        "en": "/en/viewer?project=InformantTGBot",
+                        "de": "/de/viewer?project=InformantTGBot"
+                    },
+                    "newTab": false
+                }
+            }
+        },
+        {
+            "title": {
                 "ru": "BeautifulConsole",
                 "en": "BeautifulConsole",
                 "de": "BeautifulConsole"
