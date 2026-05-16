@@ -164,7 +164,6 @@
                 "de": "Asynchroner Telegram-Bot für Geschäftschats. Bietet lokale KI (Ollama), Memes/Witze, Wetter, RP-Befehle (SFW/NSFW), Abwesenheitsmodus mit Auto-Antwort und Link-Speicherung. Vollständige Statistiken und Admin-Panel."
             },
             "language": "Python",
-            "lastRelease": "2025",
             "tags": [
                 "Bot",
                 "Telegram",
