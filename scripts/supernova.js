@@ -62,9 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const releaseSun = () => {
-        if (state === 'holding') {
+        if (state === 'holding')
             state = 'recovering';
-        }
     };
 
     window.addEventListener('mouseup', releaseSun);
