@@ -53,88 +53,65 @@ body.flash-active {
 	filter: brightness(5.0) contrast(2) saturate(3);
 }
 
-body.glitch-stage-1 {
-	filter: contrast(1.4) hue-rotate(60deg) blur(0.5px);
+.glitch-stage-1 {
+	filter: contrast(1.5) saturate(3) hue-rotate(45deg);
 }
 
 @keyframes screenTearStage2 {
 
 	0%,
 	100% {
-		clip-path: inset(0 0 0 0);
-		transform: translate(0);
+		transform: translateX(0);
+		filter: drop-shadow(0 0 0 transparent);
 	}
 
 	20% {
-		clip-path: inset(15% 0 60% 0);
-		transform: translate(-35px, 10px) skewX(-10deg);
+		transform: translateX(-10px);
+		filter: drop-shadow(10px 0 0 #00ffff);
 	}
 
 	40% {
-		clip-path: inset(45% 0 10% 0);
-		transform: translate(40px, -5px) skewX(15deg);
-		filter: invert(0.2);
+		transform: translateX(10px);
+		filter: drop-shadow(-10px 0 0 #ff00aa);
 	}
 
 	60% {
-		clip-path: inset(70% 0 5% 0);
-		transform: translate(-20px, -15px) rotate(1deg);
+		transform: translateY(-5px);
 	}
 
 	80% {
-		clip-path: inset(30% 0 40% 0);
-		transform: translate(15px, 20px) skewY(-2deg);
+		transform: translateY(5px) skewX(2deg);
 	}
 }
 
-body.glitch-stage-2 #content-wrapper,
-body.glitch-stage-2 nav,
-body.glitch-stage-2 .bg-grid {
-	animation: screenTearStage2 0.4s infinite steps(2, start);
+.glitch-stage-2 nav,
+.glitch-stage-2 .about-section,
+.glitch-stage-2 .projects-grid,
+.glitch-stage-2 footer,
+.glitch-stage-2 .bg-grid {
+	animation: screenTearStage2 0.15s infinite;
 }
 
-@keyframes screenTearStage3 {
-
-	0%,
-	100% {
-		clip-path: inset(0 0 0 0);
-		transform: translate(0);
-		filter: invert(0);
-	}
-
-	15% {
-		clip-path: inset(5% 0 80% 0);
-		transform: translate(-70px, 30px) scaleY(1.3) skewX(-25deg);
-		filter: invert(1);
-	}
-
-	35% {
-		clip-path: inset(50% 0 5% 0);
-		transform: translate(80px, -40px) scaleX(0.8) skewY(10deg);
-	}
-
-	55% {
-		clip-path: inset(20% 0 50% 0);
-		transform: translate(-50px, -10px) skewX(30deg);
-		filter: hue-rotate(180deg);
-	}
-
-	75% {
-		clip-path: inset(75% 0 2% 0);
-		transform: translate(90px, 50px) scale(1.2);
-		filter: brightness(3);
-	}
+.glitch-stage-3 {
+	filter: invert(1) hue-rotate(180deg) brightness(2);
+	transform: scale(1.1) rotate(2deg);
 }
 
-body.glitch-stage-3 {
-	background-color: #ff00aa !important;
+.glitch-stage-3 nav,
+.glitch-stage-3 .about-section,
+.glitch-stage-3 .projects-grid,
+.glitch-stage-3 footer,
+.glitch-stage-3 .bg-grid,
+.glitch-stage-3 canvas {
+	animation: screenTearStage2 0.05s infinite;
 }
 
-body.glitch-stage-3 #content-wrapper,
-body.glitch-stage-3 nav,
-body.glitch-stage-3 .bg-grid,
-body.glitch-stage-3 canvas {
-	animation: screenTearStage3 0.25s infinite steps(1, end) !important;
+.freeze-all,
+.freeze-all *,
+.freeze-all *::before,
+.freeze-all *::after {
+	animation-play-state: paused !important;
+	transition: none !important;
 }
 
 .supernova-nebula {
@@ -143,7 +120,7 @@ body.glitch-stage-3 canvas {
 	opacity: 0;
 	width: 60px;
 	height: 60px;
-	z-index: 999997;
+	z-index: 9998;
 	box-shadow:
 		0 0 200px 100px rgba(255, 0, 170, 0.55),
 		0 0 350px 180px rgba(0, 255, 255, 0.4),
@@ -172,18 +149,13 @@ body.glitch-stage-3 canvas {
 	}
 }
 
-/* ==========================================================================
-   ИЗОЛИРОВАННЫЙ ТЕРМИНАЛ (Сброс стилей сайта через all: initial)
-   ========================================================================== */
-
 .terminal-screen-overlay {
-	all: initial;
-	/* Сбрасываем абсолютно все наследуемые стили темы/сайта */
-
-	position: fixed;
-	inset: 0;
-	background-color: #030305;
-	z-index: 999999;
+	position: absolute !important;
+	inset: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+	background-color: transparent;
+	z-index: 999999 !important;
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -191,142 +163,85 @@ body.glitch-stage-3 canvas {
 	box-sizing: border-box;
 	overflow-y: auto;
 	overflow-x: hidden;
-
-	/* Фиксируем базовые стили для оверлея */
-	transform: scale(1);
-	opacity: 1;
+	margin: 0;
+	user-select: text !important;
+	-webkit-user-select: text !important;
 }
 
-/* Эффекты сетки ЭЛТ поверх оверлея */
 .terminal-screen-overlay::before {
-	content: " ";
-	display: block;
-	position: absolute;
-	inset: 0;
-	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
-		linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
-	z-index: 20;
-	background-size: 100% 4px, 6px 100%;
-	pointer-events: none;
+	content: " " !important;
+	display: block !important;
+	position: fixed !important;
+	inset: 0 !important;
+	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
+		linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05)) !important;
+	z-index: 9999999 !important;
+	background-size: 100% 5px, 6px 100% !important;
+	pointer-events: none !important;
 }
 
 .terminal-screen-overlay::after {
-	content: " ";
-	display: block;
-	position: absolute;
-	inset: 0;
-	background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 120%);
-	z-index: 21;
-	pointer-events: none;
+	content: " " !important;
+	display: block !important;
+	position: fixed !important;
+	inset: 0 !important;
+	background: radial-gradient(circle, transparent 35%, rgba(0, 0, 0, 0.85) 110%) !important;
+	z-index: 9999998 !important;
+	pointer-events: none !important;
 }
 
-/* Сам контейнер с текстом терминала */
 .supernova-terminal {
-	all: initial;
 	display: block;
 	width: 100%;
 	max-width: 1000px;
 	font-family: 'Fira Code', 'Courier New', monospace !important;
-	font-size: 1.1rem !important;
-	line-height: 1.6 !important;
-	color: #e4e4e7 !important;
-	text-shadow: 0 0 5px rgba(228, 228, 231, 0.35) !important;
+	font-size: 1.1rem;
+	line-height: 1.6;
+	color: #e4e4e7;
+	text-shadow: 0 0 6px rgba(228, 228, 231, 0.5);
+	text-align: left;
+	position: relative;
+	z-index: 9999991;
 }
 
-/* Строки терминала */
 .supernova-terminal .terminal-line {
-	all: initial;
 	display: block;
 	min-height: 1.6rem;
 	white-space: pre-wrap;
 	word-break: break-all;
 	margin-bottom: 4px;
-	font-family: 'Fira Code', 'Courier New', monospace !important;
-	font-size: 1.1rem !important;
 	color: #e4e4e7;
 }
 
 .supernova-terminal .prompt-line {
-	color: #a1a1aa !important;
+	color: #a1a1aa;
 }
 
 .supernova-terminal .active-input-line {
-	color: #ffffff !important;
-	font-weight: bold !important;
+	color: #ffffff;
+	font-weight: bold;
 }
 
 .supernova-terminal .terminal-cursor {
-	animation: hardwareCursorBlink 0.7s steps(2, start) infinite;
+	display: inline-block !important;
+	visibility: visible !important;
 	color: #00ffff !important;
-	text-shadow: 0 0 8px #00ffff !important;
-	margin-left: 2px;
+	text-shadow: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.5) !important;
+	margin-left: 6px;
+	user-select: all !important;
+	-webkit-user-select: all !important;
+	animation: hardwareCursorBlink 0.8s infinite !important;
 }
 
 @keyframes hardwareCursorBlink {
 
 	0%,
-	100% {
+	49% {
 		opacity: 1;
 	}
 
-	50% {
+	50%,
+	100% {
 		opacity: 0;
-	}
-}
-
-/* АНИМАЦИИ СХЛОПЫВАНИЯ ЭКРАНА (Исправлены трансформации) */
-
-.crt-shutdown {
-	animation: crtPowerOff 0.65s cubic-bezier(0.15, 0.85, 0.3, 1) forwards !important;
-}
-
-@keyframes crtPowerOff {
-	0% {
-		transform: scale(1);
-		filter: brightness(1) contrast(1);
-	}
-
-	40% {
-		transform: scale(1, 0.005);
-		background-color: #ffffff;
-		filter: brightness(4);
-		opacity: 1;
-	}
-
-	85% {
-		transform: scale(0.005, 0.005);
-		background-color: #ffffff;
-		filter: brightness(10);
-		opacity: 1;
-	}
-
-	100% {
-		transform: scale(0, 0);
-		opacity: 0;
-	}
-}
-
-.crt-startup {
-	animation: crtPowerOn 0.45s cubic-bezier(0.08, 0.9, 0.2, 1) forwards !important;
-}
-
-@keyframes crtPowerOn {
-	0% {
-		transform: scale(0.005, 0.005);
-		filter: brightness(10);
-		opacity: 1;
-		background-color: #ffffff;
-	}
-
-	45% {
-		transform: scale(1, 0.005);
-		filter: brightness(3);
-		background-color: #030305;
-	}
-
-	100% {
-		transform: scale(1);
-		filter: brightness(1);
-		opacity: 1;
 	}
 }

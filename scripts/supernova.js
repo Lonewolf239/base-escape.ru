@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastTime = 0;
     let rafId = null;
 
-    const HOLD_DURATION = 2000;
-    const THRESHOLD = 0.25;
+    const HOLD_DURATION = 4500;
+    const THRESHOLD = 0.50;
 
     let centerX = 0;
     let centerY = 0;
@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let canvas = null;
     let ctx = null;
     const implosionParticles = [];
+
+    const glitchTargets = [
+        document.querySelector('nav'),
+        document.querySelector('.about-section'),
+        document.querySelector('.projects-grid'),
+		document.getElementById('lonewolf239'),
+        document.querySelector('footer')
+    ].filter(Boolean);
 
     sun.addEventListener('mousedown', (e) => {
         if (e.button !== 0 || state === 'exploded' || state === 'irreversible') return;
@@ -60,10 +68,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.addEventListener('mouseup', releaseSun);
-    sun.addEventListener('mouseleave', releaseSun);
 
     function interactionLoop(time) {
-        const dt = time - lastTime;
+        let dt = time - lastTime;
+        if (dt > 100) dt = 100;
         lastTime = time;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -84,24 +92,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 triggerCinematicExplosion();
                 return;
             }
-        } else if (state === 'recovering') {
-            progress -= (dt / HOLD_DURATION) * 2;
-            implosionParticles.length = 0; 
+		} else if (state === 'recovering') {
+			progress -= (dt / (HOLD_DURATION * 0.5));
+	        implosionParticles.length = 0;
 
-            if (progress <= 0) {
-                progress = 0;
-                state = 'idle';
-                sun.style.animation = '';
-                sun.style.transform = '';
-                sun.style.filter = '';
-                if (canvas) {
-                    canvas.remove();
-                    canvas = null;
-                    ctx = null;
-                }
-                return;
-            }
-        }
+		    if (progress <= 0) {
+			    progress = 0;
+				state = 'idle';
+				sun.style.animation = '';
+	            sun.style.transform = '';
+		        sun.style.filter = '';
+			    if (canvas) {
+				    canvas.remove();
+					canvas = null;
+					ctx = null;
+	            }
+		        return;
+			}
+	    }
 
         if (state !== 'idle' && state !== 'exploded') {
             renderHoldEffect(progress);
@@ -174,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cosmicGas = [];
         const solidChunks = [];
 
-        const GAS_GROUPS = 4;
+        const GAS_GROUPS = 6;
         for (let g = 0; g < GAS_GROUPS; g++) {
             const count = 45 + g * 20;
             const baseSpeed = 7 + g * 6;
@@ -195,16 +203,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        const CHUNK_COUNT = 85;
+        const CHUNK_COUNT = 82;
         for (let i = 0; i < CHUNK_COUNT; i++) {
             const angle = Math.random() * Math.PI * 2;
             const speed = 5 + Math.random() * 25;
 
             const numVertices = 5 + Math.floor(Math.random() * 4);
             const vertices = [];
-            for (let v = 0; v < numVertices; v++) {
+            for (let v = 0; v < numVertices; v++)
                 vertices.push(0.5 + Math.random() * 0.7);
-            }
 
             solidChunks.push({
                 x: 0, y: 0, z: Math.random() * 160 - 80,
@@ -222,39 +229,102 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let explosionTime = 0;
         let lastFrameTime = performance.now();
+        const EXPLOSION_CRASH_TIME = 5000;
+
+		const PHASE_1_END = 2000;
+		const PHASE_2_END = 3500;
+		const PHASE_3_END = 5000;
 
         function renderExplosionFrame(timestamp) {
-            const dt = timestamp - lastFrameTime;
+            let dt = timestamp - lastFrameTime;
+            if (dt > 100) dt = 100;
             lastFrameTime = timestamp;
             explosionTime += dt;
 
-            if (explosionTime > 1200 && explosionTime < 2400) {
-                if (Math.random() < 0.25) {
-                    rafId = requestAnimationFrame(renderExplosionFrame);
-                    return;
-                }
-            } else if (explosionTime >= 2400) {
-                const freezeDuration = 25 + Math.random() * 35;
-                const startFreeze = performance.now();
-                while (performance.now() - startFreeze < freezeDuration) {}
-            }
+			let lagIntensity = 0;
+		    let glitchAmount = 0;
+		    let stallChance = 0;
+		    let hangMax = 0;
+
+			if (explosionTime < PHASE_1_END) {
+		        const t = explosionTime / PHASE_1_END;
+		        lagIntensity = 0.015 + 0.03 * t;
+		        glitchAmount = 2 + 3 * t;
+		        stallChance = 0.03;
+		        hangMax = 4;
+		    } else if (explosionTime < PHASE_2_END) {
+		        const t = (explosionTime - PHASE_1_END) / (PHASE_2_END - PHASE_1_END);
+		        lagIntensity = 0.05 + 0.12 * t;
+		        glitchAmount = 5 + 10 * t;
+		        stallChance = 0.08 + 0.04 * t;
+		        hangMax = 10 + 10 * t;
+		    } else if (explosionTime < PHASE_3_END) {
+		        const t = (explosionTime - PHASE_2_END) / (PHASE_3_END - PHASE_2_END);
+		        const exp = (Math.exp(t * 4.0) - 1) / (Math.exp(4.0) - 1);
+		        lagIntensity = 0.17 + exp * 0.83;
+		        glitchAmount = 15 + exp * 50;
+		        stallChance = 0.12 + exp * 0.70;
+		        hangMax = 20 + exp * 220;
+		    } else {
+			    lagIntensity = 1;
+		        glitchAmount = 70;
+		        stallChance = 1;
+		        hangMax = 320;
+		    }
+
+            glitchTargets.forEach(el => {
+		        const rx = (Math.random() - 0.5) * glitchAmount;
+		        const ry = (Math.random() - 0.5) * glitchAmount;
+		        const skew = (Math.random() - 0.5) * (glitchAmount / 1.4);
+		        const scale = 1 + (Math.random() - 0.5) * (glitchAmount / 90);
+
+		        el.style.transform = `translate(${rx}px, ${ry}px) skew(${skew}deg) scale(${scale})`;
+		        el.style.filter = `hue-rotate(${lagIntensity * 180}deg) saturate(${1 + lagIntensity * 4})`;
+		    });
+
+			if (Math.random() < stallChance) {
+		        document.body.classList.add('freeze-all');
+		        const stallEnd = performance.now() + (Math.random() * hangMax);
+		        while (performance.now() < stallEnd) {}
+		    } else document.body.classList.remove('freeze-all');
+
+
+            if (explosionTime > 900 && !document.body.classList.contains('glitch-stage-1'))
+				document.body.classList.add('glitch-stage-1');
+		    if (explosionTime > 2200 && !document.body.classList.contains('glitch-stage-2'))
+		        document.body.classList.add('glitch-stage-2');
+		    if (explosionTime > 3600 && !document.body.classList.contains('glitch-stage-3'))
+		        document.body.classList.add('glitch-stage-3');
+
+            if (explosionTime >= EXPLOSION_CRASH_TIME) {
+		        if (!document.getElementById('doomsday-freeze')) {
+		            const freezeStyle = document.createElement('style');
+		            freezeStyle.id = 'doomsday-freeze';
+		            freezeStyle.innerHTML = `
+		                *, *::before, *::after {
+		                    animation-play-state: paused !important;
+		                    transition: none !important;
+		                }
+		            `;
+		            document.head.appendChild(freezeStyle);
+		        }
+		
+		        setTimeout(() => {
+		            glitchTargets.forEach(el => {
+		                el.style.transform = '';
+		                el.style.filter = '';
+		            });
+		            document.body.classList.remove('freeze-all');
+		
+		            cancelAnimationFrame(rafId);
+		            if (canvas) canvas.remove();
+		            if (sun) sun.remove();
+		            triggerTerminalCrash();
+		        }, 650);
+		        return;
+		    }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (explosionTime > 500 && !document.body.classList.contains('glitch-stage-1'))
-                document.body.classList.add('glitch-stage-1');
-            if (explosionTime > 1400 && !document.body.classList.contains('glitch-stage-2'))
-                document.body.classList.add('glitch-stage-2');
-            if (explosionTime > 2500 && !document.body.classList.contains('glitch-stage-3'))
-                document.body.classList.add('glitch-stage-3');
-
-            if (explosionTime >= 4200) {
-                cancelAnimationFrame(rafId);
-                canvas.remove();
-                sun.remove();
-                triggerTerminalCrash();
-                return;
-            }
 
             ctx.globalCompositeOperation = 'lighter';
             for (let i = cosmicGas.length - 1; i >= 0; i--) {
@@ -350,17 +420,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function triggerTerminalCrash() {
-        document.body.className = ''; 
-        document.body.style.backgroundColor = '#010103';
-        document.body.innerHTML = ''; 
+        document.body.className = '';
+        document.body.style.cssText = 'background-color: #000; margin: 0; padding: 0; overflow: hidden; width: 100vw; height: 100vh;';
+        document.body.innerHTML = '';
+
+        const crtContainer = document.createElement('div');
+        crtContainer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #030305; z-index: 999998; transform-origin: center center; overflow: hidden;';
 
         const terminalWrapper = document.createElement('div');
         terminalWrapper.className = 'terminal-screen-overlay';
 
         const terminal = document.createElement('div');
         terminal.className = 'supernova-terminal';
+
         terminalWrapper.appendChild(terminal);
-        document.body.appendChild(terminalWrapper);
+        crtContainer.appendChild(terminalWrapper);
+        document.body.appendChild(crtContainer);
 
         const crashLogs = [
             "guest@universe:~# ./runtime_status.sh",
@@ -385,41 +460,56 @@ document.addEventListener("DOMContentLoaded", () => {
             if (lineIndex < crashLogs.length) {
                 const line = document.createElement('div');
                 line.className = 'terminal-line';
-                if (crashLogs[lineIndex].startsWith('guest'))
+                const text = crashLogs[lineIndex];
+
+                if (text.startsWith('guest'))
                     line.className += ' prompt-line';
-                else if (crashLogs[lineIndex].includes('[   ERROR    ]') || crashLogs[lineIndex].includes('FATAL')) {
+                else if (text.includes('[   ERROR    ]') || text.includes('FATAL')) {
                     line.style.color = '#ff00aa';
                     line.style.textShadow = '0 0 10px rgba(255, 0, 170, 0.85)';
-                } else if (crashLogs[lineIndex].includes('---') || crashLogs[lineIndex].includes('reset code')) {
+                } else if (text.includes('---') || text.includes('reset code')) {
                     line.style.color = '#00ffff';
                     line.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.85)';
                 }
 
                 terminal.appendChild(line);
-                let charIndex = 0;
-                const text = crashLogs[lineIndex];
 
-                function typeChar() {
-                    if (charIndex < text.length) {
-                        line.textContent += text[charIndex];
-                        charIndex++;
-                        setTimeout(typeChar, text.startsWith('[') ? 4 : 15);
-                    } else {
-                        lineIndex++;
-                        setTimeout(typeCrashLine, 90);
+                const isSystemLog = text.startsWith('[') || text.startsWith('FATAL') || text.startsWith('guest') || text.trim() === '';
+
+                if (isSystemLog) {
+                    line.textContent = text;
+                    lineIndex++;
+                    setTimeout(typeCrashLine, 15 + Math.random() * 35);
+                } else {
+                    let charIndex = 0;
+                    function typeChar() {
+                        if (charIndex < text.length) {
+                            line.textContent += text[charIndex];
+                            charIndex++;
+                            const charDelay = Math.random() < 0.1 ? 80 : (10 + Math.random() * 20);
+                            setTimeout(typeChar, charDelay);
+                        } else {
+                            lineIndex++;
+                            setTimeout(typeCrashLine, 300);
+                        }
                     }
+                    typeChar();
                 }
-                typeChar();
             } else initializeInteractiveInput();
         }
-
-        setTimeout(typeCrashLine, 400);
+        setTimeout(typeCrashLine, 200);
 
         function initializeInteractiveInput() {
             const inputContainer = document.createElement('div');
             inputContainer.className = 'terminal-line prompt-line active-input-line';
             inputContainer.innerHTML = 'guest@universe:~# <span class="user-typed-text"></span><span class="terminal-cursor">█</span>';
             terminal.appendChild(inputContainer);
+
+            const cursor = inputContainer.querySelector('.terminal-cursor');
+            cursor.style.animation = 'none';
+            setInterval(() => {
+                cursor.style.opacity = cursor.style.opacity === '0' ? '1' : '0';
+            }, 800);
 
             const textSpan = inputContainer.querySelector('.user-typed-text');
             let inputBuffer = "";
@@ -451,16 +541,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function executeCrtScreenOff() {
-            terminalWrapper.classList.add('crt-shutdown');
+            crtContainer.animate([
+                { transform: 'scale(1)', filter: 'brightness(1) contrast(1)', backgroundColor: '#030305', opacity: 1 },
+                { transform: 'scale(1, 0.005)', filter: 'brightness(4)', backgroundColor: '#ffffff', opacity: 1, offset: 0.4 },
+                { transform: 'scale(0.005, 0.005)', filter: 'brightness(10)', backgroundColor: '#ffffff', opacity: 1, offset: 0.85 },
+                { transform: 'scale(0, 0)', opacity: 0 }
+            ], { 
+                duration: 650, 
+                easing: 'cubic-bezier(0.15, 0.85, 0.3, 1)', 
+                fill: 'forwards' 
+            });
+
             setTimeout(() => {
                 terminal.innerHTML = '';
-                executeCrtScreenOn();
-            }, 750);
+                setTimeout(executeCrtScreenOn, 1500);
+            }, 650);
         }
 
         function executeCrtScreenOn() {
-            terminalWrapper.classList.remove('crt-shutdown');
-            terminalWrapper.classList.add('crt-startup');
+            crtContainer.animate([
+                { transform: 'scale(0.005, 0.005)', filter: 'brightness(10)', backgroundColor: '#ffffff', opacity: 1 },
+                { transform: 'scale(1, 0.005)', filter: 'brightness(3)', backgroundColor: '#030305', offset: 0.45 },
+                { transform: 'scale(1)', filter: 'brightness(1)', opacity: 1 }
+            ], { 
+                duration: 450, 
+                easing: 'cubic-bezier(0.08, 0.9, 0.2, 1)', 
+                fill: 'forwards' 
+            });
 
             const bootLogs = [
                 "[    0.000000] Linux version 6.13.4-architecture-lonewolf (gcc version 13.2.0)",
@@ -485,25 +592,30 @@ document.addEventListener("DOMContentLoaded", () => {
             ];
 
             let bootIndex = 0;
-
             function streamBootLogs() {
-
                 if (bootIndex < bootLogs.length) {
                     const line = document.createElement('div');
                     line.className = 'terminal-line';
-                    if (bootLogs[bootIndex].includes('[ OK ]') || bootLogs[bootIndex].includes('successful')) {
+                    const currentLog = bootLogs[bootIndex];
+
+                    if (currentLog.includes('[ OK ]') || currentLog.includes('successful')) {
                         line.style.color = '#00ff66';
                         line.style.textShadow = '0 0 8px rgba(0, 255, 102, 0.7)';
-                    } else if (bootLogs[bootIndex].includes('['))
-                        line.style.color = '#a1a1aa';
+                    } else if (currentLog.startsWith('[')) line.style.color = '#a1a1aa';
 
-                    line.textContent = bootLogs[bootIndex];
+                    line.textContent = currentLog;
                     terminal.appendChild(line);
-
                     terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
 
                     bootIndex++;
-                    setTimeout(streamBootLogs, 20 + Math.random() * 45);
+                    let delay = 2 + Math.random() * 10;
+
+                    if (currentLog.includes('EXT4-fs') || currentLog.includes('timeline threads'))
+                        delay = 700 + Math.random() * 600;
+                    else if (currentLog.includes('[ OK ]')) delay = 150 + Math.random() * 150;
+                    else if (Math.random() < 0.08) delay = 80 + Math.random() * 100;
+
+                    setTimeout(streamBootLogs, delay);
                 } else {
                     setTimeout(() => {
                         window.location.reload();
@@ -511,7 +623,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            setTimeout(streamBootLogs, 300);
+            setTimeout(streamBootLogs, 250);
         }
     }
 });
