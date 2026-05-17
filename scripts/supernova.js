@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+	if (localStorage.getItem('supernova_secret') === 'true') {
+        initUltimateSecret();
+        return;
+    }
+
     const sun = document.querySelector('.retro-sun');
 
     if (!sun) {
@@ -419,6 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function triggerTerminalCrash() {
+		localStorage.removeItem('supernova_42_count');
         document.body.className = '';
         document.body.style.cssText = 'background-color: #000; margin: 0; padding: 0; overflow: hidden; width: 100vw; height: 100vh;';
         document.body.innerHTML = '';
@@ -515,7 +521,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const keyHandler = (e) => {
                 if (e.key === 'Enter') {
-                    if (inputBuffer.trim().toLowerCase() === 'reboot') {
+					const trimmedCmd = inputBuffer.trim().toLowerCase();
+					if (trimmedCmd === '42') {
+                        let currentCount = parseInt(localStorage.getItem('supernova_42_count') || '0', 10);
+                        currentCount++;
+                        localStorage.setItem('supernova_42_count', currentCount);
+
+                        const logLine = document.createElement('div');
+                        logLine.className = 'terminal-line';
+                        logLine.style.color = '#ffff00';
+
+                        if (currentCount >= 42) {
+                            logLine.textContent = `42`;
+                            localStorage.setItem('supernova_secret', 'true');
+							window.removeEventListener('keydown', keyHandler);
+	                        executeCrtScreenOff();
+                        } else if (currentCount % 10 === 0) logLine.textContent = `bash: ${currentCount}`;
+
+                        terminal.insertBefore(logLine, inputContainer);
+                        inputBuffer = "";
+                        textSpan.textContent = "";
+                    } else if (trimmedCmd === 'reboot') {
                         window.removeEventListener('keydown', keyHandler);
                         executeCrtScreenOff();
                     } else {
@@ -569,16 +595,16 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const bootLogs = [
-                "[    0.000000] Linux version 6.13.4-architecture-lonewolf (gcc version 13.2.0)",
-                "[    0.002410] CPU0: Intel(R) Core(TM) Quantum Processor Physical Context initialized",
-                "[    0.021004] BIOS-provided physical RAM map: 0x0000000000000 - 0x0000FFFFFFFFF (Aura Dynamic)",
-                "[    0.104251] ACPI: Core Revision 20260517",
-                "[    0.240984] ACPI: 1 ACPI AML tables successfully acquired and loaded",
-                "[    0.512049] usbcore: registered new interface driver hub",
-                "[    0.690114] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled",
-                "[    0.884102] Dynamic Cipher Mapping: AES-256-GCM hardware acceleration integrity checks... OK",
-                "[    1.024951] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)",
-                "[    1.230114] VFS: Mounted root (ext4 filesystem) readonly on device 8:1.",
+                "[    0.000042] Linux version 6.13.4-architecture-lonewolf (gcc version 13.2.0)",
+                "[    0.002420] CPU0: Intel(R) Core(TM) Quantum Processor Physical Context initialized",
+                "[    0.021042] BIOS-provided physical RAM map: 0x0000000000000 - 0x0000FFFFFFFFF (Aura Dynamic)",
+                "[    0.104251] ACPI: Core Revision 00102239",
+                "[    0.249842] ACPI: 1 ACPI AML tables successfully acquired and loaded",
+                "[    0.542049] usbcore: registered new interface driver hub",
+                "[    0.690142] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled",
+                "[    0.884202] Dynamic Cipher Mapping: AES-256-GCM hardware acceleration integrity checks... OK",
+                "[    1.024291] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)",
+                "[    1.230142] VFS: Mounted root (ext4 filesystem) readonly on device 8:1.",
                 "[    1.421049] init: Allocating system timeline threads...",
                 " ",
                 "[  CONNECT   ] Initializing Lonewolf239 Main Frame Architecture... [ OK ]",
@@ -624,5 +650,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(streamBootLogs, 250);
         }
+    }
+
+	function initUltimateSecret() {
+
+        const triggerApocalypse = (e) => {
+            if (e && typeof e.preventDefault === 'function')
+                e.preventDefault();
+
+		    window.removeEventListener('click', triggerApocalypse, { capture: true });
+		    window.removeEventListener('touchstart', triggerApocalypse, { capture: true });
+		    window.removeEventListener('keydown', triggerApocalypse, { capture: true });
+
+            localStorage.removeItem('supernova_secret');
+            localStorage.removeItem('supernova_42_count');
+
+            document.body.className = '';
+            document.body.innerHTML = '';
+            document.body.style.cssText = `
+                margin: 0;
+                padding: 0;
+                background-color: #000;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                inset: 0;
+            `;
+
+            const img = document.createElement('img');
+            img.src = '/images/lonewolf239.jpg';
+            img.style.cssText = `
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 1;
+            `;
+            document.body.appendChild(img);
+
+            const audio = new Audio();
+            audio.src = '/images/What_I_ve_Done_Linkin_Park.m4a';
+            audio.loop = true;
+            audio.volume = 0.8;
+
+            audio.play().catch(err => console.error("Ошибка воспроизведения:", err));
+        };
+
+        window.addEventListener('click', triggerApocalypse, { once: true, capture: true });
+        window.addEventListener('touchstart', triggerApocalypse, { once: true, capture: true });
+        window.addEventListener('keydown', triggerApocalypse, { once: true, capture: true });
     }
 });
