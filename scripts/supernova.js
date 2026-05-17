@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let rafId = null;
 
     const HOLD_DURATION = 2000;
-    const THRESHOLD = 0.50;
+    const THRESHOLD = 0.25;
 
     let centerX = 0;
     let centerY = 0;
