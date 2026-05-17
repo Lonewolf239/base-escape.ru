@@ -201,12 +201,11 @@ body {
 		0 0 200px 60px rgba(255, 170, 51, 0.3);
 	mask-image: linear-gradient(to bottom, black 50%, transparent 100%),
 		repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
+	mask-composite: intersect;
 	-webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%),
 		repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
-	-webkit-mask-composite: source-in;
-	mask-composite: intersect;
+	-webkit-mask-composite: destination-in;
 	animation: sunPulse 3s ease-in-out infinite alternate;
-	pointer-events: none;
 }
 
 @keyframes sunPulse {

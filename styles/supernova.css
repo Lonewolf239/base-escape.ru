@@ -1,94 +1,332 @@
-.supernova-explosion-canvas {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	pointer-events: none;
-}
-
-.supernova {
-	position: fixed;
-	bottom: 35%;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 550px;
-	height: 550px;
-	background: radial-gradient(circle at 30% 30%, #88aaff, #ffffff, #aaccff);
-	border-radius: 50%;
-	z-index: 3;
-	opacity: 0.9;
-	box-shadow: 0 0 120px 50px rgba(100, 150, 255, 0.9), 0 0 200px 80px rgba(80, 120, 255, 0.6);
-	mask-image: linear-gradient(to bottom, black 50%, transparent 100%),
-		repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
-	-webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%),
-		repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
-	-webkit-mask-composite: source-in;
-	mask-composite: intersect;
-	animation: supernovaGlow 3s ease-in-out infinite alternate;
-	pointer-events: none;
-}
-
-@keyframes supernovaGlow {
+@keyframes megaCameraCollapse {
 	0% {
-		filter: brightness(0.8) blur(2px);
-		transform: translateX(-50%) scale(1);
-		box-shadow: 0 0 80px 30px rgba(100, 150, 255, 0.7), 0 0 150px 60px rgba(80, 120, 255, 0.5);
+		transform: translate(0, 0) rotate(0deg);
 	}
 
-	100% {
-		filter: brightness(1.5) blur(4px);
-		transform: translateX(-50%) scale(1.05);
-		box-shadow: 0 0 180px 70px rgba(100, 150, 255, 1), 0 0 300px 100px rgba(80, 120, 255, 0.8);
+	10% {
+		transform: translate(-12px, 8px) rotate(-2deg) scale(1.02);
 	}
-}
 
-.supernova-nebula {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 9998;
-	pointer-events: none;
-	mix-blend-mode: screen;
-	animation: nebulaFadeIn 4s ease-out forwards;
-}
-
-@keyframes nebulaFadeIn {
-	0% {
-		opacity: 0;
+	20% {
+		transform: translate(14px, -10px) rotate(2.5deg);
 	}
 
 	30% {
-		opacity: 0.6;
+		transform: translate(-18px, -4px) rotate(-1.5deg) scale(0.98);
+	}
+
+	40% {
+		transform: translate(10px, 14px) rotate(2deg);
+	}
+
+	50% {
+		transform: translate(-15px, -8px) rotate(-2.5deg);
+	}
+
+	60% {
+		transform: translate(18px, 4px) rotate(1deg);
+	}
+
+	70% {
+		transform: translate(-10px, 12px) rotate(3deg) scale(1.04);
+	}
+
+	80% {
+		transform: translate(8px, -12px) rotate(-2deg);
+	}
+
+	90% {
+		transform: translate(-6px, 6px) rotate(0.5deg);
 	}
 
 	100% {
-		opacity: 1;
+		transform: translate(0, 0) rotate(0deg);
 	}
+}
+
+.shake-active {
+	animation: megaCameraCollapse 0.7s infinite cubic-bezier(.36, .07, .19, .97);
+}
+
+body.flash-active {
+	transition: none !important;
+	filter: brightness(5.0) contrast(2) saturate(3);
+}
+
+body.glitch-stage-1 {
+	filter: contrast(1.4) hue-rotate(60deg) blur(0.5px);
+}
+
+@keyframes screenTearStage2 {
+
+	0%,
+	100% {
+		clip-path: inset(0 0 0 0);
+		transform: translate(0);
+	}
+
+	20% {
+		clip-path: inset(15% 0 60% 0);
+		transform: translate(-35px, 10px) skewX(-10deg);
+	}
+
+	40% {
+		clip-path: inset(45% 0 10% 0);
+		transform: translate(40px, -5px) skewX(15deg);
+		filter: invert(0.2);
+	}
+
+	60% {
+		clip-path: inset(70% 0 5% 0);
+		transform: translate(-20px, -15px) rotate(1deg);
+	}
+
+	80% {
+		clip-path: inset(30% 0 40% 0);
+		transform: translate(15px, 20px) skewY(-2deg);
+	}
+}
+
+body.glitch-stage-2 #content-wrapper,
+body.glitch-stage-2 nav,
+body.glitch-stage-2 .bg-grid {
+	animation: screenTearStage2 0.4s infinite steps(2, start);
+}
+
+@keyframes screenTearStage3 {
+
+	0%,
+	100% {
+		clip-path: inset(0 0 0 0);
+		transform: translate(0);
+		filter: invert(0);
+	}
+
+	15% {
+		clip-path: inset(5% 0 80% 0);
+		transform: translate(-70px, 30px) scaleY(1.3) skewX(-25deg);
+		filter: invert(1);
+	}
+
+	35% {
+		clip-path: inset(50% 0 5% 0);
+		transform: translate(80px, -40px) scaleX(0.8) skewY(10deg);
+	}
+
+	55% {
+		clip-path: inset(20% 0 50% 0);
+		transform: translate(-50px, -10px) skewX(30deg);
+		filter: hue-rotate(180deg);
+	}
+
+	75% {
+		clip-path: inset(75% 0 2% 0);
+		transform: translate(90px, 50px) scale(1.2);
+		filter: brightness(3);
+	}
+}
+
+body.glitch-stage-3 {
+	background-color: #ff00aa !important;
+}
+
+body.glitch-stage-3 #content-wrapper,
+body.glitch-stage-3 nav,
+body.glitch-stage-3 .bg-grid,
+body.glitch-stage-3 canvas {
+	animation: screenTearStage3 0.25s infinite steps(1, end) !important;
 }
 
 .supernova-nebula {
-	filter: blur(2px) brightness(1.2);
-	transition: filter 0.5s ease;
+	position: fixed;
+	transform: translate(-50%, -50%) scale(0);
+	opacity: 0;
+	width: 60px;
+	height: 60px;
+	z-index: 999997;
+	box-shadow:
+		0 0 200px 100px rgba(255, 0, 170, 0.55),
+		0 0 350px 180px rgba(0, 255, 255, 0.4),
+		0 0 600px 300px rgba(240, 100, 0, 0.25);
+	pointer-events: none;
+	animation: nebulaCosmicBloom 4.5s cubic-bezier(0.05, 0.75, 0.1, 1) forwards;
 }
 
-.supernova-nebula:hover {
-	filter: blur(0px) brightness(1.4);
-}
-
-@keyframes nebulaPulse {
+@keyframes nebulaCosmicBloom {
 	0% {
-		opacity: 0.8;
-		transform: scale(1);
-		filter: blur(2px);
+		transform: translate(-50%, -50%) scale(0.1);
+		opacity: 0;
+		filter: blur(30px);
+	}
+
+	10% {
+		transform: translate(-50%, -50%) scale(9.5);
+		opacity: 1;
+		filter: blur(12px);
 	}
 
 	100% {
+		transform: translate(-50%, -50%) scale(8.0);
+		opacity: 0.9;
+		filter: blur(6px);
+	}
+}
+
+/* ==========================================================================
+   ИЗОЛИРОВАННЫЙ ТЕРМИНАЛ (Сброс стилей сайта через all: initial)
+   ========================================================================== */
+
+.terminal-screen-overlay {
+	all: initial;
+	/* Сбрасываем абсолютно все наследуемые стили темы/сайта */
+
+	position: fixed;
+	inset: 0;
+	background-color: #030305;
+	z-index: 999999;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	padding: 40px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	/* Фиксируем базовые стили для оверлея */
+	transform: scale(1);
+	opacity: 1;
+}
+
+/* Эффекты сетки ЭЛТ поверх оверлея */
+.terminal-screen-overlay::before {
+	content: " ";
+	display: block;
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%),
+		linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+	z-index: 20;
+	background-size: 100% 4px, 6px 100%;
+	pointer-events: none;
+}
+
+.terminal-screen-overlay::after {
+	content: " ";
+	display: block;
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle, transparent 40%, rgba(0, 0, 0, 0.8) 120%);
+	z-index: 21;
+	pointer-events: none;
+}
+
+/* Сам контейнер с текстом терминала */
+.supernova-terminal {
+	all: initial;
+	display: block;
+	width: 100%;
+	max-width: 1000px;
+	font-family: 'Fira Code', 'Courier New', monospace !important;
+	font-size: 1.1rem !important;
+	line-height: 1.6 !important;
+	color: #e4e4e7 !important;
+	text-shadow: 0 0 5px rgba(228, 228, 231, 0.35) !important;
+}
+
+/* Строки терминала */
+.supernova-terminal .terminal-line {
+	all: initial;
+	display: block;
+	min-height: 1.6rem;
+	white-space: pre-wrap;
+	word-break: break-all;
+	margin-bottom: 4px;
+	font-family: 'Fira Code', 'Courier New', monospace !important;
+	font-size: 1.1rem !important;
+	color: #e4e4e7;
+}
+
+.supernova-terminal .prompt-line {
+	color: #a1a1aa !important;
+}
+
+.supernova-terminal .active-input-line {
+	color: #ffffff !important;
+	font-weight: bold !important;
+}
+
+.supernova-terminal .terminal-cursor {
+	animation: hardwareCursorBlink 0.7s steps(2, start) infinite;
+	color: #00ffff !important;
+	text-shadow: 0 0 8px #00ffff !important;
+	margin-left: 2px;
+}
+
+@keyframes hardwareCursorBlink {
+
+	0%,
+	100% {
 		opacity: 1;
-		transform: scale(1.02);
-		filter: blur(3px);
+	}
+
+	50% {
+		opacity: 0;
+	}
+}
+
+/* АНИМАЦИИ СХЛОПЫВАНИЯ ЭКРАНА (Исправлены трансформации) */
+
+.crt-shutdown {
+	animation: crtPowerOff 0.65s cubic-bezier(0.15, 0.85, 0.3, 1) forwards !important;
+}
+
+@keyframes crtPowerOff {
+	0% {
+		transform: scale(1);
+		filter: brightness(1) contrast(1);
+	}
+
+	40% {
+		transform: scale(1, 0.005);
+		background-color: #ffffff;
+		filter: brightness(4);
+		opacity: 1;
+	}
+
+	85% {
+		transform: scale(0.005, 0.005);
+		background-color: #ffffff;
+		filter: brightness(10);
+		opacity: 1;
+	}
+
+	100% {
+		transform: scale(0, 0);
+		opacity: 0;
+	}
+}
+
+.crt-startup {
+	animation: crtPowerOn 0.45s cubic-bezier(0.08, 0.9, 0.2, 1) forwards !important;
+}
+
+@keyframes crtPowerOn {
+	0% {
+		transform: scale(0.005, 0.005);
+		filter: brightness(10);
+		opacity: 1;
+		background-color: #ffffff;
+	}
+
+	45% {
+		transform: scale(1, 0.005);
+		filter: brightness(3);
+		background-color: #030305;
+	}
+
+	100% {
+		transform: scale(1);
+		filter: brightness(1);
+		opacity: 1;
 	}
 }

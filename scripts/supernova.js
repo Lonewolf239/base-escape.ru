@@ -1,362 +1,517 @@
-function setupSunClicks() {
+document.addEventListener("DOMContentLoaded", () => {
     const sun = document.querySelector('.retro-sun');
-    if (!sun) return;
 
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || 
-                     ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-    if (isMobile) return;
-
-    sun.style.pointerEvents = 'auto';
-
-    let exploded = false;
-    let animationId = null;
-    let currentProgress = 0;
-    let isCompressing = false;
-    let irreversible = false;
-
-    const THRESHOLD = 0.35;
-    const MAX_COMPRESSION = 0.95;
-    const SPEED = 0.003;
-
-    function updateSunAppearance(progress) {
-        const scale = 1 - progress * 0.95;
-        const r = 255 - Math.floor(progress * 200);
-        const g = 102 + Math.floor(progress * 100);
-        const b = 51 + Math.floor(progress * 150);
-        const color = `radial-gradient(circle at 30% 30%, rgb(${r}, ${g}, ${b}), rgb(255, 170, 51))`;
-        const shadowIntensity = 1 - progress * 0.8;
-        const shadowColor = `rgba(100, 150, 255, ${shadowIntensity * 0.8})`;
-
-		sun.style.animation = 'none';
-        sun.style.background = color;
-        sun.style.transform = `translateX(-50%) scale(${scale})`;
-        sun.style.boxShadow = `0 0 ${60 + progress * 40}px ${15 + progress * 20}px ${shadowColor}`;
+    if (!sun) {
+        console.error("Критическая ошибка: Элемент солнца не найден!");
+        return;
     }
 
-    function stopAnimation() {
-        if (animationId) {
-            cancelAnimationFrame(animationId);
-            animationId = null;
-        }
-        isCompressing = false;
-    }
+    const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth > 768;
+    if (!isPC) return;
 
-    function startCompress() {
-        if (exploded || irreversible) return;
-        stopAnimation();
-        isCompressing = true;
+    let state = 'idle'; 
+    let progress = 0; 
+    let lastTime = 0;
+    let rafId = null;
 
-        function step() {
-            if (!isCompressing) return;
-            if (exploded) return;
+    const HOLD_DURATION = 2000;
+    const THRESHOLD = 0.50;
 
-            currentProgress += SPEED;
-            if (currentProgress >= THRESHOLD && !irreversible) {
-                irreversible = true;
-                isCompressing = false;
-                completeCompression();
-                return;
-            }
-            if (currentProgress > MAX_COMPRESSION) currentProgress = MAX_COMPRESSION;
-            updateSunAppearance(currentProgress);
-            animationId = requestAnimationFrame(step);
-        }
-        animationId = requestAnimationFrame(step);
-    }
+    let centerX = 0;
+    let centerY = 0;
 
-    function startRestore() {
-        if (exploded || irreversible) return;
-        if (currentProgress === 0) return;
-        stopAnimation();
-        isCompressing = false;
+    let canvas = null;
+    let ctx = null;
+    const implosionParticles = [];
 
-        function step() {
-            if (exploded || irreversible) return;
-            currentProgress -= SPEED;
-            if (currentProgress <= 0) {
-                currentProgress = 0;
-                updateSunAppearance(currentProgress);
-                stopAnimation();
-                return;
-            }
-            updateSunAppearance(currentProgress);
-            animationId = requestAnimationFrame(step);
-        }
-        animationId = requestAnimationFrame(step);
-    }
+    sun.addEventListener('mousedown', (e) => {
+        if (e.button !== 0 || state === 'exploded' || state === 'irreversible') return;
 
-    function completeCompression() {
-        if (exploded) return;
-
-        function step() {
-            if (exploded) return;
-            currentProgress += SPEED * 0.8;
-            if (currentProgress >= MAX_COMPRESSION) {
-                currentProgress = MAX_COMPRESSION;
-                updateSunAppearance(currentProgress);
-                explode();
-                return;
-            }
-            updateSunAppearance(currentProgress);
-            animationId = requestAnimationFrame(step);
-        }
-        animationId = requestAnimationFrame(step);
-    }
-
-    function onMouseDown(e) {
-        e.preventDefault();
-        if (exploded || irreversible) return;
-        startCompress();
-    }
-
-    function onMouseUp() {
-        if (exploded || irreversible) return;
-        if (currentProgress < THRESHOLD) startRestore();
-    }
-
-    function onMouseLeave() {
-        if (exploded || irreversible) return;
-        if (currentProgress < THRESHOLD) startRestore();
-    }
-
-    sun.addEventListener('mousedown', onMouseDown);
-    sun.addEventListener('mouseup', onMouseUp);
-    sun.addEventListener('mouseleave', onMouseLeave);
-
-    function explode() {
-        if (exploded) return;
-        exploded = true;
-        stopAnimation();
-
-        const oldCanvas = document.querySelector('.supernova-explosion-canvas');
-        if (oldCanvas) oldCanvas.remove();
-        const oldNebula = document.querySelector('.supernova-nebula');
-        if (oldNebula) oldNebula.remove();
+        state = 'holding';
+        sun.style.animation = 'none'; 
+        lastTime = performance.now();
 
         const rect = sun.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
+        centerX = rect.left + rect.width / 2;
+        centerY = rect.top + rect.height / 2;
 
-        const canvas = document.createElement('canvas');
-        canvas.className = 'supernova-explosion-canvas';
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        document.body.appendChild(canvas);
-        const ctx = canvas.getContext('2d');
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed';
+            canvas.style.inset = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '2'; 
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            document.body.appendChild(canvas);
+            ctx = canvas.getContext('2d', { alpha: true });
+        }
 
-        let startTime = null;
-        const explosionDuration = 1600;
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(interactionLoop);
+    });
 
-        const PARTICLE_COUNT = 300;
-        const DEBRIS_COUNT = 50;
-        const particles = [];
-        const debris = [];
+    const releaseSun = () => {
+        if (state === 'holding') {
+            state = 'recovering';
+        }
+    };
 
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
+    window.addEventListener('mouseup', releaseSun);
+    sun.addEventListener('mouseleave', releaseSun);
+
+    function interactionLoop(time) {
+        const dt = time - lastTime;
+        lastTime = time;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (state === 'holding' || state === 'irreversible') {
+            progress += dt / HOLD_DURATION;
+
+            if (progress >= THRESHOLD && state === 'holding') {
+                state = 'irreversible';
+                document.body.classList.add('shake-active');
+            }
+
+            updateAndDrawImplosion(dt);
+
+            if (progress >= 1) {
+                progress = 1;
+                state = 'exploded';
+                triggerCinematicExplosion();
+                return;
+            }
+        } else if (state === 'recovering') {
+            progress -= (dt / HOLD_DURATION) * 2;
+            implosionParticles.length = 0; 
+
+            if (progress <= 0) {
+                progress = 0;
+                state = 'idle';
+                sun.style.animation = '';
+                sun.style.transform = '';
+                sun.style.filter = '';
+                if (canvas) {
+                    canvas.remove();
+                    canvas = null;
+                    ctx = null;
+                }
+                return;
+            }
+        }
+
+        if (state !== 'idle' && state !== 'exploded') {
+            renderHoldEffect(progress);
+            rafId = requestAnimationFrame(interactionLoop);
+        }
+    }
+
+    function updateAndDrawImplosion(dt) {
+        if (Math.random() < 0.7) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = 200 + Math.random() * 600;
-            const size = 2 + Math.random() * 6;
-            const hue = 180 + Math.random() * 80;
-            const sat = 70 + Math.random() * 30;
-            const light = 50 + Math.random() * 40;
-            particles.push({
-                angle, speed, size, hue, sat, light,
-                life: 0.5 + Math.random() * 0.6
+            const distance = 200 + Math.random() * 350;
+            implosionParticles.push({
+                x: centerX + Math.cos(angle) * distance,
+                y: centerY + Math.sin(angle) * distance,
+                speed: 3 + Math.random() * 5,
+                size: 1 + Math.random() * 2.5,
+                color: Math.random() > 0.5 ? '#ff00aa' : '#00ffff'
             });
         }
 
-        for (let i = 0; i < DEBRIS_COUNT; i++) {
+        ctx.globalCompositeOperation = 'lighter';
+        for (let i = implosionParticles.length - 1; i >= 0; i--) {
+            const p = implosionParticles[i];
+            const dx = centerX - p.x;
+            const dy = centerY - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 15) {
+                implosionParticles.splice(i, 1);
+                continue;
+            }
+
+            p.speed += 0.3; 
+            p.x += (dx / dist) * p.speed;
+            p.y += (dy / dist) * p.speed;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+        }
+    }
+
+    function renderHoldEffect(p) {
+        const scale = 1 - (p * 0.97); 
+        let shakeX = 0, shakeY = 0;
+        if (p > 0.4) {
+            const intensity = (p - 0.4) * 60; 
+            shakeX = (Math.random() - 0.5) * intensity;
+            shakeY = (Math.random() - 0.5) * intensity;
+        }
+
+        sun.style.transform = `translate(calc(-50% + ${shakeX}px), ${shakeY}px) scale(${scale})`;
+        const brightness = 1 + (p * 14); 
+        const hueShift = p * -150; 
+        sun.style.filter = `brightness(${brightness}) hue-rotate(${hueShift}deg) blur(${p * 3}px)`;
+    }
+
+    function triggerCinematicExplosion() {
+        sun.style.transform = 'translate(-50%, -50%) scale(0)';
+        sun.style.opacity = '0';
+
+        createNebulaAftermath(centerX, centerY);
+
+        document.body.classList.add('shake-active'); 
+        document.body.classList.add('flash-active');
+        setTimeout(() => document.body.classList.remove('flash-active'), 450);
+
+        const FOV = 300; 
+        const cosmicGas = [];
+        const solidChunks = [];
+
+        const GAS_GROUPS = 4;
+        for (let g = 0; g < GAS_GROUPS; g++) {
+            const count = 45 + g * 20;
+            const baseSpeed = 7 + g * 6;
+            const colorType = g % 3;
+
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+                cosmicGas.push({
+                    x: 0, y: 0, z: Math.random() * 40 - 20,
+                    vx: Math.cos(angle) * baseSpeed * (1 + Math.random() * 0.4),
+                    vy: Math.sin(angle) * baseSpeed * 0.35 * (1 + Math.random() * 0.4), 
+                    vz: (Math.random() - 0.5) * 4,
+                    size: 60 + Math.random() * 80, 
+                    life: 1.0,
+                    decay: 0.004 + Math.random() * 0.007,
+                    color: colorType === 0 ? '255, 0, 170' : colorType === 1 ? '0, 255, 255' : '255, 120, 0'
+                });
+            }
+        }
+
+        const CHUNK_COUNT = 85;
+        for (let i = 0; i < CHUNK_COUNT; i++) {
             const angle = Math.random() * Math.PI * 2;
-            const speed = 150 + Math.random() * 500;
-            const size = 4 + Math.random() * 12;
-            const hue = 20 + Math.random() * 40;
-            const sat = 80 + Math.random() * 20;
-            const light = 60 + Math.random() * 30;
-            debris.push({
-                angle, speed, size, hue, sat, light,
-                life: 0.7 + Math.random() * 0.5
+            const speed = 5 + Math.random() * 25;
+
+            const numVertices = 5 + Math.floor(Math.random() * 4);
+            const vertices = [];
+            for (let v = 0; v < numVertices; v++) {
+                vertices.push(0.5 + Math.random() * 0.7);
+            }
+
+            solidChunks.push({
+                x: 0, y: 0, z: Math.random() * 160 - 80,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed * 0.38, 
+                vz: (Math.random() - 0.5) * speed * 1.8, 
+                size: 15 + Math.random() * 25,
+                angle: Math.random() * Math.PI * 2,
+                spin: (Math.random() - 0.5) * 0.2,
+                vertices: vertices,
+                baseColor: Math.random() > 0.4 ? '#141416' : '#221611', 
+                veinColor: Math.random() > 0.5 ? '#ff00aa' : '#00ffff'
             });
         }
 
-        let flashIntensity = 0;
-        let shockwaveRadius = 0;
-        const maxShockwave = Math.max(window.innerWidth, window.innerHeight) * 1.2;
+        let explosionTime = 0;
+        let lastFrameTime = performance.now();
 
-        function animateExplosion(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const progress = Math.min(elapsed / explosionDuration, 1);
+        function renderExplosionFrame(timestamp) {
+            const dt = timestamp - lastFrameTime;
+            lastFrameTime = timestamp;
+            explosionTime += dt;
+
+            if (explosionTime > 1200 && explosionTime < 2400) {
+                if (Math.random() < 0.25) {
+                    rafId = requestAnimationFrame(renderExplosionFrame);
+                    return;
+                }
+            } else if (explosionTime >= 2400) {
+                const freezeDuration = 25 + Math.random() * 35;
+                const startFreeze = performance.now();
+                while (performance.now() - startFreeze < freezeDuration) {}
+            }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            flashIntensity = Math.sin(progress * Math.PI) * 1.3;
-            const flashRadius = Math.min(canvas.width, canvas.height) * (0.4 + progress * 0.9);
-            const flashGrd = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, flashRadius);
-            flashGrd.addColorStop(0, `rgba(100, 180, 255, ${flashIntensity * 0.9})`);
-            flashGrd.addColorStop(0.5, `rgba(50, 100, 220, ${flashIntensity * 0.6})`);
-            flashGrd.addColorStop(1, 'rgba(20, 40, 80, 0)');
-            ctx.globalCompositeOperation = 'lighter';
-            ctx.fillStyle = flashGrd;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = 'source-over';
+            if (explosionTime > 500 && !document.body.classList.contains('glitch-stage-1'))
+                document.body.classList.add('glitch-stage-1');
+            if (explosionTime > 1400 && !document.body.classList.contains('glitch-stage-2'))
+                document.body.classList.add('glitch-stage-2');
+            if (explosionTime > 2500 && !document.body.classList.contains('glitch-stage-3'))
+                document.body.classList.add('glitch-stage-3');
 
-            shockwaveRadius = maxShockwave * progress;
-            const waveOpacity = Math.sin(progress * Math.PI) * 0.9;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, shockwaveRadius, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(80, 180, 255, ${waveOpacity})`;
-            ctx.lineWidth = 10 * (1 - progress);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, shockwaveRadius * 0.6, 0, Math.PI * 2);
-            ctx.strokeStyle = `rgba(200, 100, 255, ${waveOpacity * 0.7})`;
-            ctx.lineWidth = 6 * (1 - progress);
-            ctx.stroke();
-
-            for (let p of particles) {
-                const partProgress = progress / p.life;
-                if (partProgress >= 1) continue;
-
-                const distance = p.speed * progress * 0.001;
-                const x = centerX + Math.cos(p.angle) * distance;
-                const y = centerY + Math.sin(p.angle) * distance;
-                const size = p.size * (1 - partProgress * 0.8);
-                const alpha = (1 - partProgress) * 0.9;
-
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${p.hue}, ${p.sat}%, ${p.light}%, ${alpha})`;
-                ctx.shadowBlur = size * 1.5;
-                ctx.shadowColor = `rgba(80, 160, 255, ${alpha * 0.8})`;
-                ctx.fill();
-            }
-
-            for (let d of debris) {
-                const partProgress = progress / d.life;
-                if (partProgress >= 1) continue;
-
-                const distance = d.speed * progress * 0.001;
-                const x = centerX + Math.cos(d.angle) * distance;
-                const y = centerY + Math.sin(d.angle) * distance;
-                const size = d.size * (1 - partProgress * 0.6);
-                const alpha = (1 - partProgress) * 0.8;
-
-                ctx.beginPath();
-                ctx.arc(x, y, size, 0, Math.PI * 2);
-                ctx.fillStyle = `hsla(${d.hue}, ${d.sat}%, ${d.light}%, ${alpha})`;
-                ctx.shadowBlur = size * 1.2;
-                ctx.shadowColor = `rgba(255, 100, 100, ${alpha * 0.7})`;
-                ctx.fill();
-            }
-
-            const vignette = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, canvas.width * 0.7);
-            vignette.addColorStop(0, 'rgba(0,0,0,0)');
-            vignette.addColorStop(1, `rgba(0,0,0,${progress * 0.3})`);
-            ctx.fillStyle = vignette;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            if (progress < 1) {
-                requestAnimationFrame(animateExplosion);
-            } else {
+            if (explosionTime >= 4200) {
+                cancelAnimationFrame(rafId);
                 canvas.remove();
                 sun.remove();
-                createNebula(centerX, centerY);
+                triggerTerminalCrash();
+                return;
             }
+
+            ctx.globalCompositeOperation = 'lighter';
+            for (let i = cosmicGas.length - 1; i >= 0; i--) {
+                const gas = cosmicGas[i];
+                gas.x += gas.vx;
+                gas.y += gas.vy;
+                gas.z += gas.vz;
+                gas.vx *= 0.98;
+                gas.vy *= 0.98;
+                gas.life -= gas.decay;
+
+                if (gas.life <= 0) {
+                    cosmicGas.splice(i, 1);
+                    continue;
+                }
+
+                const scale = FOV / (FOV + gas.z);
+                const projX = centerX + gas.x * scale;
+                const projY = centerY + gas.y * scale;
+                const projSize = gas.size * scale * (1 + (1 - gas.life) * 2);
+
+                if (projSize <= 0) continue;
+
+                const radGrd = ctx.createRadialGradient(projX, projY, 0, projX, projY, projSize);
+                const alpha = gas.life * 0.22;
+                radGrd.addColorStop(0, `rgba(${gas.color}, ${alpha})`);
+                radGrd.addColorStop(0.5, `rgba(${gas.color}, ${alpha * 0.3})`);
+                radGrd.addColorStop(1, `rgba(${gas.color}, 0)`);
+
+                ctx.fillStyle = radGrd;
+                ctx.beginPath();
+                ctx.arc(projX, projY, projSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+            for (let i = solidChunks.length - 1; i >= 0; i--) {
+                const chunk = solidChunks[i];
+                chunk.x += chunk.vx;
+                chunk.y += chunk.vy;
+                chunk.z += chunk.vz;
+                chunk.angle += chunk.spin;
+
+                const scale = FOV / (FOV + chunk.z);
+                const projX = centerX + chunk.x * scale;
+                const projY = centerY + chunk.y * scale;
+                const projRadius = chunk.size * scale;
+
+                const margin = projRadius + 100;
+                if (projX < -margin || projX > canvas.width + margin || projY < -margin || projY > canvas.height + margin || chunk.z <= -FOV) {
+                    solidChunks.splice(i, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.translate(projX, projY);
+                ctx.rotate(chunk.angle);
+
+                ctx.beginPath();
+                const vCount = chunk.vertices.length;
+                for (let v = 0; v < vCount; v++) {
+                    const currAngle = (v / vCount) * Math.PI * 2;
+                    const r = projRadius * chunk.vertices[v];
+                    const vx = Math.cos(currAngle) * r;
+                    const vy = Math.sin(currAngle) * r;
+                    if (v === 0) ctx.moveTo(vx, vy);
+                    else ctx.lineTo(vx, vy);
+                }
+                ctx.closePath();
+
+                ctx.fillStyle = chunk.baseColor;
+                ctx.fill();
+
+                ctx.strokeStyle = chunk.veinColor;
+                ctx.lineWidth = Math.max(0.6, 1.8 * scale);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            rafId = requestAnimationFrame(renderExplosionFrame);
         }
 
-        requestAnimationFrame(animateExplosion);
+        rafId = requestAnimationFrame(renderExplosionFrame);
     }
 
-    function createNebula(cx, cy) {
-        const nebulaCanvas = document.createElement('canvas');
-        nebulaCanvas.className = 'supernova-nebula';
-        nebulaCanvas.width = window.innerWidth;
-        nebulaCanvas.height = window.innerHeight;
-        document.body.appendChild(nebulaCanvas);
-        const nebulaCtx = nebulaCanvas.getContext('2d');
-
-        const cloudCount = 200;
-        const clouds = [];
-
-        for (let i = 0; i < cloudCount; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const radius = 100 + Math.random() * 450;
-            const size = 20 + Math.random() * 70;
-            const hue = 180 + Math.random() * 80;
-            const sat = 50 + Math.random() * 40;
-            const light = 40 + Math.random() * 40;
-            clouds.push({
-                x: cx + Math.cos(angle) * radius,
-                y: cy + Math.sin(angle) * radius,
-                size,
-                hue,
-                sat,
-                light,
-                alpha: 0.2 + Math.random() * 0.5
-            });
-        }
-
-        const dust = [];
-        for (let i = 0; i < 1000; i++) {
-            dust.push({
-                x: Math.random() * nebulaCanvas.width,
-                y: Math.random() * nebulaCanvas.height,
-                size: 0.8 + Math.random() * 2,
-                alpha: 0.3 + Math.random() * 0.5
-            });
-        }
-
-        for (let d of dust) {
-            nebulaCtx.beginPath();
-            nebulaCtx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
-            nebulaCtx.fillStyle = `rgba(255, 255, 255, ${d.alpha * 0.7})`;
-            nebulaCtx.fill();
-        }
-
-        for (let c of clouds) {
-            const gradient = nebulaCtx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.size);
-            gradient.addColorStop(0, `hsla(${c.hue}, ${c.sat}%, ${c.light}%, ${c.alpha * 0.8})`);
-            gradient.addColorStop(0.6, `hsla(${c.hue}, ${c.sat}%, ${c.light}%, ${c.alpha * 0.3})`);
-            gradient.addColorStop(1, 'rgba(0,0,0,0)');
-            nebulaCtx.beginPath();
-            nebulaCtx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
-            nebulaCtx.fillStyle = gradient;
-            nebulaCtx.fill();
-        }
-
-        for (let i = 0; i < 60; i++) {
-            const angle = i * Math.PI * 2 / 60;
-            const radius = 280 + Math.random() * 80;
-            const x1 = cx + Math.cos(angle) * radius;
-            const y1 = cy + Math.sin(angle) * radius;
-            const x2 = cx + Math.cos(angle + 0.4) * (radius - 50);
-            const y2 = cy + Math.sin(angle + 0.4) * (radius - 50);
-            nebulaCtx.beginPath();
-            nebulaCtx.moveTo(x1, y1);
-            nebulaCtx.lineTo(x2, y2);
-            nebulaCtx.strokeStyle = `hsla(210, 70%, 65%, 0.2)`;
-            nebulaCtx.lineWidth = 1.2;
-            nebulaCtx.stroke();
-        }
-
-        const coreGlow = nebulaCtx.createRadialGradient(cx, cy, 0, cx, cy, 140);
-        coreGlow.addColorStop(0, 'rgba(100, 150, 255, 0.4)');
-        coreGlow.addColorStop(0.7, 'rgba(40, 80, 180, 0.1)');
-        coreGlow.addColorStop(1, 'rgba(0,0,0,0)');
-        nebulaCtx.fillStyle = coreGlow;
-        nebulaCtx.fillRect(0, 0, nebulaCanvas.width, nebulaCanvas.height);
-
-        let opacity = 1;
-        let direction = -0.003;
-        function animateNebula() {
-            if (!nebulaCanvas.parentNode) return;
-            opacity += direction;
-            if (opacity <= 0.8) direction = 0.003;
-            if (opacity >= 1) direction = -0.003;
-            nebulaCanvas.style.opacity = opacity;
-            requestAnimationFrame(animateNebula);
-        }
-        animateNebula();
+    function createNebulaAftermath(x, y) {
+        const nebula = document.createElement('div');
+        nebula.className = 'supernova-nebula';
+        nebula.style.left = `${x}px`;
+        nebula.style.top = `${y}px`;
+        document.body.appendChild(nebula);
     }
-}
+
+    function triggerTerminalCrash() {
+        document.body.className = ''; 
+        document.body.style.backgroundColor = '#010103';
+        document.body.innerHTML = ''; 
+
+        const terminalWrapper = document.createElement('div');
+        terminalWrapper.className = 'terminal-screen-overlay';
+
+        const terminal = document.createElement('div');
+        terminal.className = 'supernova-terminal';
+        terminalWrapper.appendChild(terminal);
+        document.body.appendChild(terminalWrapper);
+
+        const crashLogs = [
+            "guest@universe:~# ./runtime_status.sh",
+            "[  CRITICAL  ] BROADCASTING CORE COLLAPSE DATA SYNC...",
+            "[   KERNEL   ] Panic: SingularityEvent detected at core vector (0,0,0)",
+            "[   KERNEL   ] StarMass threshold crossed: actual=4.92e30kg, required_stable > 1.2e30kg",
+            "[  HARDWARE  ] Thermal sensor out of bounds: > 8.43e9 K (Hardware Melting)",
+            "[   ERROR    ] Sector 0x00FF8C1 - 0x0F4A2B9: DOM_TREE_STRUCTURE_DESTROYED",
+            "[   ERROR    ] Cascade failures detected in: CSS_Quantum_Selectors, Grid_Ballistix",
+            " ",
+            "--- EMERGENCY EXCEPTION REPORT ---",
+            "FATAL STATUS CODE: 0x992FE_STELLAR_DEATH",
+            "The localized space-time reality of Lonewolf239 has dissolved.",
+            "All core layout systems are offline. Quantum state is volatile.",
+            " ",
+            "System requires kernel reset code to initialize timeline recovery.",
+            "Please execute system reboot string."
+        ];
+
+        let lineIndex = 0;
+        function typeCrashLine() {
+            if (lineIndex < crashLogs.length) {
+                const line = document.createElement('div');
+                line.className = 'terminal-line';
+                if (crashLogs[lineIndex].startsWith('guest'))
+                    line.className += ' prompt-line';
+                else if (crashLogs[lineIndex].includes('[   ERROR    ]') || crashLogs[lineIndex].includes('FATAL')) {
+                    line.style.color = '#ff00aa';
+                    line.style.textShadow = '0 0 10px rgba(255, 0, 170, 0.85)';
+                } else if (crashLogs[lineIndex].includes('---') || crashLogs[lineIndex].includes('reset code')) {
+                    line.style.color = '#00ffff';
+                    line.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.85)';
+                }
+
+                terminal.appendChild(line);
+                let charIndex = 0;
+                const text = crashLogs[lineIndex];
+
+                function typeChar() {
+                    if (charIndex < text.length) {
+                        line.textContent += text[charIndex];
+                        charIndex++;
+                        setTimeout(typeChar, text.startsWith('[') ? 4 : 15);
+                    } else {
+                        lineIndex++;
+                        setTimeout(typeCrashLine, 90);
+                    }
+                }
+                typeChar();
+            } else initializeInteractiveInput();
+        }
+
+        setTimeout(typeCrashLine, 400);
+
+        function initializeInteractiveInput() {
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'terminal-line prompt-line active-input-line';
+            inputContainer.innerHTML = 'guest@universe:~# <span class="user-typed-text"></span><span class="terminal-cursor">█</span>';
+            terminal.appendChild(inputContainer);
+
+            const textSpan = inputContainer.querySelector('.user-typed-text');
+            let inputBuffer = "";
+
+            const keyHandler = (e) => {
+                if (e.key === 'Enter') {
+                    if (inputBuffer.trim().toLowerCase() === 'reboot') {
+                        window.removeEventListener('keydown', keyHandler);
+                        executeCrtScreenOff();
+                    } else {
+                        const errLine = document.createElement('div');
+                        errLine.className = 'terminal-line';
+                        errLine.style.color = '#ff3366';
+                        errLine.textContent = `bash: command not found: ${inputBuffer}`;
+                        terminal.insertBefore(errLine, inputContainer);
+                        inputBuffer = "";
+                        textSpan.textContent = "";
+                    }
+                } else if (e.key === 'Backspace') {
+                    inputBuffer = inputBuffer.slice(0, -1);
+                    textSpan.textContent = inputBuffer;
+                } else if (e.key.length === 1 && /^[a-zA-Z0-9 ]$/.test(e.key)) {
+                    inputBuffer += e.key;
+                    textSpan.textContent = inputBuffer;
+                }
+            };
+
+            window.addEventListener('keydown', keyHandler);
+        }
+
+        function executeCrtScreenOff() {
+            terminalWrapper.classList.add('crt-shutdown');
+            setTimeout(() => {
+                terminal.innerHTML = '';
+                executeCrtScreenOn();
+            }, 750);
+        }
+
+        function executeCrtScreenOn() {
+            terminalWrapper.classList.remove('crt-shutdown');
+            terminalWrapper.classList.add('crt-startup');
+
+            const bootLogs = [
+                "[    0.000000] Linux version 6.13.4-architecture-lonewolf (gcc version 13.2.0)",
+                "[    0.002410] CPU0: Intel(R) Core(TM) Quantum Processor Physical Context initialized",
+                "[    0.021004] BIOS-provided physical RAM map: 0x0000000000000 - 0x0000FFFFFFFFF (Aura Dynamic)",
+                "[    0.104251] ACPI: Core Revision 20260517",
+                "[    0.240984] ACPI: 1 ACPI AML tables successfully acquired and loaded",
+                "[    0.512049] usbcore: registered new interface driver hub",
+                "[    0.690114] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled",
+                "[    0.884102] Dynamic Cipher Mapping: AES-256-GCM hardware acceleration integrity checks... OK",
+                "[    1.024951] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)",
+                "[    1.230114] VFS: Mounted root (ext4 filesystem) readonly on device 8:1.",
+                "[    1.421049] init: Allocating system timeline threads...",
+                " ",
+                "[  CONNECT   ] Initializing Lonewolf239 Main Frame Architecture... [ OK ]",
+                "[  RESTORE   ] Compiling destroyed DOM layout elements... [ OK ]",
+                "[  RE-INDEX  ] Re-mapping CSS hyper-vectors and linear grids... [ OK ]",
+                "[  STABLE    ] Calibrating stellar core mass and particle balancers... [ OK ]",
+                " ",
+                "[   READY    ] Dynamic universe deployment successful.",
+                "[   REBOOT   ] Synchronizing local timelines. Redirecting user..."
+            ];
+
+            let bootIndex = 0;
+
+            function streamBootLogs() {
+
+                if (bootIndex < bootLogs.length) {
+                    const line = document.createElement('div');
+                    line.className = 'terminal-line';
+                    if (bootLogs[bootIndex].includes('[ OK ]') || bootLogs[bootIndex].includes('successful')) {
+                        line.style.color = '#00ff66';
+                        line.style.textShadow = '0 0 8px rgba(0, 255, 102, 0.7)';
+                    } else if (bootLogs[bootIndex].includes('['))
+                        line.style.color = '#a1a1aa';
+
+                    line.textContent = bootLogs[bootIndex];
+                    terminal.appendChild(line);
+
+                    terminalWrapper.scrollTop = terminalWrapper.scrollHeight;
+
+                    bootIndex++;
+                    setTimeout(streamBootLogs, 20 + Math.random() * 45);
+                } else {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
+                }
+            }
+
+            setTimeout(streamBootLogs, 300);
+        }
+    }
+});

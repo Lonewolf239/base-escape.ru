@@ -109,6 +109,44 @@
         },
         {
             "title": {
+                "ru": "NeoIniLight",
+                "en": "NeoIniLight",
+                "de": "NeoIniLight"
+            },
+            "shortDescription": {
+                "ru": "Лёгкая INI-библиотека для .NET (MIT)",
+                "en": "Lightweight INI library for .NET (MIT)",
+                "de": "Leichte INI-Bibliothek für .NET (MIT)"
+            },
+            "description": {
+                "ru": "Облегчённая версия NeoIni с MIT-лицензией. Без шифрования и hot-reload, но с потокобезопасностью, атомарными записями и автоматическими бэкапами. Идеальна для open-source проектов.",
+                "en": "Lightweight version of NeoIni with MIT license. No encryption or hot-reload, but with thread safety, atomic writes, and automatic backups. Perfect for open-source projects.",
+                "de": "Leichte Version von NeoIni mit MIT-Lizenz. Keine Verschlüsselung oder Hot-Reload, aber mit Threadsicherheit, atomaren Schreibvorgängen und automatischen Backups. Ideal für Open-Source-Projekte."
+            },
+            "language": "C#",
+            "tags": [
+                "Library",
+                ".NET",
+                "INI",
+                "Configuration",
+                "MIT",
+                "Thread-Safe"
+            ],
+            "links": {
+                "github": "https://github.com/Lonewolf239/NeoIniLight",
+                "nuget": "https://www.nuget.org/packages/NeoIniLight",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=NeoIniLight",
+                        "en": "/en/viewer?project=NeoIniLight",
+                        "de": "/de/viewer?project=NeoIniLight"
+                    },
+                    "newTab": false
+                }
+            }
+        },
+        {
+            "title": {
                 "ru": "Lonewolf239 Portfolio",
                 "en": "Lonewolf239 Portfolio",
                 "de": "Lonewolf239 Portfolio"
