@@ -536,7 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             localStorage.setItem('supernova_secret', 'true');
 							window.removeEventListener('keydown', keyHandler);
 	                        executeCrtScreenOff();
-                        } else if (currentCount % 10 === 0) logLine.textContent = `bash: ${currentCount}`;
+                        } else if (currentCount % 5 === 0) logLine.textContent = `bash: ${currentCount}`;
 
                         terminal.insertBefore(logLine, inputContainer);
                         inputBuffer = "";
@@ -652,15 +652,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-	function initUltimateSecret() {
+    function initUltimateSecret() {
 
         const triggerApocalypse = (e) => {
             if (e && typeof e.preventDefault === 'function')
                 e.preventDefault();
 
-		    window.removeEventListener('click', triggerApocalypse, { capture: true });
-		    window.removeEventListener('touchstart', triggerApocalypse, { capture: true });
-		    window.removeEventListener('keydown', triggerApocalypse, { capture: true });
+            window.removeEventListener('click', triggerApocalypse, { capture: true });
+            window.removeEventListener('touchstart', triggerApocalypse, { capture: true });
 
             localStorage.removeItem('supernova_secret');
             localStorage.removeItem('supernova_42_count');
@@ -693,6 +692,181 @@ document.addEventListener("DOMContentLoaded", () => {
                 z-index: 1;
             `;
             document.body.appendChild(img);
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes cinematicScroll {
+                    0% { transform: translate3d(0, 100vh, 0); }
+                    100% { transform: translate3d(0, -100%, 0); }
+                }
+                .credits-overlay {
+                    position: absolute;
+                    inset: 0;
+                    z-index: 2;
+                    /* Глубокий гранжевый градиент слева для читаемости текста */
+                    background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 35%, transparent 70%),
+                                radial-gradient(circle at center, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
+                    display: flex;
+                    justify-content: flex-start;
+                    overflow: hidden;
+                    pointer-events: none;
+                    padding-left: 8%;
+                }
+                .credits-scroll-box {
+                    width: 100%;
+                    max-width: 550px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    text-align: left;
+                    font-family: 'Fira Code', monospace;
+                    color: #ffffff;
+                    
+                    flex-shrink: 0;
+                    height: max-content;
+                    will-change: transform;
+                    
+                    animation: cinematicScroll 210s linear forwards;
+                }
+                .credits-main-title {
+                    font-size: 2.8rem;
+                    letter-spacing: 12px;
+                    text-transform: uppercase;
+                    margin-bottom: 7rem;
+                    margin-top: 15vh;
+                    color: #ff6a00; 
+                    text-shadow: 3px 3px 0px #000, -1px -1px 0px #000, 0 0 25px rgba(255,106,0,0.7);
+                }
+                .credit-group {
+                    margin-bottom: 2.6rem;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    width: 100%;
+                }
+                .credit-position {
+                    font-size: 0.8rem;
+                    text-transform: uppercase;
+                    letter-spacing: 4px;
+                    color: #cbd5e1; 
+                    font-weight: 600;
+                    margin-bottom: 0.4rem;
+                    text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0 2px 4px #000;
+                }
+                .credit-name-holder {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    color: #ffffff;
+                    text-shadow: 2px 2px 0px #000, -1px -1px 0px #000, 2px -1px 0px #000, -1px 2px 0px #000, 0 0 10px rgba(255,255,255,0.3);
+                }
+                .credit-footer-note {
+                    margin-top: 10rem;
+                    font-size: 0.85rem;
+                    letter-spacing: 3px;
+                    color: #94a3b8;
+                    text-transform: uppercase;
+                    padding-bottom: 35vh;
+                    line-height: 2;
+                    text-shadow: 2px 2px 0px #000;
+                }
+            `;
+            document.head.appendChild(style);
+
+            const creditsOverlay = document.createElement('div');
+            creditsOverlay.className = 'credits-overlay';
+
+            const scrollBox = document.createElement('div');
+            scrollBox.className = 'credits-scroll-box';
+            scrollBox.innerHTML = `<h1 class="credits-main-title">LONEWOLF239</h1>`;
+
+            const rolesList = [
+                { p: "Режиссер-постановщик", n: "Lonewolf239" },
+                { p: "Автор оригинального сценария", n: "Lonewolf239" },
+                { p: "Генеральный продюсер", n: "Lonewolf239" },
+                { p: "Исполнительный продюсер", n: "Lonewolf239" },
+                { p: "Линейный продюсер проекта", n: "Lonewolf239" },
+                { p: "Шоураннер", n: "Lonewolf239" },
+                { p: "В главной роли", n: "Lonewolf239" },
+                { p: "В роли Одинокого Волка", n: "Lonewolf239" },
+                { p: "Главный архитектор систем (Chief Architect)", n: "Lonewolf239" },
+                { p: "Руководитель разработки (Team Lead)", n: "Lonewolf239" },
+                { p: "Senior Frontend Developer", n: "Lonewolf239" },
+                { p: "Middle Frontend Developer", n: "Lonewolf239" },
+                { p: "Junior Frontend Developer", n: "Lonewolf239" },
+                { p: "Frontend Intern (Стажер-кодер)", n: "Lonewolf239" },
+                { p: "Тот самый чувак, исправивший баги за стажером", n: "Lonewolf239" },
+                { p: "Главный UI/UX дизайнер интерфейса", n: "Lonewolf239" },
+                { p: "Исследователь пользовательского опыта (UX Researcher)", n: "Lonewolf239" },
+                { p: "Инженер квантовых частиц Canvas", n: "Lonewolf239" },
+                { p: "Разработчик физики взрыва Сверхновой", n: "Lonewolf239" },
+                { p: "Магистр деформации DOM-дерева", n: "Lonewolf239" },
+                { p: "Специалист по анимациям CSS3 и Keyframes", n: "Lonewolf239" },
+                { p: "Инженер эффектов симуляции CRT-монитора", n: "Lonewolf239" },
+                { p: "Ведущий системный администратор терминала", n: "Lonewolf239" },
+                { p: "Администратор баз данных LocalStorage", n: "Lonewolf239" },
+                { p: "DevOps Engineer & Infrastructure Lead", n: "Lonewolf239" },
+                { p: "Специалист по падениям CI/CD пайплайнов", n: "Lonewolf239" },
+                { p: "Директор Департамента обеспечения качества (QA Director)", n: "Lonewolf239" },
+                { p: "Ведущий инженер по автоматизации тестирования", n: "Lonewolf239" },
+                { p: "Специалист по ручному тестированию (Manual QA)", n: "Lonewolf239" },
+                { p: "Тестировщик под высокими нагрузками (Stress Tester)", n: "Lonewolf239" },
+                { p: "Звукорежиссер перезаписи и монтажа звука", n: "Lonewolf239" },
+                { p: "Музыкальный супервайзер (Music Supervisor)", n: "Lonewolf239" },
+                { p: "Инженер по аудио-компрессии кодека .m4a", n: "Lonewolf239" },
+                { p: "Скаут локаций (Location Scout)", n: "Lonewolf239" },
+                { p: "Постановщик трюков (Stunt Coordinator)", n: "Lonewolf239" },
+                { p: "Исполнитель опасных трюков (Каскадер)", n: "Lonewolf239" },
+                { p: "Ассистент каскадера", n: "Lonewolf239" },
+                { p: "Постановщик трюка «Медитация на разделительной полосе»", n: "Lonewolf239" },
+                { p: "Художник по костюмам (Кожаная куртка и шлем LS2)", n: "Lonewolf239" },
+                { p: "Менеджер по реквизиту (Property Master)", n: "Lonewolf239" },
+                { p: "Директор по освещению кадра (Солнечный закат)", n: "Lonewolf239" },
+                { p: "Колорист финального изображения (Color Grader)", n: "Lonewolf239" },
+                { p: "Директор по маркетингу и связям с общественностью", n: "Lonewolf239" },
+                { p: "Копирайтер терминальных логов и аварийных отчетов", n: "Lonewolf239" },
+                { p: "Главный специалист по решению Git-конфликтов", n: "Lonewolf239" },
+                { p: "Сортировщик и чистильщик мертвого кода", n: "Lonewolf239" },
+                { p: "Менеджер по доставке кофе и энергетиков (Catering)", n: "Lonewolf239" },
+                { p: "Шеф-повар полевой кухни для одного разработчика", n: "Lonewolf239" },
+                { p: "Главный Scrum-мастер и фасилитатор", n: "Lonewolf239" },
+                { p: "Agile-консультант проекта", n: "Lonewolf239" },
+                { p: "Владелец продукта (Product Owner)", n: "Lonewolf239" },
+                { p: "Психологическая поддержка команды разработки", n: "Lonewolf239" },
+                { p: "Тот, кто загорелся идеей и набросал базу за пару дней", n: "Lonewolf239" },
+                { p: "Тот, кто забил болт на код на несколько месяцев", n: "Lonewolf239" },
+                { p: "Тот, кто собрал всё в монолит за сутки перед деплоем", n: "Lonewolf239" },
+                { p: "Chief Executive Officer (CEO)", n: "Lonewolf239" },
+                { p: "Chief Technology Officer (CTO)", n: "Lonewolf239" },
+                { p: "Chief Cleaning Officer (Уборщик console.log)", n: "Lonewolf239" },
+                { p: "Философский консультант по числу 42", n: "Дуглас Адамс" },
+                { p: "Особая благодарность за саундтрек молодости", n: "Честер Беннингтон (Linkin Park)" },
+                { p: "Вдохновитель масштаба взрывов и общего пафоса", n: "Майкл Бэй" },
+                { p: "Технический спонсор проекта", n: "Кофеин, Бессонница и Чистый Энтузиазм" }
+            ];
+
+            rolesList.forEach(item => {
+                const block = document.createElement('div');
+                block.className = 'credit-group';
+                block.innerHTML = `
+                    <div class="credit-position">${item.p}</div>
+                    <div class="credit-name-holder">${item.n}</div>
+                `;
+                scrollBox.appendChild(block);
+            });
+
+            const footerNote = document.createElement('div');
+            footerNote.className = 'credit-footer-note';
+            footerNote.innerHTML = `
+                <div>© 2026 LONEWOLF239.</div>
+                <div style="font-size: 0.7rem; margin-top: 1rem; color: #94a3b8; letter-spacing: 2px;">
+                    НАЖМИТЕ F5.
+                </div>
+            `;
+            scrollBox.appendChild(footerNote);
+
+            creditsOverlay.appendChild(scrollBox);
+            document.body.appendChild(creditsOverlay);
 
             const audio = new Audio();
             audio.src = '/images/What_I_ve_Done_Linkin_Park.m4a';
@@ -704,6 +878,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.addEventListener('click', triggerApocalypse, { once: true, capture: true });
         window.addEventListener('touchstart', triggerApocalypse, { once: true, capture: true });
-        window.addEventListener('keydown', triggerApocalypse, { once: true, capture: true });
     }
 });
