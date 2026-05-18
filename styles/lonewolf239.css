@@ -8,6 +8,7 @@
 	color: #fff;
 	position: relative;
 	animation: glitch 16s infinite ease-in-out;
+	pointer-events: none;
 }
 
 @keyframes glitch {

@@ -164,8 +164,8 @@ body.flash-active {
 	overflow-y: auto;
 	overflow-x: hidden;
 	margin: 0;
-	user-select: text !important;
-	-webkit-user-select: text !important;
+	pointer-events: none !important;
+	cursor: none !important;
 }
 
 .terminal-screen-overlay::before {
