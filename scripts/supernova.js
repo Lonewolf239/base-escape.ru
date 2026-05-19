@@ -652,7 +652,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function initUltimateSecret() {
+	function initUltimateSecret() {
 		const triggerApocalypse = (e) => {
 			if (e && typeof e.preventDefault === 'function')
 				e.preventDefault();
@@ -680,18 +680,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	            cursor: none;
 		    `;
 
-	        const img = document.createElement('img');
-		    img.src = '/images/lonewolf239.jpg';
-			img.style.cssText = `
-				width: 100%;
-	            height: 100%;
-		        object-fit: cover;
-			    position: absolute;
-				top: 0;
-	            left: 0;
-		        z-index: 1;
-			`;
-	        document.body.appendChild(img);
+	        const imgEmpty = document.createElement('img');
+		    imgEmpty.src = '/images/no_lonewolf239.jpg';
+			imgEmpty.className = 'scene-image-base';
+	        document.body.appendChild(imgEmpty);
+
+	        const imgSubject = document.createElement('img');
+		    imgSubject.src = '/images/lonewolf239.jpg';
+			imgSubject.className = 'scene-image-subject';
+	        document.body.appendChild(imgSubject);
+
 
 			const style = document.createElement('style');
 	        style.innerHTML = `
@@ -705,14 +703,38 @@ document.addEventListener("DOMContentLoaded", () => {
 					90% { transform: translateY(0); opacity: 1; }
 	                100% { transform: translateY(120%); opacity: 0; }
 		        }
-			    @keyframes finalFadeOut {
-				    0% { opacity: 0; visibility: hidden; }
-					100% { opacity: 1; visibility: visible; }
+
+                .scene-image-base, .scene-image-subject {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+
+                .scene-image-base { z-index: 1; }
+
+                .scene-image-subject {
+                    z-index: 2;
+                    animation: subjectDissolve 15s ease-in-out forwards;
+                    animation-delay: 193s;
+                }
+
+                @keyframes subjectDissolve {
+                    0% { opacity: 1; filter: blur(0px); transform: scale(1); }
+                    100% { opacity: 0; filter: blur(12px); transform: scale(1.04); visibility: hidden; }
+                }
+
+			    @keyframes finalMessageShow {
+				    0% { opacity: 0; filter: blur(10px); transform: scale(0.95); visibility: visible; }
+					100% { opacity: 1; filter: blur(0px); transform: scale(1); visibility: visible; }
 	            }
+
 		        .credits-overlay {
 			        position: absolute;
 				    inset: 0;
-					z-index: 2;
+					z-index: 3;
 	                background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 35%, transparent 70%),
 		                        radial-gradient(circle at center, rgba(0,0,0,0) 20%, rgba(0,0,0,0.6) 100%);
 			        display: flex;
@@ -733,19 +755,19 @@ document.addEventListener("DOMContentLoaded", () => {
 				    flex-shrink: 0;
 					height: max-content;
 	                will-change: transform;
-		            animation: cinematicScroll 220s linear forwards;
+		            animation: cinematicScroll 208s linear forwards;
 			    }
 	            .credits-main-title {
 		            font-size: 2.8rem;
 			        letter-spacing: 12px;
 				    text-transform: uppercase;
-					margin-bottom: 7rem;
-	                margin-top: 15vh;
+					margin-bottom: 12rem;
+	                margin-top: 25vh;
 		            color: #ff6a00; 
 			        text-shadow: 3px 3px 0px #000, -1px -1px 0px #000, 0 0 25px rgba(255,106,0,0.7);
 	            }
 		        .credit-group {
-			        margin-bottom: 2.6rem;
+			        margin-bottom: 5.5rem;
 				    display: flex;
 					flex-direction: column;
 	                align-items: flex-start;
@@ -757,7 +779,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		            letter-spacing: 4px;
 			        color: #cbd5e1; 
 				    font-weight: 600;
-					margin-bottom: 0.4rem;
+					margin-bottom: 0.5rem;
 	                text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0 2px 4px #000;
 		        }
 			    .credit-name-holder {
@@ -770,7 +792,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	            .music-panel {
 		            position: absolute;
 			        bottom: 30px;
-				    right: 30px;
+				right: 30px;
 					z-index: 10;
 	                background: rgba(20, 20, 20, 0.85);
 		            border: 1px solid rgba(255, 106, 0, 0.4);
@@ -809,28 +831,45 @@ document.addEventListener("DOMContentLoaded", () => {
 		            letter-spacing: 2px;
 	                margin-top: 2px;
 			    }
+
 	            .final-dark-overlay {
 		            position: absolute;
 			        inset: 0;
-				    background: #000;
-					z-index: 20;
+				    background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+					z-index: 20; 
 	                opacity: 0;
 		            visibility: hidden;
 			        display: flex;
 				    justify-content: center;
 					align-items: center;
-	                animation: finalFadeOut 5s ease-in-out forwards;
-		            animation-delay: 200s;
+	                animation: finalMessageShow 15s ease-in-out forwards;
+		            animation-delay: 193s; 
 	            }
 	            .centered-footer {
 		            text-align: center;
 			        font-family: 'Fira Code', monospace;
-				    color: #94a3b8;
-					text-transform: uppercase;
-	                line-height: 1.8;
-		            letter-spacing: 3px;
-			        text-shadow: 0 0 10px rgba(148, 163, 184, 0.5);
 				}
+                .final-title {
+                    font-size: 3rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                    letter-spacing: 6px;
+                    margin-bottom: 1.2rem;
+                    text-transform: uppercase;
+                    text-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8);
+                }
+                .final-subtitle {
+                    font-size: 1.4rem;
+                    color: #ff6a00;
+                    letter-spacing: 4px;
+                    text-transform: uppercase;
+                    text-shadow: 0 0 15px rgba(255, 106, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.8);
+                    animation: pulseGlow 2.5s infinite ease-in-out;
+                }
+                @keyframes pulseGlow {
+                    0%, 100% { opacity: 0.7; text-shadow: 0 0 10px rgba(255, 106, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+                    50% { opacity: 1; text-shadow: 0 0 25px rgba(255, 106, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+                }
 	        `;
 		    document.head.appendChild(style);
 
@@ -864,7 +903,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		        { p: "Магистр деформации DOM-дерева", n: "Lonewolf239" },
 			    { p: "Специалист по анимациям CSS3 и Keyframes", n: "Lonewolf239" },
 				{ p: "Инженер эффектов симуляции CRT-монитора", n: "Lonewolf239" },
-	            { p: "Ведущий системный администратор терминала", n: "Lonewolf239" },
+	            { p: "Ведущий системный администратор terminal", n: "Lonewolf239" },
 		        { p: "Администратор баз данных LocalStorage", n: "Lonewolf239" },
 			    { p: "DevOps Engineer & Infrastructure Lead", n: "Lonewolf239" },
 				{ p: "Специалист по падениям CI/CD пайплайнов", n: "Lonewolf239" },
@@ -884,7 +923,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		        { p: "Менеджер по реквизиту (Property Master)", n: "Lonewolf239" },
 			    { p: "Директор по освещению кадра (Солнечный закат)", n: "Lonewolf239" },
 				{ p: "Колорист финального изображения (Color Grader)", n: "Lonewolf239" },
-	            { p: "Директор по маркетингу и связям с общественностью", n: "Lonewolf239" },
+	            { p: "Директор по MARKETING и связям с общественностью", n: "Lonewolf239" },
 		        { p: "Копирайтер терминальных логов и аварийных отчетов", n: "Lonewolf239" },
 			    { p: "Главный специалист по решению Git-конфликтов", n: "Lonewolf239" },
 				{ p: "Сортировщик и чистильщик мертвого кода", n: "Lonewolf239" },
@@ -916,10 +955,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	            scrollBox.appendChild(block);
 		    });
 
-			const spacer = document.createElement('div');
-	        spacer.style.height = '100vh';
-		    scrollBox.appendChild(spacer);
-
 			creditsOverlay.appendChild(scrollBox);
 	        document.body.appendChild(creditsOverlay);
 
@@ -938,10 +973,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		    finalDarkness.className = 'final-dark-overlay';
 			finalDarkness.innerHTML = `
 				<div class="centered-footer">
-					<div>© 2026 LONEWOLF239.</div>
-	                <div style="font-size: 0.7rem; margin-top: 1.2rem; color: #64748b;">
-		                НАЖМИТЕ F5.
-			        </div>
+					<div class="final-title">LONEWOLF239 © 2026</div>
+	                <div class="final-subtitle">Нажмите F5</div>
 				</div>
 	        `;
 		    document.body.appendChild(finalDarkness);
