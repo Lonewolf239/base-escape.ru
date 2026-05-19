@@ -703,7 +703,6 @@ document.addEventListener("DOMContentLoaded", () => {
 					90% { transform: translateY(0); opacity: 1; }
 	                100% { transform: translateY(120%); opacity: 0; }
 		        }
-
                 .scene-image-base, .scene-image-subject {
                     width: 100%;
                     height: 100%;
@@ -712,25 +711,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     top: 0;
                     left: 0;
                 }
-
                 .scene-image-base { z-index: 1; }
-
                 .scene-image-subject {
                     z-index: 2;
                     animation: subjectDissolve 15s ease-in-out forwards;
                     animation-delay: 193s;
                 }
-
                 @keyframes subjectDissolve {
                     0% { opacity: 1; filter: blur(0px); transform: scale(1); }
                     100% { opacity: 0; filter: blur(12px); transform: scale(1.04); visibility: hidden; }
                 }
-
 			    @keyframes finalMessageShow {
 				    0% { opacity: 0; filter: blur(10px); transform: scale(0.95); visibility: visible; }
 					100% { opacity: 1; filter: blur(0px); transform: scale(1); visibility: visible; }
 	            }
-
 		        .credits-overlay {
 			        position: absolute;
 				    inset: 0;
@@ -792,7 +786,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	            .music-panel {
 		            position: absolute;
 			        bottom: 30px;
-				right: 30px;
+					right: 30px;
 					z-index: 10;
 	                background: rgba(20, 20, 20, 0.85);
 		            border: 1px solid rgba(255, 106, 0, 0.4);
@@ -831,7 +825,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		            letter-spacing: 2px;
 	                margin-top: 2px;
 			    }
-
 	            .final-dark-overlay {
 		            position: absolute;
 			        inset: 0;
@@ -984,6 +977,33 @@ document.addEventListener("DOMContentLoaded", () => {
 			audio.volume = 0.8;
 
 	        audio.play().catch(err => console.error("Ошибка воспроизведения:", err));
+
+			const creditsDuration = 208000;
+            const waitTime = 42 * 60 * 60 * 1000;
+            let timer42 = null;
+            let isFailed = false;
+
+			const checkVisibility = () => {
+                if (document.hidden || document.visibilityState === 'hidden' || !document.hasFocus()) {
+                    isFailed = true;
+                    if (timer42) clearTimeout(timer42);
+                    document.removeEventListener('visibilitychange', checkVisibility);
+                    window.removeEventListener('blur', checkVisibility);
+                }
+            };
+
+			document.addEventListener('visibilitychange', checkVisibility);
+            window.addEventListener('blur', checkVisibility);
+
+			setTimeout(() => {
+                if (isFailed) return;
+                timer42 = setTimeout(() => {
+                    if (!isFailed) {
+                        sessionStorage.setItem('ultimate_42_unlocked', 'true');
+                        window.location.href = '/42/42/42/42/42/42/42/42/42/42/42/index.html';
+                    }
+                }, waitTime);
+            }, creditsDuration);
 		};
 
 	    window.addEventListener('click', triggerApocalypse, { once: true, capture: true });
