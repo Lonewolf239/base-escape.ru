@@ -426,7 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function triggerTerminalCrash() {
 		localStorage.removeItem('supernova_42_count');
         document.body.className = '';
-		document.body.style.cssText = 'background-color: #000; margin: 0; padding: 0; overflow: hidden; width: 100vw; height: 100vh; cursor: none;';
+		document.body.style.cssText = 'background: #000; background-color: #000; margin: 0; padding: 0; overflow: hidden; width: 100vw; height: 100vh; cursor: none;';
         document.body.innerHTML = '';
 
         const crtContainer = document.createElement('div');
