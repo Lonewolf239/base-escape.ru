@@ -9,6 +9,7 @@ html {
 
 html,
 body {
+	overflow-x: hidden;
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -205,9 +206,8 @@ footer a:hover,
 	}
 
 	nav {
-		top: 10px;
-		left: 10px;
-		right: auto;
+		top: 15px;
+		left: 15px;
 		background: transparent;
 		backdrop-filter: none;
 		flex-direction: column;
@@ -215,21 +215,9 @@ footer a:hover,
 	}
 
 	.menu-toggle-btn {
-		display: flex;
-		width: 36px;
-		height: 36px;
-		background: rgba(20, 20, 30, 0.5);
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 0, 170, 0.4);
-		border-radius: 50%;
-		cursor: pointer;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.25s ease;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-		font-size: 22px;
-		font-weight: bold;
-		color: white;
+		width: 44px;
+		height: 44px;
+		font-size: 24px;
 	}
 
 	.menu-toggle-btn:hover {
@@ -243,32 +231,28 @@ footer a:hover,
 		flex-direction: column;
 		gap: 12px;
 		margin-top: 12px;
-		transform: scaleY(0);
+		padding: 12px;
+		background: rgba(15, 15, 20, 0.85);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgba(255, 0, 170, 0.4);
+		border-radius: 20px;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+		transform: scaleY(0) translateY(-10px);
 		opacity: 0;
-		transition: transform 0.3s ease, opacity 0.2s ease;
+		transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.2s ease;
 		pointer-events: none;
 		transform-origin: top center;
 	}
 
 	.nav-menu.open {
-		transform: scaleY(1);
+		transform: scaleY(1) translateY(0);
 		opacity: 1;
 		pointer-events: auto;
 	}
 
 	.nav-menu button {
-		width: 36px;
-		height: 36px;
-		background: rgba(20, 20, 30, 0.5);
-		backdrop-filter: blur(8px);
-		border: 1px solid rgba(255, 0, 170, 0.4);
-		border-radius: 50%;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: all 0.25s ease;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+		width: 40px;
+		height: 40px;
 	}
 
 	.nav-menu button img {

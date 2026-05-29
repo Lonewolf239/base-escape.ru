@@ -1,5 +1,8 @@
 :root {
 	--bg-main: #09090b;
+	--sunset-start: #06060c;
+	--sunset-mid: #250b46;
+	--sunset-end: #ff2a5f;
 	--primary: #ff00aa;
 	--primary-glow: rgba(255, 0, 170, 0.4);
 	--text-main: #f4f4f5;
@@ -8,18 +11,46 @@
 }
 
 body {
-	background: var(--bg-main);
+	background: linear-gradient(to bottom,
+			var(--sunset-start) 0%,
+			var(--sunset-start) 30%,
+			var(--sunset-mid) 60%,
+			var(--sunset-end) 100%);
 	color: var(--text-main);
 	font-family: 'Inter', system-ui, sans-serif;
 	margin: 0;
 	min-height: 100vh;
 	position: relative;
-	overflow-x: hidden;
+}
+
+#background {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	height: 100vh;
+	height: 100svh;
+	z-index: 0;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+#background::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: 5;
+	background: repeating-linear-gradient(to bottom,
+			rgba(0, 0, 0, 0.15) 0px,
+			rgba(0, 0, 0, 0.15) 1px,
+			transparent 1px,
+			transparent 4px);
+	pointer-events: none;
+	opacity: 0.6;
 }
 
 .space-dust,
 .stars-extra {
-	position: fixed;
+	position: absolute;
 	inset: 0;
 	z-index: 1;
 	pointer-events: none;
@@ -137,15 +168,15 @@ body {
 }
 
 .shooting-stars-container {
-	position: fixed;
+	position: absolute;
 	inset: 0;
 	z-index: 2;
 	pointer-events: none;
 	overflow: hidden;
 	width: 100%;
 	max-width: 100%;
-	height: 50vh;
-	max-height: 50vh;
+	height: 50%;
+	max-height: 50%;
 }
 
 .comet {
@@ -186,7 +217,7 @@ body {
 }
 
 .retro-sun {
-	position: fixed;
+	position: absolute;
 	bottom: 35%;
 	left: 50%;
 	transform: translateX(-50%);
@@ -206,6 +237,7 @@ body {
 		repeating-linear-gradient(to bottom, black 0px, black 12px, transparent 12px, transparent 18px);
 	-webkit-mask-composite: destination-in;
 	animation: sunPulse 3s ease-in-out infinite alternate;
+	pointer-events: auto;
 }
 
 @keyframes sunPulse {
@@ -222,12 +254,29 @@ body {
 	}
 }
 
+.horizon-glow {
+	position: absolute;
+	bottom: 50%;
+	left: 0;
+	width: 100%;
+	height: 180px;
+	transform: translateY(50%);
+	z-index: 2;
+	pointer-events: none;
+	background:
+		radial-gradient(ellipse 35% 70% at 50% 50%, rgba(255, 0, 170, 0.85) 0%, rgba(255, 0, 170, 0) 100%),
+		linear-gradient(to bottom, transparent 43%, rgba(255, 0, 170, 0.75) 50%, transparent 57%);
+
+	filter: blur(14px);
+	opacity: 0.9;
+}
+
 .bg-grid {
-	position: fixed;
+	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	height: 50vh;
+	height: 50%;
 	z-index: 4;
 	background-color: var(--bg-main);
 	border-top: 2px solid var(--primary);
@@ -265,6 +314,18 @@ body {
 }
 
 @media (max-width: 768px) {
+	.retro-sun {
+		width: 300px;
+		height: 300px;
+		bottom: 40%;
+		animation: none;
+	}
+
+	.horizon-glow {
+		height: 140px;
+		filter: blur(10px);
+	}
+
 	.bg-grid::before {
 		animation: none;
 	}

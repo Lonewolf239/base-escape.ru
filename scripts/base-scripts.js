@@ -181,11 +181,13 @@ function initBackground() {
 		<div class="space-dust"></div>
 	    <div class="stars-extra"></div>
 	    <div class="shooting-stars-container"></div>
+	    <div class="horizon-glow"></div>
 	    <div class="retro-sun"></div>
 	    <div class="bg-grid"></div>
 	`;
 
-	startComets();
+    const isPC = !('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.innerWidth > 768;
+	if(isPC) startComets();
 }
 
 function createComet() {

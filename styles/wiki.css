@@ -204,14 +204,21 @@
 		grid-template-columns: 1fr;
 		padding: 12px;
 		gap: 16px;
+		margin-top: 65px;
 	}
 
 	.sidebar {
-		position: static;
-		max-height: 40vh;
+		position: relative;
+		top: 0;
+		max-height: 200px;
 	}
 
 	.wiki-content {
 		padding: 16px;
+	}
+
+	.wiki-content pre {
+		padding: 0.8em;
+		font-size: 0.8rem;
 	}
 }

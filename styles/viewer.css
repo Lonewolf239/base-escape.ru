@@ -345,14 +345,16 @@
 
 @media (max-width: 768px) {
 	.ide-container {
+		margin-top: 65px;
 		grid-template-columns: 1fr;
 		padding: 12px;
 		gap: 16px;
 	}
 
 	.sidebar {
-		position: static;
-		max-height: 50vh;
+		position: relative;
+		top: 0;
+		max-height: 260px;
 	}
 
 	.code-viewer pre {
@@ -365,7 +367,7 @@
 
 	.image-info {
 		flex-direction: column;
-		text-align: center;
+		align-items: flex-start;
 		gap: 8px;
 	}
 }
