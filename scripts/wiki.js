@@ -2,10 +2,42 @@ const wikiPagesCache = {};
 let currentProject = '';
 let pagesList = [];
 let displayNames = [];
+let closeMobileMenu = () => {};
 
 document.addEventListener('DOMContentLoaded', initWiki);
 
+function initMobileMenu() {
+    const container = document.querySelector('.wiki-container');
+    if (!container) return;
+
+    const burger = document.createElement('button');
+    burger.className = 'burger-btn';
+    burger.innerHTML = '☰ Список страниц';
+    container.insertBefore(burger, container.firstChild);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+
+    container.appendChild(overlay);
+
+    const sidebar = document.querySelector('.sidebar');
+
+    function toggle() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+    }
+
+    closeMobileMenu = () => {
+        if (sidebar && sidebar.classList.contains('active')) toggle();
+    };
+
+    burger.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+}
+
 async function initWiki() {
+	initMobileMenu();
     const params = new URLSearchParams(window.location.search);
     const project = params.get('project');
     if (!project) {
@@ -48,6 +80,7 @@ function renderPagesList(pages) {
         div.textContent = page;
         div.addEventListener('click', async () => {
             await loadPage(page);
+			closeMobileMenu();
         });
         container.appendChild(div);
     });

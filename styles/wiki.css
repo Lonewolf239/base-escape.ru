@@ -199,18 +199,74 @@
 	color: #ff6666;
 }
 
+.burger-btn {
+	display: none;
+	background: rgba(20, 20, 30, 0.7);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 0, 170, 0.5);
+	color: var(--text-main, #fff);
+	padding: 10px 16px;
+	border-radius: 12px;
+	cursor: pointer;
+	font-size: 1rem;
+	margin-bottom: 16px;
+	text-shadow: 0 0 3px var(--primary-glow);
+	box-shadow: 0 0 10px rgba(255, 0, 170, 0.2);
+	z-index: 98;
+	align-self: flex-start;
+}
+
+.mobile-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(3px);
+	z-index: 99;
+}
+
+.mobile-overlay.active {
+	display: block;
+}
+
 @media (max-width: 768px) {
 	.wiki-container {
-		grid-template-columns: 1fr;
-		padding: 12px;
-		gap: 16px;
 		margin-top: 65px;
+		display: flex;
+		flex-direction: column;
+		padding: 12px;
+		gap: 0;
+	}
+
+	.burger-btn {
+		display: inline-block;
 	}
 
 	.sidebar {
-		position: relative;
+		position: fixed;
 		top: 0;
-		max-height: 200px;
+		left: -100%;
+		width: 85%;
+		max-width: 320px;
+		height: 100vh;
+		max-height: 100vh;
+		z-index: 100;
+		border-radius: 0 24px 24px 0;
+		transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		background: rgba(20, 20, 30, 0.95);
+		box-shadow: 5px 0 25px rgba(0, 0, 0, 0.5);
+	}
+
+	.sidebar.active {
+		left: 0;
+	}
+
+	.wiki-page-item {
+		padding: 14px 16px;
+		margin-bottom: 4px;
 	}
 
 	.wiki-content {
@@ -218,7 +274,8 @@
 	}
 
 	.wiki-content pre {
-		padding: 0.8em;
+		padding: 12px;
 		font-size: 0.8rem;
+		-webkit-overflow-scrolling: touch;
 	}
 }

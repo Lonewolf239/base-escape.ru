@@ -2,10 +2,42 @@ const GITHUB_OWNER = 'Lonewolf239';
 const folderCache = {};
 let currentRepo = '';
 let repoName = '';
+let closeMobileMenu = () => {};
 
 document.addEventListener('DOMContentLoaded', initViewer);
 
+function initMobileMenu() {
+    const container = document.querySelector('.ide-container');
+    if (!container) return;
+
+    const burger = document.createElement('button');
+    burger.className = 'burger-btn';
+    burger.innerHTML = '☰ Структура проекта';
+    container.insertBefore(burger, container.firstChild);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+
+    container.appendChild(overlay);
+
+    const sidebar = document.querySelector('.sidebar');
+
+    function toggle() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+    }
+
+    closeMobileMenu = () => {
+        if (sidebar && sidebar.classList.contains('active')) toggle();
+    };
+
+    burger.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+}
+
 async function initViewer() {
+	initMobileMenu();
     const params = new URLSearchParams(window.location.search);
     const project = params.get('project');
     if (!project) {
@@ -123,6 +155,7 @@ function renderTree(items, container, parentPath) {
                 loadAndShowFile(item.path, item.name);
                 document.querySelectorAll('.tree-node.file').forEach(n => n.classList.remove('active'));
                 node.classList.add('active');
+				closeMobileMenu();
             });
         }
 
@@ -343,7 +376,10 @@ async function checkLicense(items) {
         const licenseNameSpan = document.getElementById('license-name');
         if (licenseNameSpan) licenseNameSpan.textContent = licenseFile.name;
         licenseInfo.style.display = 'flex';
-        licenseInfo.onclick = () => loadAndShowFile(licenseFile.path, licenseFile.name);
+        licenseInfo.onclick = () => {
+			loadAndShowFile(licenseFile.path, licenseFile.name);
+			closeMobileMenu();
+		}
     } else licenseInfo.style.display = 'none';
 }
 
@@ -386,11 +422,14 @@ async function checkReadme(items) {
     if (!readmeInfo) return;
 
     const readmeFile = await findReadmeRecursive('');
-    
+
     if (readmeFile) {
         const readmeNameSpan = document.getElementById('readme-name');
         if (readmeNameSpan) readmeNameSpan.textContent = readmeFile.name;
         readmeInfo.style.display = 'flex';
-        readmeInfo.onclick = () => loadAndShowFile(readmeFile.path, readmeFile.name);
+        readmeInfo.onclick = () => {
+			loadAndShowFile(readmeFile.path, readmeFile.name);
+			closeMobileMenu();
+		}
     } else readmeInfo.style.display = 'none';
 }
