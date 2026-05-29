@@ -143,7 +143,41 @@
                     },
                     "newTab": false
                 }
-            }
+            },
+            "subprojects": [
+                {
+                    "title": {
+                        "ru": "AsyncReaderWriterLock",
+                        "en": "AsyncReaderWriterLock",
+                        "de": "AsyncReaderWriterLock"
+                    },
+                    "description": {
+                        "ru": "Асинхронная блокировка чтения-записи для .NET. Легковесная, кроссплатформенная, с поддержкой отмены операций и справедливой очередью.",
+                        "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
+                        "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
+                    },
+                    "language": "C#",
+                    "tags": [
+                        "Library",
+                        ".NET",
+                        "Concurrency",
+                        "Async",
+                        "Thread-Safe"
+                    ],
+                    "links": {
+                        "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
+                        "nuget": "https://www.nuget.org/packages/AsyncReaderWriterLock",
+                        "code": {
+                            "url": {
+                                "ru": "/ru/viewer?project=AsyncReaderWriterLock",
+                                "en": "/en/viewer?project=AsyncReaderWriterLock",
+                                "de": "/de/viewer?project=AsyncReaderWriterLock"
+                            },
+                            "newTab": false
+                        }
+                    }
+                }
+            ]
         },
         {
             "title": {

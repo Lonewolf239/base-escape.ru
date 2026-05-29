@@ -125,52 +125,65 @@ function getLanguageButtonConfig() {
 }
 
 function createScrollTopButton(useNativeSmooth = true) {
-    if (document.querySelector('.scroll-top-btn')) return;
+    let scrollTopBtn = document.querySelector('.scroll-top-btn');
 
-    const btn = document.createElement('button');
-    btn.className = 'scroll-top-btn';
-    btn.setAttribute('aria-label', 'Scroll to top');
-    const arrowSpan = document.createElement('span');
-    arrowSpan.className = 'arrow-up';
-    arrowSpan.textContent = '↑';
-    btn.appendChild(arrowSpan);
-    document.body.appendChild(btn);
-
-    let timeoutId = null;
-    function checkScroll() {
-        const scrollY = window.scrollY;
-        const threshold = document.documentElement.scrollHeight * 0.25;
-        if (scrollY > threshold) btn.classList.add('visible');
-        else btn.classList.remove('visible');
+    if (!scrollTopBtn) {
+        scrollTopBtn = document.createElement('button');
+        scrollTopBtn.className = 'scroll-top-btn';
+        scrollTopBtn.innerHTML = '<span class="arrow-up">↑</span>';
+        document.body.appendChild(scrollTopBtn);
     }
 
-    window.addEventListener('scroll', () => {
-        if (timeoutId) cancelAnimationFrame(timeoutId);
-        timeoutId = requestAnimationFrame(checkScroll);
-    });
-    window.addEventListener('resize', () => {
-        if (timeoutId) cancelAnimationFrame(timeoutId);
-        timeoutId = requestAnimationFrame(checkScroll);
-    });
-    checkScroll();
+    const contentWrapper = document.getElementById('content-wrapper');
+    const scrollContainers = [window, document.documentElement, document.body, contentWrapper];
 
-    function smoothScrollToTop(duration = 500) {
-        const startY = window.scrollY;
+    const checkScroll = () => {
+        const currentScroll = Math.max(
+            window.scrollY || 0,
+            document.documentElement.scrollTop || 0,
+            document.body.scrollTop || 0,
+            contentWrapper?.scrollTop || 0
+        );
+
+        if (currentScroll > 300) scrollTopBtn.classList.add('visible');
+        else scrollTopBtn.classList.remove('visible');
+    };
+
+    scrollContainers.forEach(container => {
+        if (container)
+            container.addEventListener('scroll', checkScroll, { passive: true });
+    });
+
+    scrollTopBtn.addEventListener('click', () => {
+        const targets = scrollContainers.map(el => {
+            if (!el) return null;
+            const current = el === window ? window.scrollY : el.scrollTop;
+            return current > 0 ? { el, start: current } : null;
+        }).filter(Boolean);
+
+        if (targets.length === 0) return;
+
+        const duration = 500;
         const startTime = performance.now();
 
-        function step(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            window.scrollTo(0, startY * (1 - easeOut));
+        const animateScroll = (currentTime) => {
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
 
-            if (progress < 1) requestAnimationFrame(step);
-        }
+            const ease = progress < 0.5 ?
+				4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
-        requestAnimationFrame(step);
-    }
+            targets.forEach(target => {
+                const nextScroll = target.start * (1 - ease);
+                if (target.el === window) window.scrollTo(0, nextScroll);
+                else target.el.scrollTop = nextScroll;
+            });
 
-    btn.addEventListener('click', () => { smoothScrollToTop(); });
+            if (progress < 1) requestAnimationFrame(animateScroll);
+        };
+
+        requestAnimationFrame(animateScroll);
+    });
 }
 
 function initBackground() {
