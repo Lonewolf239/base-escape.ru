@@ -26,6 +26,71 @@
             "email": "mailto:neoinilicense@gmail.com"
         }
     },
+    "subprojects_pool": {
+        "async_rw_lock": {
+            "title": {
+                "ru": "AsyncReaderWriterLock",
+                "en": "AsyncReaderWriterLock",
+                "de": "AsyncReaderWriterLock"
+            },
+            "description": {
+                "ru": "Асинхронная блокировка чтения-записи для .NET. Легковесная, кроссплатформенная, с поддержкой отмены операций и справедливой очередью.",
+                "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
+                "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
+            },
+            "language": "C#",
+            "tags": [
+                "Library",
+                ".NET",
+                "Concurrency",
+                "Async",
+                "Thread-Safe"
+            ],
+            "links": {
+                "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
+                "nuget": "https://www.nuget.org/packages/AsyncReaderWriterLock",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=AsyncReaderWriterLock",
+                        "en": "/en/viewer?project=AsyncReaderWriterLock",
+                        "de": "/de/viewer?project=AsyncReaderWriterLock"
+                    },
+                    "newTab": false
+                }
+            }
+        },
+        "plaza_support_bot": {
+            "title": {
+                "ru": "PlazaSupportBot",
+                "en": "PlazaSupportBot",
+                "de": "PlazaSupportBot"
+            },
+            "description": {
+                "ru": "Telegram-бот для технической поддержки пользователей PlazaBot. Обрабатывает тикеты и управляет обращениями.",
+                "en": "Telegram bot for PlazaBot user support. Handles tickets and manages inquiries.",
+                "de": "Telegram-Bot für den Benutzersupport von PlazaBot. Bearbeitet Tickets und verwaltet Anfragen."
+            },
+            "language": "Python",
+            "lastRelease": "2025-11-7",
+            "tags": [
+                "Bot",
+                "Telegram",
+                "Support",
+                "Ticketing"
+            ],
+            "links": {
+                "github": "https://github.com/Lonewolf239/PlazaSupportBot",
+                "code": {
+                    "url": {
+                        "ru": "/ru/viewer?project=PlazaSupportBot",
+                        "en": "/en/viewer?project=PlazaSupportBot",
+                        "de": "/de/viewer?project=PlazaSupportBot"
+                    },
+                    "newTab": false
+                }
+            }
+        }
+    },
     "projects": [
         {
             "title": {
@@ -34,21 +99,20 @@
                 "de": "NeoIni"
             },
             "shortDescription": {
-                "ru": "INI-библиотека для .NET с AES-256 шифрованием",
-                "en": ".NET INI library with AES-256 encryption",
-                "de": ".NET INI-Bibliothek mit AES-256-Verschlüsselung"
+                "ru": "Конфигурационный фреймворк для .NET с AES-256 шифрованием",
+                "en": ".NET configuration framework with AES-256 encryption",
+                "de": ".NET Konfigurations-Framework mit AES-256 Verschlüsselung"
             },
             "description": {
-                "ru": "Библиотека конфигурации INI для .NET. Поддерживает потокобезопасность, AES-256 шифрование и подключаемую архитектуру провайдеров.",
-                "en": "INI configuration library for .NET. Supports thread safety, AES-256 encryption, and a pluggable provider architecture.",
-                "de": "INI-Konfigurationsbibliothek für .NET. Unterstützt Threadsicherheit, AES-256-Verschlüsselung und eine austauschbare Provider-Architektur."
+                "ru": "Конфигурационный фреймворк для .NET с INI-подобной сериализацией. Поддерживает потокобезопасность, AES-256 шифрование, SHA-256 контрольные суммы, горячую перезагрузку и подключаемых провайдеров.",
+                "en": "Configuration framework for .NET with INI-based persistence. Supports thread safety, AES-256 encryption, SHA-256 checksums, hot reload, and pluggable providers.",
+                "de": "Konfigurations-Framework für .NET mit INI-basierter Persistenz. Unterstützt Threadsicherheit, AES-256 Verschlüsselung, SHA-256 Prüfsummen, Hot Reload und austauschbare Provider."
             },
             "language": "C#",
             "tags": [
                 "Library",
                 ".NET",
-                "INI",
-                "Configuration",
+                "ConfigFramework",
                 "Encryption",
                 "Thread-Safe"
             ],
@@ -73,38 +137,7 @@
                 }
             },
             "subprojects": [
-                {
-                    "title": {
-                        "ru": "AsyncReaderWriterLock",
-                        "en": "AsyncReaderWriterLock",
-                        "de": "AsyncReaderWriterLock"
-                    },
-                    "description": {
-                        "ru": "Асинхронная блокировка чтения-записи для .NET. Легковесная, кроссплатформенная, с поддержкой отмены операций и справедливой очередью.",
-                        "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
-                        "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
-                    },
-                    "language": "C#",
-                    "tags": [
-                        "Library",
-                        ".NET",
-                        "Concurrency",
-                        "Async",
-                        "Thread-Safe"
-                    ],
-                    "links": {
-                        "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
-                        "nuget": "https://www.nuget.org/packages/AsyncReaderWriterLock",
-                        "code": {
-                            "url": {
-                                "ru": "/ru/viewer?project=AsyncReaderWriterLock",
-                                "en": "/en/viewer?project=AsyncReaderWriterLock",
-                                "de": "/de/viewer?project=AsyncReaderWriterLock"
-                            },
-                            "newTab": false
-                        }
-                    }
-                }
+                "async_rw_lock"
             ]
         },
         {
@@ -114,9 +147,9 @@
                 "de": "NeoIniLight"
             },
             "shortDescription": {
-                "ru": "Лёгкая INI-библиотека для .NET (MIT)",
-                "en": "Lightweight INI library for .NET (MIT)",
-                "de": "Leichte INI-Bibliothek für .NET (MIT)"
+                "ru": "Лёгкий конфигурационный фреймворк для .NET (MIT)",
+                "en": "Lightweight .NET configuration framework (MIT)",
+                "de": "Leichtes .NET Konfigurations-Framework (MIT)"
             },
             "description": {
                 "ru": "Облегчённая версия NeoIni с MIT-лицензией. Без шифрования и hot-reload, но с потокобезопасностью, атомарными записями и автоматическими бэкапами. Идеальна для open-source проектов.",
@@ -127,8 +160,7 @@
             "tags": [
                 "Library",
                 ".NET",
-                "INI",
-                "Configuration",
+                "ConfigFramework",
                 "MIT",
                 "Thread-Safe"
             ],
@@ -145,38 +177,7 @@
                 }
             },
             "subprojects": [
-                {
-                    "title": {
-                        "ru": "AsyncReaderWriterLock",
-                        "en": "AsyncReaderWriterLock",
-                        "de": "AsyncReaderWriterLock"
-                    },
-                    "description": {
-                        "ru": "Асинхронная блокировка чтения-записи для .NET. Легковесная, кроссплатформенная, с поддержкой отмены операций и справедливой очередью.",
-                        "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
-                        "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
-                    },
-                    "language": "C#",
-                    "tags": [
-                        "Library",
-                        ".NET",
-                        "Concurrency",
-                        "Async",
-                        "Thread-Safe"
-                    ],
-                    "links": {
-                        "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
-                        "nuget": "https://www.nuget.org/packages/AsyncReaderWriterLock",
-                        "code": {
-                            "url": {
-                                "ru": "/ru/viewer?project=AsyncReaderWriterLock",
-                                "en": "/en/viewer?project=AsyncReaderWriterLock",
-                                "de": "/de/viewer?project=AsyncReaderWriterLock"
-                            },
-                            "newTab": false
-                        }
-                    }
-                }
+                "async_rw_lock"
             ]
         },
         {
@@ -441,37 +442,7 @@
                 }
             },
             "subprojects": [
-                {
-                    "title": {
-                        "ru": "PlazaSupportBot",
-                        "en": "PlazaSupportBot",
-                        "de": "PlazaSupportBot"
-                    },
-                    "description": {
-                        "ru": "Telegram-бот для технической поддержки пользователей PlazaBot. Обрабатывает тикеты и управляет обращениями.",
-                        "en": "Telegram bot for PlazaBot user support. Handles tickets and manages inquiries.",
-                        "de": "Telegram-Bot für den Benutzersupport von PlazaBot. Bearbeitet Tickets und verwaltet Anfragen."
-                    },
-                    "language": "Python",
-					"lastRelease": "2025-11-7",
-                    "tags": [
-                        "Bot",
-                        "Telegram",
-                        "Support",
-                        "Ticketing"
-                    ],
-                    "links": {
-                        "github": "https://github.com/Lonewolf239/PlazaSupportBot",
-                        "code": {
-                            "url": {
-                                "ru": "/ru/viewer?project=PlazaSupportBot",
-                                "en": "/en/viewer?project=PlazaSupportBot",
-                                "de": "/de/viewer?project=PlazaSupportBot"
-                            },
-                            "newTab": false
-                        }
-                    }
-                }
+                "plaza_support_bot"
             ]
         },
         {

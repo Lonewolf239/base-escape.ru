@@ -37,7 +37,7 @@ function initMobileMenu() {
 }
 
 async function initWiki() {
-	initMobileMenu();
+    initMobileMenu();
     const params = new URLSearchParams(window.location.search);
     const project = params.get('project');
     if (!project) {
@@ -52,21 +52,43 @@ async function initWiki() {
 async function loadWikiPages() {
     showLoader(true);
     try {
-        const indexUrl = `/wiki/${currentProject}/index.json`;
-        const response = await fetch(indexUrl);
-        if (!response.ok) throw new Error(`index.json not found for the project ${currentProject}`);
-        const rawPagesList = await response.json();
-        if (!Array.isArray(rawPagesList) || rawPagesList.length === 0)
-            throw new Error('The page list is empty or invalid');
-        pagesList = [...rawPagesList];
-        displayNames = rawPagesList.map(name => name.replace(/-/g, ' '));
+        const targetUrl = `https://github.com/Lonewolf239/${currentProject}/wiki/_pages`;
+        const proxyUrl = `/github-proxy.php?path=` + encodeURIComponent(targetUrl);
+
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error(`Wiki not found for project ${currentProject}`);
+
+        const htmlText = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        const linkSelector = `a[href^="/Lonewolf239/${currentProject}/wiki"]`;
+        const links = doc.querySelectorAll(linkSelector);
+
+        const pages = new Set();
+
+        pages.add('Home');
+
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+
+            if (href.endsWith('/wiki') || href.endsWith('/wiki/')) return;
+
+            const pageId = href.split('/').pop();
+
+            if (pageId && !pageId.startsWith('_') && pageId.toLowerCase() !== 'home')
+                pages.add(decodeURIComponent(pageId));
+        });
+
+        pagesList = Array.from(pages);
+        displayNames = pagesList.map(name => name.replace(/-/g, ' '));
+
         renderPagesList(displayNames);
-        const homeIndex = displayNames.findIndex(name => name === 'Home');
-        const defaultPageIndex = homeIndex !== -1 ? homeIndex : 0;
-        await loadPage(displayNames[defaultPageIndex]);
+
+        await loadPage(displayNames[0]);
     } catch (err) {
         console.error(err);
-        showError('Error loading wiki: ' + err.message);
+        showError('Error loading wiki pages list: ' + err.message);
     } finally { showLoader(false); }
 }
 
@@ -80,7 +102,7 @@ function renderPagesList(pages) {
         div.textContent = page;
         div.addEventListener('click', async () => {
             await loadPage(page);
-			closeMobileMenu();
+            closeMobileMenu();
         });
         container.appendChild(div);
     });
@@ -124,7 +146,10 @@ async function loadPage(pageName) {
         let content = wikiPagesCache[pageName];
         if (!content) {
             const possibleNames = getPossibleFileNames(pageName);
-            const urls = possibleNames.map(name => `/wiki/${currentProject}/${name}.md`);
+            const urls = possibleNames.map(name => 
+                `/github-proxy.php?path=` + encodeURIComponent(`https://raw.githubusercontent.com/wiki/Lonewolf239/${currentProject}/${name}.md`)
+            );
+
             let response = null;
             let lastError = null;
             for (const url of urls) {
@@ -132,7 +157,7 @@ async function loadPage(pageName) {
                     response = await fetch(url);
                     if (response.ok) break;
                     if (response.status === 404) {
-                        lastError = new Error(`HTTP 404 – file not found (${url})`);
+                        lastError = new Error(`HTTP 404 – file not found (${pageName}.md)`);
                         continue;
                     }
                     throw new Error(`HTTP ${response.status}`);
@@ -146,9 +171,9 @@ async function loadPage(pageName) {
         await displayMarkdown(content, pageName);
         updateActivePage(pageName);
     } catch (err) {
-		console.error(err);
-		const safeMessage = escapeHtml(err.message);
-		contentDiv.innerHTML = `<div class="error-message">Page loading error: ${safeMessage}</div>`;
+        console.error(err);
+        const safeMessage = escapeHtml(err.message);
+        contentDiv.innerHTML = `<div class="error-message">Page loading error: ${safeMessage}</div>`;
     } finally { showLoaderInContent(false); }
 }
 
@@ -188,9 +213,10 @@ function processWikiLinks(markdown) {
 }
 
 async function displayMarkdown(markdown, pageName) {
-	const contentDiv = document.getElementById('wiki-content');
+    const contentDiv = document.getElementById('wiki-content');
     if (!contentDiv) return;
     const processedMarkdown = processWikiLinks(markdown);
+
     if (typeof marked !== 'undefined') {
         marked.setOptions({
             highlight: function(code, lang) {
@@ -200,9 +226,12 @@ async function displayMarkdown(markdown, pageName) {
             }
         });
     }
+
     const html = marked.parse(processedMarkdown);
     contentDiv.innerHTML = html;
-    processExternalLinks();
+
+    processLinksAndImages();
+
     if (typeof hljs !== 'undefined') {
         document.querySelectorAll('#wiki-content pre code').forEach(block => {
             hljs.highlightElement(block);
@@ -213,16 +242,43 @@ async function displayMarkdown(markdown, pageName) {
     if (currentFileSpan) currentFileSpan.textContent = pageName;
 }
 
-function processExternalLinks() {
+function processLinksAndImages() {
     const links = document.querySelectorAll('#wiki-content a');
     links.forEach(link => {
         if (!link.classList.contains('wiki-link') && !link.hasAttribute('data-processed')) {
             const href = link.getAttribute('href');
-            if (href && (href.startsWith('http://') || href.startsWith('https://'))) {
+            if (!href) return;
+
+            if (href.startsWith('http://') || href.startsWith('https://')) {
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener noreferrer');
                 link.setAttribute('data-processed', 'true');
+            } else if (!href.startsWith('#')) {
+                link.classList.add('wiki-link');
+                let pageName = href.replace(/\.md$/i, '');
+                const decoded = decodeURIComponent(pageName);
+
+                const index = pagesList.findIndex(p => 
+                    p.toLowerCase() === decoded.toLowerCase() || 
+                    p.replace(/-/g, ' ').toLowerCase() === decoded.toLowerCase()
+                );
+
+                if (index !== -1) pageName = displayNames[index];
+                else pageName = decoded.replace(/-/g, ' ');
+
+                link.setAttribute('data-page', pageName);
+                link.removeAttribute('href');
+                link.setAttribute('data-processed', 'true');
             }
+        }
+    });
+
+    const images = document.querySelectorAll('#wiki-content img');
+    images.forEach(img => {
+        const src = img.getAttribute('src');
+        if (src && !src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:')) {
+            const rawUrl = `https://raw.githubusercontent.com/wiki/Lonewolf239/${currentProject}/${src}`;
+            img.src = `/github-proxy.php?path=` + encodeURIComponent(rawUrl);
         }
     });
 }

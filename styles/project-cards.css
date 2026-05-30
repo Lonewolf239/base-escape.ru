@@ -348,6 +348,28 @@
 	padding-top: 12px;
 }
 
+.subprojects-wrapper {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+	margin-top: 0;
+}
+
+.subprojects-wrapper.open {
+	grid-template-rows: 1fr;
+	margin-top: 16px;
+}
+
+.project-description-full-wrapper {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.project-description-full-wrapper.open {
+	grid-template-rows: 1fr;
+}
+
 .subprojects-toggle {
 	width: 100%;
 	background: rgba(255, 0, 170, 0.12);
@@ -380,18 +402,11 @@
 }
 
 .subprojects-list {
-	display: none;
+	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	margin-top: 16px;
-	max-height: 0;
 	overflow: hidden;
-	transition: max-height 0.4s ease-out;
-}
-
-.subprojects-list.open {
-	display: flex;
-	max-height: 2000px;
+	min-height: 0;
 }
 
 .subproject-card {
@@ -794,7 +809,6 @@
 }
 
 .project-description-full {
-	display: none;
 	margin-top: 12px;
 	padding-top: 12px;
 	border-top: 1px dashed rgba(255, 0, 170, 0.3);
@@ -814,6 +828,89 @@
 	color: rgba(255, 255, 255, 0.85);
 	margin: 0;
 	padding-right: 6px;
+}
+
+.skeleton-card {
+	background: rgba(20, 20, 30, 0.35);
+	backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 0, 170, 0.1);
+	border-radius: 28px;
+	padding: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	height: 320px;
+	position: relative;
+	overflow: hidden;
+}
+
+.skeleton-card::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 50%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 0, 170, 0.05), transparent);
+	animation: shimmer 1.5s infinite ease-in-out;
+}
+
+@keyframes shimmer {
+	100% {
+		left: 200%;
+	}
+}
+
+.skeleton-element {
+	background: rgba(255, 255, 255, 0.05);
+	border-radius: 8px;
+}
+
+.skeleton-title {
+	height: 28px;
+	width: 60%;
+	margin-bottom: 8px;
+}
+
+.skeleton-date {
+	height: 16px;
+	width: 30%;
+	position: absolute;
+	right: 24px;
+	top: 24px;
+}
+
+.skeleton-text {
+	height: 16px;
+	width: 100%;
+}
+
+.skeleton-text.short {
+	width: 80%;
+}
+
+.skeleton-tags {
+	display: flex;
+	gap: 8px;
+	margin-top: auto;
+	padding-top: 16px;
+}
+
+.skeleton-tag {
+	height: 26px;
+	width: 60px;
+	border-radius: 12px;
+}
+
+.lazy-hidden {
+	opacity: 0;
+	transform: translateY(40px);
+	transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.lazy-visible {
+	opacity: 1;
+	transform: translateY(0);
 }
 
 @media (max-width: 768px) {

@@ -14,7 +14,7 @@ if ($parsedUrl === false || empty($parsedUrl['host'])) {
     exit;
 }
 
-$allowedHosts = ['api.github.com', 'raw.githubusercontent.com'];
+$allowedHosts = ['api.github.com', 'raw.githubusercontent.com', 'github.com'];
 if (!in_array($parsedUrl['host'], $allowedHosts)) {
     http_response_code(403);
     echo json_encode(['error' => 'Forbidden host']);
@@ -48,9 +48,15 @@ if ($parsedUrl['host'] === 'api.github.com') {
         exit;
     }
 } elseif ($parsedUrl['host'] === 'raw.githubusercontent.com') {
-    if (!preg_match('#^Lonewolf239/[^/]+(?:/.*)?$#', $path)) {
+    if (!preg_match('#^(wiki/)?Lonewolf239/[^/]+(?:/.*)?$#', $path)) {
         http_response_code(403);
         echo json_encode(['error' => 'Access denied: only raw content from Lonewolf239 repos is allowed']);
+        exit;
+    }
+} elseif ($parsedUrl['host'] === 'github.com') {
+    if (!preg_match('#^Lonewolf239/[^/]+/wiki(?:/.*)?$#', $path)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Access denied: only wiki pages of Lonewolf239 are allowed']);
         exit;
     }
 }
@@ -63,9 +69,8 @@ if (file_exists($envPath)) {
             list($key, $value) = explode('=', $line, 2);
             $key = trim($key);
             $value = trim($value);
-            if (preg_match('/^["\'].*["\']$/', $value)) {
+            if (preg_match('/^["\'].*["\']$/', $value))
                 $value = substr($value, 1, -1);
-            }
             putenv("$key=$value");
             $_ENV[$key] = $value;
         }
@@ -73,20 +78,23 @@ if (file_exists($envPath)) {
 }
 
 $token = getenv('GITHUB_TOKEN');
-if (!$token) {
-    http_response_code(500);
-    echo json_encode(['error' => 'GitHub token not configured']);
-    exit;
+
+$headers = [
+    'User-Agent: MySiteProxy/1.0'
+];
+
+if ($parsedUrl['host'] === 'github.com')
+    $headers[] = 'Accept: text/html,application/xhtml+xml';
+else {
+    $headers[] = 'Accept: application/vnd.github.v3+json';
+    if ($token)
+        $headers[] = 'Authorization: token ' . $token;
 }
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $requestPath);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_USERAGENT, 'MySiteProxy/1.0');
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: token ' . $token,
-    'Accept: application/vnd.github.v3+json'
-]);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
@@ -105,11 +113,8 @@ if ($curlError) {
     exit;
 }
 
-if ($contentType) {
-    header('Content-Type: ' . $contentType);
-} else {
-    header('Content-Type: application/json');
-}
+if ($contentType) header('Content-Type: ' . $contentType);
+else header('Content-Type: application/json');
 
 http_response_code($httpCode);
 echo $response;

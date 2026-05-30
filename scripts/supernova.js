@@ -678,6 +678,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			    position: fixed;
 				inset: 0;
 	            cursor: none;
+			    context-menu: none;
+			    user-select: none;
 		    `;
 
 	        const imgEmpty = document.createElement('img');
