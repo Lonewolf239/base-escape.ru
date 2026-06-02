@@ -98,11 +98,6 @@
                 "en": "NeoIni",
                 "de": "NeoIni"
             },
-            "shortDescription": {
-                "ru": "Конфигурационный фреймворк для .NET с AES-256 шифрованием",
-                "en": ".NET configuration framework with AES-256 encryption",
-                "de": ".NET Konfigurations-Framework mit AES-256 Verschlüsselung"
-            },
             "description": {
                 "ru": "Конфигурационный фреймворк для .NET с INI-подобной сериализацией. Поддерживает потокобезопасность, AES-256 шифрование, SHA-256 контрольные суммы, горячую перезагрузку и подключаемых провайдеров.",
                 "en": "Configuration framework for .NET with INI-based persistence. Supports thread safety, AES-256 encryption, SHA-256 checksums, hot reload, and pluggable providers.",
@@ -146,11 +141,6 @@
                 "en": "NeoIniLight",
                 "de": "NeoIniLight"
             },
-            "shortDescription": {
-                "ru": "Лёгкий конфигурационный фреймворк для .NET (MIT)",
-                "en": "Lightweight .NET configuration framework (MIT)",
-                "de": "Leichtes .NET Konfigurations-Framework (MIT)"
-            },
             "description": {
                 "ru": "Облегчённая версия NeoIni с MIT-лицензией. Без шифрования и hot-reload, но с потокобезопасностью, атомарными записями и автоматическими бэкапами. Идеальна для open-source проектов.",
                 "en": "Lightweight version of NeoIni with MIT license. No encryption or hot-reload, but with thread safety, atomic writes, and automatic backups. Perfect for open-source projects.",
@@ -185,11 +175,6 @@
                 "ru": "Lonewolf239 Portfolio",
                 "en": "Lonewolf239 Portfolio",
                 "de": "Lonewolf239 Portfolio"
-            },
-            "shortDescription": {
-                "ru": "Персональный сайт-портфолио с просмотром кода",
-                "en": "Personal portfolio website with code viewer",
-                "de": "Persönliche Portfolio-Website mit Code-Viewer"
             },
             "description": {
                 "ru": "Персональный сайт-портфолио. Включает витрину проектов, многоязычную поддержку, встроенный просмотрщик кода и адаптивный дизайн.",
@@ -226,11 +211,6 @@
                 "en": "InformantTGBot",
                 "de": "InformantTGBot"
             },
-            "shortDescription": {
-                "ru": "Telegram-бот с локальным ИИ, мемами и RP",
-                "en": "Telegram bot with local AI, memes and RP",
-                "de": "Telegram-Bot mit lokaler KI, Memes und RP"
-            },
             "description": {
                 "ru": "Асинхронный Telegram-бот для бизнес-чатов. Включает локальный ИИ (Ollama), мемы/анекдоты, погоду, RP-команды (SFW/NSFW), режим «отошёл» с автоответом и сохранение ссылок. Полная статистика и панель владельца.",
                 "en": "Asynchronous Telegram bot for business chats. Features local AI (Ollama), memes/jokes, weather, RP commands (SFW/NSFW), away mode with auto-reply, and link saving. Full statistics and owner panel.",
@@ -264,11 +244,6 @@
                 "en": "BeautifulConsole",
                 "de": "BeautifulConsole"
             },
-            "shortDescription": {
-                "ru": "Библиотека для красивых консольных приложений",
-                "en": "Library for beautiful console apps",
-                "de": "Bibliothek für ansprechende Konsolen-Apps"
-            },
             "description": {
                 "ru": "Библиотека для создания красивых консольных приложений на .NET. Поддерживает true-color, кроссплатформенный буфер обмена и расширенную настройку окна.",
                 "en": "Library for building beautiful console applications on .NET. Supports true-color, cross-platform clipboard, and advanced window customization.",
@@ -301,11 +276,6 @@
                 "en": "SLIL",
                 "de": "SLIL"
             },
-            "shortDescription": {
-                "ru": "DOOM-подобный шутер на C# и WinForms",
-                "en": "DOOM-like shooter in C# and WinForms",
-                "de": "DOOM-ähnlicher Shooter in C# und WinForms"
-            },
             "description": {
                 "ru": "DOOM-подобный шутер на C# и WinForms. Использует кастомный движок рейкастинга, DirectX 10 и смещение камеры по Y.",
                 "en": "DOOM-like shooter in C# and WinForms. Uses a custom raycasting engine, DirectX 10, and Y-axis camera offset.",
@@ -337,11 +307,6 @@
                 "en": "CryptoLockX",
                 "de": "CryptoLockX"
             },
-            "shortDescription": {
-                "ru": "Шифрование файлов AES-256 и сжатие Brotli",
-                "en": "AES-256 file encryption with Brotli compression",
-                "de": "AES-256-Dateiverschlüsselung mit Brotli-Kompression"
-            },
             "description": {
                 "ru": "Консольная утилита для шифрования и упаковки файлов. Использует AES-256 и сжатие Brotli.",
                 "en": "Console utility for encrypting and packing files. Uses AES-256 and Brotli compression.",
@@ -372,11 +337,6 @@
                 "ru": "PasswordManager",
                 "en": "PasswordManager",
                 "de": "PasswordManager"
-            },
-            "shortDescription": {
-                "ru": "Консольный менеджер паролей с шифрованием",
-                "en": "Console password manager with encryption",
-                "de": "Konsolen-Passwort-Manager mit Verschlüsselung"
             },
             "description": {
                 "ru": "Консольный менеджер паролей. Хранит данные в зашифрованном виде, поддерживает поиск, синхронизацию и автоматическое обновление.",
@@ -410,11 +370,6 @@
                 "ru": "PlazaBot",
                 "en": "PlazaBot",
                 "de": "PlazaBot"
-            },
-            "shortDescription": {
-                "ru": "Telegram-бот с 8+ играми и криптоплатежами",
-                "en": "Telegram bot with 8+ games and crypto payments",
-                "de": "Telegram-Bot mit 8+ Spielen und Kryptozahlungen"
             },
             "description": {
                 "ru": "Учебный Telegram-бот (~15k строк кода) для демонстрации архитектуры игровых приложений. Включает 8+ игр, интеграцию криптоплатежей, реферальную систему и админ-панель.",
@@ -451,11 +406,6 @@
                 "en": "PCtoNormal",
                 "de": "PCtoNormal"
             },
-            "shortDescription": {
-                "ru": "Настройка рабочего стола на заблокированных системах",
-                "en": "Desktop configuration on locked systems",
-                "de": "Desktop-Konfiguration auf gesperrten Systemen"
-            },
             "description": {
                 "ru": "Утилита для настройки рабочего стола на заблокированных системах. Применяет тёмную тему Windows, обои и настройки Visual Studio.",
                 "en": "Utility for configuring the desktop on locked systems. Applies Windows dark theme, wallpaper, and Visual Studio settings.",
@@ -487,11 +437,6 @@
                 "ru": "Terraria Randomizer",
                 "en": "Terraria Randomizer",
                 "de": "Terraria Randomizer"
-            },
-            "shortDescription": {
-                "ru": "Генератор персонажей для Terraria",
-                "en": "Character generator for Terraria",
-                "de": "Charakter-Generator für Terraria"
             },
             "description": {
                 "ru": "Генератор персонажей для Terraria. Мгновенно создаёт полные наборы для новых приключений.",
@@ -525,11 +470,6 @@
                 "en": "7DtD_HP",
                 "de": "7DtD_HP"
             },
-            "shortDescription": {
-                "ru": "Редактор здоровья зомби в 7 Days to Die",
-                "en": "Zombie health editor for 7 Days to Die",
-                "de": "Zombie-Gesundheitseditor für 7 Days to Die"
-            },
             "description": {
                 "ru": "Утилита для редактирования характеристик зомби в 7 Days to Die. Работает через конфигурационный файл игры.",
                 "en": "Utility for editing zombie stats in 7 Days to Die. Works through the game's configuration file.",
@@ -561,11 +501,6 @@
                 "ru": "WPM",
                 "en": "WPM",
                 "de": "WPM"
-            },
-            "shortDescription": {
-                "ru": "Менеджер планов электропитания Windows",
-                "en": "Windows power plan manager",
-                "de": "Windows-Energiesparplan-Manager"
             },
             "description": {
                 "ru": "Консольный менеджер планов электропитания для Windows. Поддерживает регулировку яркости.",
@@ -600,11 +535,6 @@
                 "en": "mini-games",
                 "de": "mini-games"
             },
-            "shortDescription": {
-                "ru": "16 офлайн мини-игр в одной коллекции",
-                "en": "16 offline mini-games in one collection",
-                "de": "16 Offline-Minispiele in einer Sammlung"
-            },
             "description": {
                 "ru": "Коллекция из 16 офлайн мини-игр. Включает головоломки, аркады и стратегии с поддержкой звука, рекордов и автообновления.",
                 "en": "Collection of 16 offline mini-games. Includes puzzles, arcade, and strategy games with sound support, high scores, and auto-updates.",
@@ -636,11 +566,6 @@
                 "ru": "GAAGA",
                 "en": "GAAGA",
                 "de": "GAAGA"
-            },
-            "shortDescription": {
-                "ru": "Аркадный шутер в стиле Galaga",
-                "en": "Galaga-style arcade shooter",
-                "de": "Galaga-artiger Arcade-Shooter"
             },
             "description": {
                 "ru": "Аркадный шутер в стиле Galaga на Python. Поддерживает двух игроков, бонусы, улучшения оружия и динамическую сложность.",
@@ -674,11 +599,6 @@
                 "en": "Base_Escape",
                 "de": "Base_Escape"
             },
-            "shortDescription": {
-                "ru": "Текстовая игра о маньяке и культе",
-                "en": "Text-based game about a maniac and a cult",
-                "de": "Textbasiertes Spiel über einen Wahnsinnigen und einen Kult"
-            },
             "description": {
                 "ru": "Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
                 "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
@@ -709,11 +629,6 @@
                 "ru": "Archive",
                 "en": "Archive",
                 "de": "Archive"
-            },
-            "shortDescription": {
-                "ru": "Git-архив 27 проектов (2022-2024)",
-                "en": "Git archive of 27 projects (2022-2024)",
-                "de": "Git-Archiv von 27 Projekten (2022-2024)"
             },
             "description": {
                 "ru": "Архив Git 27 проектов (2022-2024). Полные клоны с историей — от ранних экспериментов до первых работающих утилит.",

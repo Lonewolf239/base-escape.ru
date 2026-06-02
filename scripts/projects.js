@@ -247,73 +247,80 @@ function createSubprojectsSection(subprojects, lang, buttonLabels) {
 }
 
 function createDescriptionToggle(project, lang, buttonLabels) {
-	const shortDesc = getLocalizedValue(project.shortDescription, lang);
 	const fullDesc = getLocalizedValue(project.description, lang);
-
 	if (!fullDesc) return null;
 
 	const container = document.createElement('div');
 	container.className = 'project-description-wrapper';
 
-	const shortDescBlock = document.createElement('div');
-	shortDescBlock.className = 'project-description-short';
+	const match = fullDesc.match(/[.!?]\s/);
+	
+	let shortText = fullDesc;
+	let restText = '';
+	
+	if (match) {
+		const splitIndex = match.index + 1;
+		shortText = fullDesc.substring(0, splitIndex);
+		restText = fullDesc.substring(splitIndex + 1).trim();
+	}
 
-	const shortText = document.createElement('p');
-	shortText.textContent = shortDesc || (fullDesc.length > 120 ? fullDesc.substring(0, 120) + '...' : fullDesc);
-	shortDescBlock.appendChild(shortText);
+	const shortElement = document.createElement('p');
+	shortElement.className = 'project-description-short';
+	shortElement.textContent = shortText;
+	container.appendChild(shortElement);
 
-	const toggleBtn = document.createElement('button');
-	toggleBtn.className = 'description-toggle-btn';
-	toggleBtn.setAttribute('aria-expanded', 'false'); // A11y
+	if (restText) {
+		const restWrapper = document.createElement('div');
+		restWrapper.className = 'project-description-rest';
+		
+		const restContent = document.createElement('div');
+		restContent.className = 'project-description-rest-inner';
+		
+		const restElement = document.createElement('p');
+		restElement.textContent = restText;
+		
+		restContent.appendChild(restElement);
+		restWrapper.appendChild(restContent);
+		container.appendChild(restWrapper);
 
-	const btnText = document.createElement('span');
-	const toggleLabels = {
-		ru: { more: 'Подробнее', less: 'Свернуть' },
-		en: { more: 'Read more', less: 'Show less' },
-		de: { more: 'Mehr erfahren', less: 'Weniger anzeigen' }
-	};
-	const labels = toggleLabels[lang] || toggleLabels.en;
-	btnText.textContent = labels.more;
+		const toggleBtn = document.createElement('button');
+		toggleBtn.className = 'description-toggle-btn';
+		toggleBtn.setAttribute('aria-expanded', 'false');
 
-	const btnIcon = document.createElement('span');
-	btnIcon.className = 'description-toggle-icon';
-	btnIcon.textContent = '▼';
-	btnIcon.style.fontSize = '0.65rem';
-	btnIcon.style.marginLeft = '6px';
-	btnIcon.style.transition = 'transform 0.3s ease';
+		const btnText = document.createElement('span');
+		const toggleLabels = {
+			ru: { more: 'Подробнее', less: 'Свернуть' },
+			en: { more: 'Read more', less: 'Show less' },
+			de: { more: 'Mehr erfahren', less: 'Weniger anzeigen' }
+		};
+		const labels = toggleLabels[lang] || toggleLabels.en;
+		btnText.textContent = labels.more;
 
-	toggleBtn.appendChild(btnText);
-	toggleBtn.appendChild(btnIcon);
+		const btnIcon = document.createElement('span');
+		btnIcon.className = 'description-toggle-icon';
+		btnIcon.textContent = '▼';
 
-	const fullDescBlock = document.createElement('div');
-	fullDescBlock.className = 'project-description-full';
+		toggleBtn.appendChild(btnText);
+		toggleBtn.appendChild(btnIcon);
+		container.appendChild(toggleBtn);
 
-	const fullText = document.createElement('p');
-	fullText.textContent = fullDesc;
-	fullDescBlock.appendChild(fullText);
+		let isOpen = false;
+		toggleBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			isOpen = !isOpen;
+			toggleBtn.setAttribute('aria-expanded', isOpen);
 
-	container.appendChild(shortDescBlock);
-	container.appendChild(toggleBtn);
-	container.appendChild(fullDescBlock);
-
-	let isOpen = false;
-	toggleBtn.addEventListener('click', (e) => {
-		e.stopPropagation();
-		isOpen = !isOpen;
-		toggleBtn.setAttribute('aria-expanded', isOpen);
-
-		if (isOpen) {
-			fullDescBlock.classList.add('open');
-			toggleBtn.classList.add('open');
-			btnText.textContent = labels.less;
-			btnIcon.style.transform = 'rotate(180deg)';
-		} else {
-			fullDescBlock.classList.remove('open');
-			toggleBtn.classList.remove('open');
-			btnText.textContent = labels.more;
-			btnIcon.style.transform = 'rotate(0deg)';
-		}
-	});
+			if (isOpen) {
+				restWrapper.classList.add('open');
+				toggleBtn.classList.add('open');
+				btnText.textContent = labels.less;
+			} else {
+				restWrapper.classList.remove('open');
+				toggleBtn.classList.remove('open');
+				btnText.textContent = labels.more;
+			}
+		});
+	}
 
 	return container;
 }
