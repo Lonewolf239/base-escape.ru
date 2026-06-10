@@ -12,7 +12,7 @@ function initMobileMenu() {
 
     const burger = document.createElement('button');
     burger.className = 'burger-btn';
-    burger.innerHTML = '☰ Структура проекта';
+    burger.innerHTML = '☰ Project structure';
     container.insertBefore(burger, container.firstChild);
 
     const overlay = document.createElement('div');
@@ -58,7 +58,7 @@ async function loadRoot() {
         await checkLicense(rootItems);
         await checkReadme(rootItems);
     }
-    catch (err) { showError('Ошибка загрузки репозитория: ' + err.message); }
+    catch (err) { showError('Error loading repository: ' + err.message); }
     finally { showLoader(false); }
 }
 
@@ -67,7 +67,7 @@ async function fetchFolderContents(path) {
     const githubPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentRepo}/contents/${path}`;
 	const url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
     const response = await fetch(url);
-    if (!response.ok) throw new Error(`Ошибка HTTP ${response.status}`);
+    if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
     const data = await response.json();
     folderCache[path] = data;
     return data;
@@ -76,7 +76,7 @@ async function fetchFolderContents(path) {
 function renderTree(items, container, parentPath) {
     container.innerHTML = '';
     if (!items || items.length === 0) {
-        container.innerHTML = '<div class="empty-folder">Папка пуста</div>';
+        container.innerHTML = '<div class="empty-folder">Folder is empty</div>';
         return;
     }
 
@@ -131,7 +131,7 @@ function renderTree(items, container, parentPath) {
                         try { childItems = await fetchFolderContents(item.path); }
                         catch (err) {
                             console.error(err);
-                            childrenContainer.innerHTML = '<div class="error-message">Ошибка загрузки</div>';
+                            childrenContainer.innerHTML = '<div class="error-message">Loading error</div>';
                             childrenContainer.style.display = 'block';
                             node.classList.add('open');
                             toggleBtn.textContent = '▼';
@@ -626,7 +626,7 @@ function displayErrorMessage(fileName, errorMsg) {
 
 function showLoader(show) {
     const container = document.getElementById('file-tree');
-    if (show) container.innerHTML = '<div class="loader">Загрузка...</div>';
+    if (show) container.innerHTML = '<div class="loader">Loading...</div>';
 }
 
 function showError(message) {

@@ -24,7 +24,7 @@ function formatDate(dateString, lang) {
 	} catch { return null; }
 }
 
-async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproject = false) {
+async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproject = false, updateDate = true) {
 	if (!githubUrl || typeof githubUrl !== 'string') return;
 	
 	const match = githubUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
@@ -63,7 +63,23 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 			const release = await response.json();
 			const releaseDate = release.published_at || release.created_at;
 			if (releaseDate) {
-				updateDateElement(releaseDate);
+				if (updateDate) updateDateElement(releaseDate);
+				const linksClass = isSubproject ? '.subproject-links' : '.project-links';
+				let linksContainer = cardElement.querySelector(linksClass);
+
+				if (!linksContainer) {
+					linksContainer = document.createElement('div');
+					linksContainer.className = isSubproject ? 'subproject-links' : 'project-links';
+					cardElement.appendChild(linksContainer);
+				}
+
+				if (!linksContainer.querySelector('.btn-changelog')) {
+					const btn = document.createElement('a');
+					btn.className = 'btn-changelog';
+					btn.href = `/${lang}/releases?project=${repo}`;
+					btn.textContent = lang === 'ru' ? 'Релизы' : lang === 'de' ? 'Releases' : 'Releases';
+					linksContainer.appendChild(btn);
+				}
 				return;
 			}
 		}
@@ -220,8 +236,8 @@ function createSubprojectsSection(subprojects, lang, buttonLabels) {
 		const subCard = createSubprojectCard(subproject, lang, buttonLabels);
 		subprojectsList.appendChild(subCard);
 
-		if (!subproject.lastRelease && subproject.links?.github)
-			fetchAndUpdateGitHubDate(subproject.links.github, subCard, lang, true);
+		if (subproject.links?.github)
+			fetchAndUpdateGitHubDate(subproject.links.github, subCard, lang, true, !subproject.lastRelease);
 	});
 
 	container.appendChild(toggleBtn);
@@ -575,15 +591,15 @@ function loadProjects() {
 
                 lazyObserver.observe(card);
 
-                if (!project.lastRelease && project.links?.github && typeof project.links.github === 'string')
-                    fetchAndUpdateGitHubDate(project.links.github, card, currentLang, false);
+                if (project.links?.github && typeof project.links.github === 'string')
+                    fetchAndUpdateGitHubDate(project.links.github, card, currentLang, false, !project.lastRelease);
             });
 
             projectsGrid.appendChild(projectsFrag);
         })
         .catch(error => {
             console.error('Error loading projects:', error);
-            projectsGrid.innerHTML = '<p style="color: rgba(255, 255, 255, 0.5); text-align: center; grid-column: 1 / -1;">Не удалось загрузить проекты.</p>';
+            projectsGrid.innerHTML = '<p style="color: rgba(255, 255, 255, 0.5); text-align: center; grid-column: 1 / -1;">Failed to load projects.</p>';
         });
 }
 

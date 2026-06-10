@@ -12,7 +12,7 @@ function initMobileMenu() {
 
     const burger = document.createElement('button');
     burger.className = 'burger-btn';
-    burger.innerHTML = '☰ Список страниц';
+    burger.innerHTML = '☰ Pages list';
     container.insertBefore(burger, container.firstChild);
 
     const overlay = document.createElement('div');
