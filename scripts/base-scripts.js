@@ -88,22 +88,11 @@ function switchToNextLanguage() {
     let currentLang = 'ru';
     if (currentPath.startsWith('/en/')) currentLang = 'en';
     else if (currentPath.startsWith('/de/')) currentLang = 'de';
-    else currentLang = 'ru';
 
     const currentIndex = languages.indexOf(currentLang);
     const nextLang = languages[(currentIndex + 1) % languages.length];
 
-    let newPath = '';
-
-    if (currentLang === 'ru') {
-        if (currentPath === '/' || currentPath === '/index.html')
-            newPath = `/${nextLang}/index.html`;
-        else {
-            let cleanPath = currentPath.replace(/^\/ru\//, '/');
-            if (cleanPath === '/') cleanPath = '/index.html';
-            newPath = `/${nextLang}${cleanPath}`;
-        }
-    } else newPath = currentPath.replace(/^\/(en|de)/, `/${nextLang}`);
+    const newPath  = currentPath.replace(/^\/(ru|en|de)/, `/${nextLang}`);
 
     if (newPath === currentPath) return;
 
