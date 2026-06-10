@@ -81,6 +81,8 @@ function setupMobileMenu() {
 
 function switchToNextLanguage() {
     const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+    const currentHash = window.location.hash;
     const languages = ['ru', 'en', 'de'];
 
     let currentLang = 'ru';
@@ -104,7 +106,8 @@ function switchToNextLanguage() {
     } else newPath = currentPath.replace(/^\/(en|de)/, `/${nextLang}`);
 
     if (newPath === currentPath) return;
-    window.location.href = newPath;
+
+    window.location.href = newPath + currentSearch + currentHash;
 }
 
 function getCurrentLanguageForButton() {
