@@ -176,10 +176,11 @@ function isAudioFile(fileName) {
 }
 
 async function loadAndShowFile(filePath, fileName) {
-	const existingAudio = document.getElementById('hidden-audio-player');
+    const existingAudio = document.getElementById('hidden-audio-player');
     if (existingAudio) {
         existingAudio.pause();
         existingAudio.removeAttribute('src');
+        existingAudio.load();
     }
 
     if (isImageFile(fileName)) {
@@ -187,13 +188,13 @@ async function loadAndShowFile(filePath, fileName) {
         return;
     }
 
-	if (isAudioFile(fileName)) {
+    if (isAudioFile(fileName)) {
         await displayAudio(filePath, fileName);
         return;
     }
 
-    const binaryExtensions = ['ttf', 'woff', 'woff2', 'eot', 'otf', 'pdf', 'zip', 'tar', 'gz', 'exe', 'dll', 'so', 'pyc', 'class'];
-    const ext = fileName.split('.').pop().toLowerCase();
+    const binaryExtensions = ['ttf', 'woff', 'woff2', 'eot', 'otf', 'pdf', 'zip', 'tar', 'gz', 'exe', 'dll', 'so', 'pyc', 'class', 'bin', 'iso', 'jar', '7z', 'rar'];
+    const ext = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : '';
     if (binaryExtensions.includes(ext)) {
         displayBinaryMessage(fileName);
         return;
@@ -201,15 +202,26 @@ async function loadAndShowFile(filePath, fileName) {
 
     try {
         let githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/main/${filePath}`;
-		let url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
+        let url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
         let response = await fetch(url);
         if (!response.ok) {
             githubPath = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${currentRepo}/master/${filePath}`;
-			url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
+            url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
             response = await fetch(url);
-            if (!response.ok) throw new Error('Failed to upload file');
+            if (!response.ok) throw new Error('Failed to download file');
         }
-        const content = await response.text();
+
+        const buffer = await response.arrayBuffer();
+        const textDecoder = new TextDecoder('utf-8', { fatal: true });
+        let content;
+
+        try {
+            content = textDecoder.decode(buffer);
+        } catch (e) {
+            displayBinaryMessage(fileName);
+            return;
+        }
+
         displayCode(content, fileName);
     } catch (err) { displayErrorMessage(fileName, err.message); }
 }
@@ -220,7 +232,7 @@ async function displayImage(filePath, fileName) {
 
     currentFileSpan.textContent = fileName;
 
-	const audioContainer = document.querySelector('.audio-container');
+    const audioContainer = document.querySelector('.audio-container');
     if (audioContainer) {
         audioContainer.style.display = 'none';
         audioContainer.innerHTML = '';
@@ -249,8 +261,9 @@ async function displayImage(filePath, fileName) {
     };
 
     let imageProxyUrl;
-    try { imageProxyUrl = await checkFile('main'); }
-	catch (e) {
+    try { 
+        imageProxyUrl = await checkFile('main'); 
+    } catch (e) {
         try {
             imageProxyUrl = await checkFile('master');
         } catch (e2) {
@@ -268,12 +281,23 @@ async function displayImage(filePath, fileName) {
 
     imageContainer.innerHTML = `
         <div class="image-wrapper">
-            <img src="${imageProxyUrl}" alt="${safeFileName}" class="displayed-image" onerror="this.onerror=null; this.parentElement.parentElement.innerHTML='<div class=\'image-error\'><span>🖼️</span><p>Failed to load image</p><small>${escapeHtml(fileName)}</small></div>'">
+            <img src="${escapeHtml(imageProxyUrl)}" alt="${safeFileName}" class="displayed-image">
             <div class="image-info">
                 <span class="image-name">${safeFileName}</span>
             </div>
         </div>
     `;
+
+    const imgEl = imageContainer.querySelector('.displayed-image');
+    imgEl.onerror = function() {
+        imageContainer.innerHTML = `
+            <div class="image-error">
+                <span>🖼️</span>
+                <p>Failed to load image</p>
+                <small>${safeFileName}</small>
+            </div>
+        `;
+    };
 
     codeElement.style.display = 'none';
 }

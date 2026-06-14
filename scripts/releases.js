@@ -215,7 +215,7 @@ function renderReleaseContent(release, lang, text) {
 
     let badgeHtml = '';
     if (release.prerelease)
-        badgeHtml = `<span class="badge badge-prerelease">${text.prerelease}</span>`;
+		badgeHtml = `<span class="badge badge-prerelease">${text.prerelease}</span>`;
     else if (currentPage === 1 && listData.indexOf(release) === 0)
         badgeHtml = `<span class="badge badge-latest">${text.latest}</span>`;
 
@@ -226,17 +226,18 @@ function renderReleaseContent(release, lang, text) {
     if (release.assets && release.assets.length > 0) {
         const assetsListHtml = release.assets.map(asset => {
             const size = formatFileSize(asset.size);
-            const ext = asset.name.split('.').pop().toLowerCase();
+            const safeAssetName = escapeHtml(asset.name);
+            const ext = safeAssetName.split('.').pop().toLowerCase();
             let icon = '📦';
             if (['zip', 'rar', 'tar', 'gz'].includes(ext)) icon = '🗜️';
             if (['exe', 'msi', 'apk'].includes(ext)) icon = '⚙️';
             if (['pdf', 'txt', 'md'].includes(ext)) icon = '📄';
 
             return `
-                <a href="${asset.browser_download_url}" target="_blank" class="asset-item">
+                <a href="${escapeHtml(asset.browser_download_url)}" target="_blank" class="asset-item">
                     <div class="asset-info">
                         <span class="asset-icon">${icon}</span>
-                        <span class="asset-name">${asset.name}</span>
+                        <span class="asset-name">${safeAssetName}</span>
                     </div>
                     <div class="asset-meta">
                         <span class="asset-stat">💾 ${size}</span>
@@ -254,23 +255,29 @@ function renderReleaseContent(release, lang, text) {
         `;
     }
 
+    const safeReleaseName = escapeHtml(release.name || release.tag_name);
+    const safeTagName = escapeHtml(release.tag_name);
+    const safeAuthorUrl = escapeHtml(release.author.html_url);
+    const safeAuthorAvatar = escapeHtml(release.author.avatar_url);
+    const safeAuthorLogin = escapeHtml(release.author.login);
+
     contentContainer.innerHTML = `
         <div class="release-top">
             <div>
                 <h3 class="release-title">
-                    ${release.name || release.tag_name}
+                    ${safeReleaseName}
                     ${badgeHtml}
                 </h3>
                 <div class="release-meta" style="margin-top: 8px;">
-                    <span class="release-tag">🏷️ ${release.tag_name}</span>
+                    <span class="release-tag">🏷️ ${safeTagName}</span>
                     <span>•</span>
                     <button id="view-release-commit-btn" class="pagination-btn" style="padding: 2px 8px; font-size: 0.8rem; border-radius: 6px;">${text.view_commit}</button>
                     <span>•</span>
                     <span>📅 ${formattedDate}</span>
                     <span>•</span>
-                    <a href="${release.author.html_url}" target="_blank" class="release-author">
-                        <img src="${release.author.avatar_url}" alt="${release.author.login}">
-                        ${release.author.login}
+                    <a href="${safeAuthorUrl}" target="_blank" class="release-author">
+                        <img src="${safeAuthorAvatar}" alt="${safeAuthorLogin}">
+                        ${safeAuthorLogin}
                     </a>
                 </div>
             </div>
@@ -332,34 +339,39 @@ function renderCommitContent(commitItem, lang, text, onBack = null) {
     let rawMsg = commitItem.commit.message || 'No commit message';
     let safeHtmlBody = window.DOMPurify 
         ? DOMPurify.sanitize(rawMsg.replace(/\n/g, '<br>')) 
-        : rawMsg.replace(/\n/g, '<br>');
+        : escapeHtml(rawMsg).replace(/\n/g, '<br>');
 
     const authorName = commitItem.author ? commitItem.author.login : commitItem.commit.author.name;
     const authorAvatar = commitItem.author ? commitItem.author.avatar_url : 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png';
     const authorUrl = commitItem.author ? commitItem.author.html_url : '#';
 
     let backButtonHtml = '';
-    if (onBack) {
+    if (onBack)
         backButtonHtml = `<button id="commit-back-btn" class="pagination-btn" style="margin-bottom: 20px;">${text.back_to_release}</button>`;
-    }
+
+    const safeSha = escapeHtml(commitItem.sha.substring(0, 7));
+    const safeAuthorName = escapeHtml(authorName);
+    const safeAuthorAvatar = escapeHtml(authorAvatar);
+    const safeAuthorUrl = escapeHtml(authorUrl);
+    const safeCommitUrl = escapeHtml(commitItem.html_url);
 
     contentContainer.innerHTML = `
         ${backButtonHtml}
         <div class="release-top">
             <div>
                 <h3 class="release-title">
-                    ${commitItem.sha.substring(0, 7)}
+                    ${safeSha}
                     <span class="badge badge-prerelease">${text.commit}</span>
                 </h3>
                 <div class="release-meta" style="margin-top: 8px;">
                     <span>📅 ${formattedDate}</span>
                     <span>•</span>
-                    <a href="${authorUrl}" target="_blank" class="release-author">
-                        <img src="${authorAvatar}" alt="${authorName}">
-                        ${authorName}
+                    <a href="${safeAuthorUrl}" target="_blank" class="release-author">
+                        <img src="${safeAuthorAvatar}" alt="${safeAuthorName}">
+                        ${safeAuthorName}
                     </a>
                     <span>•</span>
-                    <a href="${commitItem.html_url}" target="_blank" style="color: #00ffaa; text-decoration: none;">GitHub ↗</a>
+                    <a href="${safeCommitUrl}" target="_blank" style="color: #00ffaa; text-decoration: none;">GitHub ↗</a>
                 </div>
             </div>
         </div>

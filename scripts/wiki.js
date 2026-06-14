@@ -228,7 +228,8 @@ async function displayMarkdown(markdown, pageName) {
     }
 
     const html = marked.parse(processedMarkdown);
-    contentDiv.innerHTML = html;
+    const safeHtml = window.DOMPurify ? DOMPurify.sanitize(html) : html;
+    contentDiv.innerHTML = safeHtml;
 
     processLinksAndImages();
 

@@ -8,8 +8,9 @@
 	    <link rel="stylesheet" href="/styles/styles.css">
 	    <link rel="stylesheet" href="/styles/viewer.css">
 	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-	    <title>Lonewolf239 | Просмотр кода</title>
+	    <title data-i18n="title_viewer">Lonewolf239 | Просмотр кода</title>
 	    <link rel="icon" href="/images/icon.svg" type="image/svg+xml">
+	    <script src="/scripts/i18n.js"></script>
 	</head>
 	<body>
 	    <nav></nav>
@@ -19,12 +20,12 @@
 	        <div class="ide-container">
 	            <div class="sidebar">
 	                <div class="sidebar-header">
-	                    <h2 id="repo-name">Загрузка...</h2>
+	                    <h2 id="repo-name" data-i18n="loading">Загрузка...</h2>
 	                </div>
 					<div class="license-info" id="license-info" style="display: none;">
 						<div class="license-icon">⚖️</div>
 						<div class="license-text">
-							<span class="license-label">Лицензия</span>
+							<span class="license-label" data-i18n="license_label">Лицензия</span>
 							<span class="license-name" id="license-name"></span>
 						</div>
 						<div class="license-open">📄</div>
@@ -32,19 +33,19 @@
 					<div class="readme-info" id="readme-info" style="display: none;">
 						<div class="readme-icon">📖</div>
 						<div class="readme-text">
-							<span class="readme-label">README</span>
+							<span class="readme-label" data-i18n="readme_label">README</span>
 							<span class="readme-name" id="readme-name"></span>
 						</div>
 						<div class="readme-open">📄</div>
 					</div>
 	                <div class="file-tree" id="file-tree">
-	                    <div class="loader">Загрузка содержимого...</div>
+	                    <div class="loader" data-i18n="loading_content">Загрузка содержимого...</div>
 	                </div>
 	            </div>
 	            <div class="main-content">
 	                <div class="code-viewer" id="code-viewer">
 	                    <div class="code-header">
-	                        <span id="current-file">Файл не выбран</span>
+	                        <span id="current-file" data-i18n="file_not_selected">Файл не выбран</span>
 	                    </div>
 	                    <pre><code id="code-content" class="language-plaintext"></code></pre>
 	                </div>

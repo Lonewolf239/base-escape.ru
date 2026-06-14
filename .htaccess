@@ -14,9 +14,9 @@ RedirectMatch 403 /\..*$
     Deny from all
 </FilesMatch>
 
-ErrorDocument 403 /403.html
-ErrorDocument 404 /404.html
-ErrorDocument 503 /503.html
+ErrorDocument 403 /html/403.html
+ErrorDocument 404 /html/404.html
+ErrorDocument 503 /html/503.html
 
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^(downloads|scripts|styles|images)(/|$) - [F]
@@ -24,23 +24,19 @@ RewriteRule ^(downloads|scripts|styles|images)(/|$) - [F]
 RewriteCond %{THE_REQUEST} /index\.html [NC]
 RewriteRule ^(.*)index\.html$ /$1 [R=301,L,NC]
 
-RewriteCond %{THE_REQUEST} /(403|404|503)\.html [NC]
-RewriteRule ^(.*)/(403|404|503)\.html$ /$1/$2 [R=301,L,NC]
-RewriteCond %{THE_REQUEST} /(403|404|503)\.html [NC]
-RewriteRule ^(403|404|503)\.html$ /$1 [R=301,L,NC]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /+(.*)\.html\ HTTP/ [NC]
+RewriteRule ^(.*)\.html$ /$1 [R=301,L]
 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} /$
 RewriteRule ^(.*)/$ /$1 [R=301,L]
 
-RewriteCond %{THE_REQUEST} /ru/wiki\.html [NC]
-RewriteRule ^ru/wiki\.html$ /ru/wiki [R=301,L,NE]
-
-RewriteCond %{THE_REQUEST} /ru/viewer\.html [NC]
-RewriteRule ^ru/viewer\.html$ /ru/viewer [R=301,L,NE]
+RewriteRule ^(ru|en|de)/?$ /html/index.html [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]+$ [NC]
-RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}.html -f
-RewriteRule ^(.*)$ $1.html [QSA,L]
+RewriteRule ^(ru|en|de)/(.*)$ /html/$2.html [L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ /html/$1.html [L,QSA]

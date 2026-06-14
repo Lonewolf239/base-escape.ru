@@ -86,8 +86,8 @@ function switchToNextLanguage() {
     const languages = ['ru', 'en', 'de'];
 
     let currentLang = 'ru';
-    if (currentPath.startsWith('/en/')) currentLang = 'en';
-    else if (currentPath.startsWith('/de/')) currentLang = 'de';
+    if (currentPath.startsWith('/en')) currentLang = 'en';
+    else if (currentPath.startsWith('/de')) currentLang = 'de';
 
     const currentIndex = languages.indexOf(currentLang);
     const nextLang = languages[(currentIndex + 1) % languages.length];
@@ -101,8 +101,8 @@ function switchToNextLanguage() {
 
 function getCurrentLanguageForButton() {
     const path = window.location.pathname;
-    if (path.startsWith('/en/')) return 'en';
-    if (path.startsWith('/de/')) return 'de';
+    if (path.startsWith('/en')) return 'en';
+    if (path.startsWith('/de')) return 'de';
     return 'ru';
 }
 
