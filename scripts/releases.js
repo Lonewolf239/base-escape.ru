@@ -476,6 +476,32 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
+function highlightIntraLine(oldStr, newStr) {
+    let start = 0;
+    const minLen = Math.min(oldStr.length, newStr.length);
+
+    while (start < minLen && oldStr[start] === newStr[start])
+        start++;
+
+    let oldEnd = oldStr.length - 1;
+    let newEnd = newStr.length - 1;
+    while (oldEnd >= start && newEnd >= start && oldStr[oldEnd] === newStr[newEnd]) {
+        oldEnd--;
+        newEnd--;
+    }
+
+    const prefix = escapeHtml(oldStr.substring(0, start));
+    const suffix = escapeHtml(oldStr.substring(oldEnd + 1));
+
+    const delMid = escapeHtml(oldStr.substring(start, oldEnd + 1));
+    const addMid = escapeHtml(newStr.substring(start, newEnd + 1));
+
+    const left = prefix + (delMid ? `<span class="diff-char-del">${delMid}</span>` : '') + suffix;
+    const right = prefix + (addMid ? `<span class="diff-char-add">${addMid}</span>` : '') + suffix;
+
+    return { left, right };
+}
+
 function renderSplitDiff(patch) {
     const lines = patch.split('\n');
     const table = document.createElement('table');
@@ -483,16 +509,75 @@ function renderSplitDiff(patch) {
 
     let leftLn = 0, rightLn = 0;
 
+    let deletions = [];
+    let additions = [];
+
+    function flushBuffers() {
+        const maxLen = Math.max(deletions.length, additions.length);
+        for (let i = 0; i < maxLen; i++) {
+            const del = deletions[i];
+            const add = additions[i];
+            const tr = document.createElement('tr');
+
+            let leftCode = '', rightCode = '';
+            let leftNumHtml = '', rightNumHtml = '';
+            let leftClass = 'diff-empty-bg', rightClass = 'diff-empty-bg';
+
+            if (del) {
+                leftNumHtml = del.ln;
+                leftClass = 'diff-del-bg';
+                leftCode = del.text;
+            }
+            if (add) {
+                rightNumHtml = add.ln;
+                rightClass = 'diff-add-bg';
+                rightCode = add.text;
+            }
+
+            if (del && add && deletions.length === additions.length) {
+                const diffed = highlightIntraLine(del.text, add.text);
+                leftCode = diffed.left;
+                rightCode = diffed.right;
+            } else {
+                leftCode = escapeHtml(leftCode);
+                rightCode = escapeHtml(rightCode);
+            }
+
+            tr.innerHTML = `
+                <td class="diff-num">${leftNumHtml}</td>
+                <td class="diff-code ${leftClass}"><div class="diff-line">${leftCode}</div></td>
+                <td class="diff-num">${rightNumHtml}</td>
+                <td class="diff-code ${rightClass}"><div class="diff-line">${rightCode}</div></td>
+            `;
+            table.appendChild(tr);
+        }
+        deletions = [];
+        additions = [];
+    }
+
     lines.forEach(line => {
-        const tr = document.createElement('tr');
-        let leftNum = '', rightNum = '', leftCode = '', rightCode = '', rowClass = '';
+        if (line.startsWith('\\')) {
+            flushBuffers();
+            const tr = document.createElement('tr');
+            const safeLine = escapeHtml(line);
+            tr.innerHTML = `
+                <td class="diff-num"></td>
+                <td class="diff-code diff-empty-bg" style="color: rgba(255,255,255,0.4); font-style: italic;"><div class="diff-line">${safeLine}</div></td>
+                <td class="diff-num"></td>
+                <td class="diff-code diff-empty-bg" style="color: rgba(255,255,255,0.4); font-style: italic;"><div class="diff-line">${safeLine}</div></td>
+            `;
+            table.appendChild(tr);
+            return;
+        }
 
         if (line.startsWith('@@')) {
+            flushBuffers();
             const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
             if (match) {
                 leftLn = parseInt(match[1]) - 1;
                 rightLn = parseInt(match[2]) - 1;
             }
+            const tr = document.createElement('tr');
             tr.className = 'diff-chunk-header';
             tr.innerHTML = `<td colspan="4">${escapeHtml(line)}</td>`;
             table.appendChild(tr);
@@ -501,42 +586,31 @@ function renderSplitDiff(patch) {
 
         if (line.startsWith('-')) {
             leftLn++;
-            leftNum = leftLn;
-            leftCode = escapeHtml(line.substring(1));
-            rowClass = 'diff-del';
-            tr.innerHTML = `
-                <td class="diff-num">${leftNum}</td>
-                <td class="diff-code diff-del-bg"><div class="diff-line">${leftCode}</div></td>
-                <td class="diff-num"></td>
-                <td class="diff-code diff-empty-bg"></td>
-            `;
+            deletions.push({ ln: leftLn, text: line.substring(1) });
         } else if (line.startsWith('+')) {
             rightLn++;
-            rightNum = rightLn;
-            rightCode = escapeHtml(line.substring(1));
-            rowClass = 'diff-add';
-            tr.innerHTML = `
-                <td class="diff-num"></td>
-                <td class="diff-code diff-empty-bg"></td>
-                <td class="diff-num">${rightNum}</td>
-                <td class="diff-code diff-add-bg"><div class="diff-line">${rightCode}</div></td>
-            `;
+            additions.push({ ln: rightLn, text: line.substring(1) });
         } else {
+            flushBuffers();
             let safeLine = line;
             if(safeLine.startsWith(' ')) safeLine = safeLine.substring(1);
-            leftLn++; rightLn++;
-            leftNum = leftLn; rightNum = rightLn;
+
+            leftLn++; 
+            rightLn++;
+
+            const tr = document.createElement('tr');
             safeLine = escapeHtml(safeLine);
             tr.innerHTML = `
-                <td class="diff-num">${leftNum}</td>
+                <td class="diff-num">${leftLn}</td>
                 <td class="diff-code"><div class="diff-line">${safeLine}</div></td>
-                <td class="diff-num">${rightNum}</td>
+                <td class="diff-num">${rightLn}</td>
                 <td class="diff-code"><div class="diff-line">${safeLine}</div></td>
             `;
+            table.appendChild(tr);
         }
-        if (rowClass) tr.classList.add(rowClass);
-        table.appendChild(tr);
     });
+
+    flushBuffers();
 
     return table;
 }

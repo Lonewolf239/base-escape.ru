@@ -416,6 +416,18 @@
 	padding: 2px 8px;
 }
 
+.diff-char-del {
+	background-color: rgba(255, 68, 68, 0.4);
+	border-radius: 2px;
+	padding: 0 1px;
+}
+
+.diff-char-add {
+	background-color: rgba(0, 255, 170, 0.4);
+	border-radius: 2px;
+	padding: 0 1px;
+}
+
 .diff-chunk-header td {
 	background: rgba(255, 179, 71, 0.1);
 	color: #ffb347;
