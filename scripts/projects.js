@@ -55,6 +55,30 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 		releaseDate.textContent = formattedDate;
 	};
 
+	const addChangelogButton = (isCommitFallback = false) => {
+		const linksClass = isSubproject ? '.subproject-links' : '.project-links';
+		let linksContainer = cardElement.querySelector(linksClass);
+
+		if (!linksContainer) {
+			linksContainer = document.createElement('div');
+			linksContainer.className = isSubproject ? 'subproject-links' : 'project-links';
+			cardElement.appendChild(linksContainer);
+		}
+
+		if (!linksContainer.querySelector('.btn-changelog')) {
+			const btn = document.createElement('a');
+			btn.className = 'btn-changelog';
+			btn.href = `/${lang}/releases?project=${repo}`;
+			
+			if (isCommitFallback)
+				btn.textContent = lang === 'ru' ? 'Коммиты' : lang === 'de' ? 'Commits' : 'Commits';
+			else
+				btn.textContent = lang === 'ru' ? 'Релизы' : lang === 'de' ? 'Releases' : 'Releases';
+			
+			linksContainer.appendChild(btn);
+		}
+	};
+
 	try {
 		const releaseApiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
 		const response = await fetch(`/github-proxy.php?path=${encodeURIComponent(releaseApiUrl)}`);
@@ -64,22 +88,7 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 			const releaseDate = release.published_at || release.created_at;
 			if (releaseDate) {
 				if (updateDate) updateDateElement(releaseDate);
-				const linksClass = isSubproject ? '.subproject-links' : '.project-links';
-				let linksContainer = cardElement.querySelector(linksClass);
-
-				if (!linksContainer) {
-					linksContainer = document.createElement('div');
-					linksContainer.className = isSubproject ? 'subproject-links' : 'project-links';
-					cardElement.appendChild(linksContainer);
-				}
-
-				if (!linksContainer.querySelector('.btn-changelog')) {
-					const btn = document.createElement('a');
-					btn.className = 'btn-changelog';
-					btn.href = `/${lang}/releases?project=${repo}`;
-					btn.textContent = lang === 'ru' ? 'Релизы' : lang === 'de' ? 'Releases' : 'Releases';
-					linksContainer.appendChild(btn);
-				}
+				addChangelogButton(false);
 				return;
 			}
 		}
@@ -91,8 +100,10 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 
 		if (response.ok) {
 			const commits = await response.json();
-			if (commits.length > 0)
-				updateDateElement(commits[0].commit.author.date);
+			if (commits.length > 0) {
+				if (updateDate) updateDateElement(commits[0].commit.author.date);
+				addChangelogButton(true);
+			}
 		}
 	} catch (error) { console.warn(`Could not fetch commit date for ${owner}/${repo}:`, error); }
 }
@@ -176,9 +187,7 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
 			if (typeof url === 'object' && url !== null) {
 				resolvedUrl = getLocalizedValue(url.url, lang) || getLocalizedValue(url, lang);
 				openInNewTab = url.newTab !== false;
-			} else {
-				resolvedUrl = getLocalizedValue(url, lang);
-			}
+			} else resolvedUrl = getLocalizedValue(url, lang);
 
 			if (resolvedUrl && isSafeUrl(resolvedUrl)) {
 				const a = document.createElement('a');

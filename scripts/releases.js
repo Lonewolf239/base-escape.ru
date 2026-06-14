@@ -1,12 +1,16 @@
 const GITHUB_OWNER = 'Lonewolf239';
 let currentProject = '';
-let releasesData = [];
+let listData = [];
 let closeMobileMenu = () => {};
 
+let currentPage = 1;
+let currentMode = 'releases';
+const PER_PAGE = 30;
+
 const i18n = {
-    ru: { latest: 'Последний', prerelease: 'Пре-релиз', assets: 'Файлы для скачивания', downloads: 'скачиваний', empty: 'Релизов для этого проекта пока нет.', error: 'Ошибка загрузки: ', menu: '☰ Список релизов' },
-    en: { latest: 'Latest', prerelease: 'Pre-release', assets: 'Assets', downloads: 'downloads', empty: 'No releases found for this project.', error: 'Error loading: ', menu: '☰ Releases List' },
-    de: { latest: 'Neueste', prerelease: 'Pre-Release', assets: 'Dateien', downloads: 'Downloads', empty: 'Keine Releases für dieses Projekt gefunden.', error: 'Fehler beim Laden: ', menu: '☰ Releases-Liste' }
+    ru: { latest: 'Последний', prerelease: 'Пре-релиз', assets: 'Файлы для скачивания', downloads: 'скачиваний', empty: 'Ни релизов, ни коммитов не найдено.', error: 'Ошибка загрузки: ', menu: '☰ Список', prev: '◄ Назад', next: 'Вперед ►', page: 'Стр.', commit: 'Коммит', commits_mode: 'Релизов нет. Показаны коммиты:', show_changes: 'Показать изменения', hide_changes: 'Скрыть изменения', loading_diff: 'Загрузка изменений...', view_commit: 'Посмотреть коммит', back_to_release: '◄ Назад к релизу', no_changed_files: 'Нет измененных файлов.', binary_file: 'Бинарный файл или изменения недоступны для отображения.' },
+    en: { latest: 'Latest', prerelease: 'Pre-release', assets: 'Assets', downloads: 'downloads', empty: 'No releases or commits found.', error: 'Error loading: ', menu: '☰ List', prev: '◄ Prev', next: 'Next ►', page: 'Page', commit: 'Commit', commits_mode: 'No releases. Showing commits:', show_changes: 'Show changes', hide_changes: 'Hide changes', loading_diff: 'Loading diff...', view_commit: 'View Commit', back_to_release: '◄ Back to Release', no_changed_files: 'No changed files found.', binary_file: 'Binary file or changes unavailable for display.' },
+    de: { latest: 'Neueste', prerelease: 'Pre-Release', assets: 'Dateien', downloads: 'Downloads', empty: 'Keine Releases oder Commits gefunden.', error: 'Fehler beim Laden: ', menu: '☰ Liste', prev: '◄ Zurück', next: 'Weiter ►', page: 'Seite', commit: 'Commit', commits_mode: 'Keine Releases. Zeige Commits:', show_changes: 'Änderungen anzeigen', hide_changes: 'Änderungen verbergen', loading_diff: 'Lade Änderungen...', view_commit: 'Commit ansehen', back_to_release: '◄ Zurück zum Release', no_changed_files: 'Keine geänderten Dateien gefunden.', binary_file: 'Binärdatei oder Änderungen nicht anzeigbar.' }
 };
 
 document.addEventListener('DOMContentLoaded', initReleases);
@@ -58,7 +62,7 @@ async function initReleases() {
 
     if(repoNameEl) repoNameEl.textContent = currentProject;
 
-    await loadReleases(lang, text);
+    await loadPage(1, lang, text);
 }
 
 function showError(msg, text) {
@@ -73,25 +77,47 @@ function showLoader(show) {
     if (show && sidebarList) sidebarList.innerHTML = '<div class="loader" style="padding: 12px; text-align: center;">Loading...</div>';
 }
 
-async function loadReleases(lang, text) {
+async function loadPage(page, lang, text) {
     showLoader(true);
+    currentPage = page;
+
     try {
-        const githubPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/releases?per_page=100`;
-        const url = `/github-proxy.php?path=${encodeURIComponent(githubPath)}`;
+        if (currentMode === 'releases') {
+            const relPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/releases?per_page=${PER_PAGE}&page=${page}`;
+            const relRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(relPath)}`);
+            if (!relRes.ok) throw new Error(`HTTP ${relRes.status}`);
+            listData = await relRes.json();
 
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (page === 1 && (!listData || listData.length === 0))
+                currentMode = 'commits';
+        }
 
-        releasesData = await response.json();
+        if (currentMode === 'commits') {
+            const comPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits?per_page=${PER_PAGE}&page=${page}`;
+            const comRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(comPath)}`);
+            if (!comRes.ok) throw new Error(`HTTP ${comRes.status}`);
+            listData = await comRes.json();
+        }
+
         const sidebarList = document.getElementById('releases-sidebar-list');
 
-        if (!releasesData || releasesData.length === 0) {
-            sidebarList.innerHTML = `<div class="empty-folder" style="padding: 12px; text-align: center;">${text.empty}</div>`;
+        if (!listData || listData.length === 0) {
+            if (page === 1) {
+                sidebarList.innerHTML = `<div class="empty-folder" style="padding: 12px; text-align: center;">${text.empty}</div>`;
+                document.getElementById('release-content').innerHTML = '';
+            } else {
+                currentPage--; 
+                showLoader(false);
+            }
             return;
         }
 
         renderSidebar(lang, text);
-        renderReleaseContent(releasesData[0], lang, text);
+
+        if (listData.length > 0) {
+            if (currentMode === 'releases') renderReleaseContent(listData[0], lang, text);
+            else renderCommitContent(listData[0], lang, text);
+        }
 
     } catch (err) {
         console.error(err);
@@ -103,22 +129,67 @@ function renderSidebar(lang, text) {
     const sidebarList = document.getElementById('releases-sidebar-list');
     sidebarList.innerHTML = '';
 
-    releasesData.forEach((release, index) => {
+    if (currentMode === 'commits') {
+        const notice = document.createElement('div');
+        notice.style.padding = '8px 12px';
+        notice.style.fontSize = '0.8rem';
+        notice.style.color = '#ffb347';
+        notice.style.borderBottom = '1px dashed rgba(255,179,71,0.3)';
+        notice.style.marginBottom = '8px';
+        notice.style.textAlign = 'center';
+        notice.textContent = text.commits_mode;
+        sidebarList.appendChild(notice);
+    }
+
+    listData.forEach((itemData, index) => {
         const item = document.createElement('div');
         item.className = 'release-sidebar-item';
         if (index === 0) item.classList.add('active');
 
-        const name = release.name || release.tag_name;
-        item.textContent = name;
+        let name = '';
+        if (currentMode === 'releases') name = itemData.name || itemData.tag_name;
+        else name = itemData.commit.message.split('\n')[0];
+        item.textContent = name || 'Untitled';
 
         item.addEventListener('click', () => {
             document.querySelectorAll('.release-sidebar-item').forEach(el => el.classList.remove('active'));
             item.classList.add('active');
-            renderReleaseContent(release, lang, text);
+
+            if (currentMode === 'releases') renderReleaseContent(itemData, lang, text);
+            else renderCommitContent(itemData, lang, text);
+
             closeMobileMenu();
         });
 
         sidebarList.appendChild(item);
+    });
+
+    renderPagination(lang, text);
+}
+
+function renderPagination(lang, text) {
+    let sidebar = document.querySelector('.sidebar');
+    let pagination = document.getElementById('sidebar-pagination');
+
+    if (!pagination) {
+        pagination = document.createElement('div');
+        pagination.id = 'sidebar-pagination';
+        pagination.className = 'sidebar-footer';
+        sidebar.appendChild(pagination);
+    }
+
+    pagination.innerHTML = `
+        <button id="page-prev" class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''}>${text.prev}</button>
+        <span class="page-label">${text.page} ${currentPage}</span>
+        <button id="page-next" class="pagination-btn" ${listData.length < PER_PAGE ? 'disabled' : ''}>${text.next}</button>
+    `;
+
+    document.getElementById('page-prev').addEventListener('click', () => {
+        if (currentPage > 1) loadPage(currentPage - 1, lang, text);
+    });
+
+    document.getElementById('page-next').addEventListener('click', () => {
+        if (listData.length === PER_PAGE) loadPage(currentPage + 1, lang, text);
     });
 }
 
@@ -134,8 +205,7 @@ function renderReleaseContent(release, lang, text) {
     const contentContainer = document.getElementById('release-content');
     if (!contentContainer) return;
 
-    if (window.marked)
-        marked.setOptions({ breaks: true, gfm: true });
+    if (window.marked) marked.setOptions({ breaks: true, gfm: true });
 
     const date = new Date(release.published_at || release.created_at);
     const formattedDate = date.toLocaleDateString(
@@ -146,7 +216,7 @@ function renderReleaseContent(release, lang, text) {
     let badgeHtml = '';
     if (release.prerelease)
         badgeHtml = `<span class="badge badge-prerelease">${text.prerelease}</span>`;
-    else if (releasesData.indexOf(release) === 0)
+    else if (currentPage === 1 && listData.indexOf(release) === 0)
         badgeHtml = `<span class="badge badge-latest">${text.latest}</span>`;
 
     let rawHtmlBody = release.body ? marked.parse(release.body) : '<i>No description</i>';
@@ -194,6 +264,8 @@ function renderReleaseContent(release, lang, text) {
                 <div class="release-meta" style="margin-top: 8px;">
                     <span class="release-tag">🏷️ ${release.tag_name}</span>
                     <span>•</span>
+                    <button id="view-release-commit-btn" class="pagination-btn" style="padding: 2px 8px; font-size: 0.8rem; border-radius: 6px;">${text.view_commit}</button>
+                    <span>•</span>
                     <span>📅 ${formattedDate}</span>
                     <span>•</span>
                     <a href="${release.author.html_url}" target="_blank" class="release-author">
@@ -212,4 +284,247 @@ function renderReleaseContent(release, lang, text) {
     document.querySelectorAll('#release-content pre code').forEach((block) => {
         if(window.hljs) hljs.highlightElement(block);
     });
+
+    const viewCommitBtn = document.getElementById('view-release-commit-btn');
+    if (viewCommitBtn) {
+        viewCommitBtn.addEventListener('click', () => {
+            fetchAndRenderReleaseCommit(release, lang, text);
+        });
+    }
+}
+
+async function fetchAndRenderReleaseCommit(release, lang, text) {
+    const contentContainer = document.getElementById('release-content');
+    contentContainer.innerHTML = `<div class="loader" style="padding: 20px; text-align: center;">Loading commit...</div>`;
+
+    try {
+        const commitPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits/${release.tag_name}`;
+        const res = await fetch(`/github-proxy.php?path=${encodeURIComponent(commitPath)}`);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const commitData = await res.json();
+
+        renderCommitContent(commitData, lang, text, () => renderReleaseContent(release, lang, text));
+
+    } catch (err) {
+        console.error(err);
+        contentContainer.innerHTML = `<div class="error-message" style="text-align:center; padding: 20px;">${text.error} ${err.message}</div>`;
+
+        const backBtn = document.createElement('button');
+        backBtn.className = 'pagination-btn';
+        backBtn.style.marginTop = '16px';
+        backBtn.textContent = text.back_to_release;
+        backBtn.onclick = () => renderReleaseContent(release, lang, text);
+        contentContainer.appendChild(backBtn);
+    }
+}
+
+function renderCommitContent(commitItem, lang, text, onBack = null) {
+    const contentContainer = document.getElementById('release-content');
+    if (!contentContainer) return;
+
+    const date = new Date(commitItem.commit.author.date);
+    const formattedDate = date.toLocaleDateString(
+        lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', 
+        { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+    );
+
+    let rawMsg = commitItem.commit.message || 'No commit message';
+    let safeHtmlBody = window.DOMPurify 
+        ? DOMPurify.sanitize(rawMsg.replace(/\n/g, '<br>')) 
+        : rawMsg.replace(/\n/g, '<br>');
+
+    const authorName = commitItem.author ? commitItem.author.login : commitItem.commit.author.name;
+    const authorAvatar = commitItem.author ? commitItem.author.avatar_url : 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png';
+    const authorUrl = commitItem.author ? commitItem.author.html_url : '#';
+
+    let backButtonHtml = '';
+    if (onBack) {
+        backButtonHtml = `<button id="commit-back-btn" class="pagination-btn" style="margin-bottom: 20px;">${text.back_to_release}</button>`;
+    }
+
+    contentContainer.innerHTML = `
+        ${backButtonHtml}
+        <div class="release-top">
+            <div>
+                <h3 class="release-title">
+                    ${commitItem.sha.substring(0, 7)}
+                    <span class="badge badge-prerelease">${text.commit}</span>
+                </h3>
+                <div class="release-meta" style="margin-top: 8px;">
+                    <span>📅 ${formattedDate}</span>
+                    <span>•</span>
+                    <a href="${authorUrl}" target="_blank" class="release-author">
+                        <img src="${authorAvatar}" alt="${authorName}">
+                        ${authorName}
+                    </a>
+                    <span>•</span>
+                    <a href="${commitItem.html_url}" target="_blank" style="color: #00ffaa; text-decoration: none;">GitHub ↗</a>
+                </div>
+            </div>
+        </div>
+        <div class="release-body markdown-body" style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 12px; border: 1px dashed rgba(255,0,170,0.3); font-family: 'Fira Code', monospace;">
+            ${safeHtmlBody}
+        </div>
+
+        <div style="margin-top: 24px;">
+            <button id="toggle-diff-btn" class="pagination-btn" style="width: 100%; padding: 12px; font-weight: bold; border-radius: 12px;">
+                ${text.show_changes}
+            </button>
+            <div id="commit-diff-container" style="display: none; margin-top: 16px; flex-direction: column; gap: 16px;"></div>
+        </div>
+    `;
+
+    if (onBack)
+        document.getElementById('commit-back-btn').addEventListener('click', onBack);
+
+    const diffBtn = document.getElementById('toggle-diff-btn');
+    const diffContainer = document.getElementById('commit-diff-container');
+
+    diffBtn.addEventListener('click', async () => {
+        if (diffContainer.style.display === 'none') {
+            diffContainer.style.display = 'flex';
+            diffBtn.textContent = text.hide_changes;
+
+            if (!diffContainer.hasAttribute('data-loaded')) {
+                diffContainer.innerHTML = `<div class="loader" style="text-align: center; padding: 20px;">${text.loading_diff}</div>`;
+                await loadAndRenderDiff(commitItem.sha, diffContainer, lang, text);
+                diffContainer.setAttribute('data-loaded', 'true');
+            }
+        } else {
+            diffContainer.style.display = 'none';
+            diffBtn.textContent = text.show_changes;
+        }
+    });
+}
+
+async function loadAndRenderDiff(sha, container, lang, text) {
+    try {
+        const commitPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits/${sha}`;
+        const res = await fetch(`/github-proxy.php?path=${encodeURIComponent(commitPath)}`);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        container.innerHTML = '';
+
+        if (!data.files || data.files.length === 0) {
+            container.innerHTML = `<div class="empty-folder" style="text-align:center;">${text.no_changed_files}</div>`;
+            return;
+        }
+
+        data.files.forEach(file => {
+            container.appendChild(createDiffElement(file, text));
+        });
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="error-message" style="text-align:center;">${text.error} ${err.message}</div>`;
+    }
+}
+
+function createDiffElement(file, text) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'diff-file-wrapper';
+
+    const header = document.createElement('div');
+    header.className = 'diff-file-header';
+    header.innerHTML = `
+        <span class="diff-toggle" style="transform: rotate(-90deg);">▼</span>
+        <span class="diff-filename">${file.filename}</span>
+        <span class="diff-stats">
+            <span style="color: #00ffaa;">+${file.additions}</span>
+            <span style="color: #ff4444;">-${file.deletions}</span>
+        </span>
+    `;
+
+    const content = document.createElement('div');
+    content.className = 'diff-file-content';
+    content.style.display = 'none';
+
+    if (!file.patch) content.innerHTML = `<div class="diff-no-patch">${text.binary_file}</div>`;
+    else content.appendChild(renderSplitDiff(file.patch));
+
+    header.addEventListener('click', () => {
+        const isCollapsed = content.style.display === 'none';
+        content.style.display = isCollapsed ? 'block' : 'none';
+        header.querySelector('.diff-toggle').style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(-90deg)';
+    });
+
+    wrapper.appendChild(header);
+    wrapper.appendChild(content);
+    return wrapper;
+}
+
+function escapeHtml(unsafe) {
+    return (unsafe || '').toString()
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+function renderSplitDiff(patch) {
+    const lines = patch.split('\n');
+    const table = document.createElement('table');
+    table.className = 'diff-table';
+
+    let leftLn = 0, rightLn = 0;
+
+    lines.forEach(line => {
+        const tr = document.createElement('tr');
+        let leftNum = '', rightNum = '', leftCode = '', rightCode = '', rowClass = '';
+
+        if (line.startsWith('@@')) {
+            const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
+            if (match) {
+                leftLn = parseInt(match[1]) - 1;
+                rightLn = parseInt(match[2]) - 1;
+            }
+            tr.className = 'diff-chunk-header';
+            tr.innerHTML = `<td colspan="4">${escapeHtml(line)}</td>`;
+            table.appendChild(tr);
+            return;
+        }
+
+        if (line.startsWith('-')) {
+            leftLn++;
+            leftNum = leftLn;
+            leftCode = escapeHtml(line.substring(1));
+            rowClass = 'diff-del';
+            tr.innerHTML = `
+                <td class="diff-num">${leftNum}</td>
+                <td class="diff-code diff-del-bg"><div class="diff-line">${leftCode}</div></td>
+                <td class="diff-num"></td>
+                <td class="diff-code diff-empty-bg"></td>
+            `;
+        } else if (line.startsWith('+')) {
+            rightLn++;
+            rightNum = rightLn;
+            rightCode = escapeHtml(line.substring(1));
+            rowClass = 'diff-add';
+            tr.innerHTML = `
+                <td class="diff-num"></td>
+                <td class="diff-code diff-empty-bg"></td>
+                <td class="diff-num">${rightNum}</td>
+                <td class="diff-code diff-add-bg"><div class="diff-line">${rightCode}</div></td>
+            `;
+        } else {
+            let safeLine = line;
+            if(safeLine.startsWith(' ')) safeLine = safeLine.substring(1);
+            leftLn++; rightLn++;
+            leftNum = leftLn; rightNum = rightLn;
+            safeLine = escapeHtml(safeLine);
+            tr.innerHTML = `
+                <td class="diff-num">${leftNum}</td>
+                <td class="diff-code"><div class="diff-line">${safeLine}</div></td>
+                <td class="diff-num">${rightNum}</td>
+                <td class="diff-code"><div class="diff-line">${safeLine}</div></td>
+            `;
+        }
+        if (rowClass) tr.classList.add(rowClass);
+        table.appendChild(tr);
+    });
+
+    return table;
 }
