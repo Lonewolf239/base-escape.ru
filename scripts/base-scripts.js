@@ -92,10 +92,11 @@ function switchToNextLanguage() {
     const currentIndex = languages.indexOf(currentLang);
     const nextLang = languages[(currentIndex + 1) % languages.length];
 
-    const newPath  = currentPath.replace(/^\/(ru|en|de)/, `/${nextLang}`);
+    const newPath = currentPath.replace(/^\/(ru|en|de)/, `/${nextLang}`);
 
     if (newPath === currentPath) return;
 
+	localStorage.setItem('currentLang', nextLang);
     window.location.href = newPath + currentSearch + currentHash;
 }
 

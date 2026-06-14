@@ -9,6 +9,7 @@ import webbrowser
 import threading
 import urllib.parse
 import subprocess
+import re
 
 PORT = 8000
 DIRECTORY = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -30,30 +31,180 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Expires', '0')
         super().end_headers()
 
+    def process_htaccess(self, url_path):
+        htaccess_path = os.path.join(DIRECTORY, '.htaccess')
+
+        if not os.path.exists(htaccess_path):
+            if url_path == "/" or url_path == "":
+                return 200, "/index.php" if os.path.exists(os.path.join(DIRECTORY, "index.php")) else "/index.html"
+            return 200, url_path
+
+        match_path = url_path.lstrip('/')
+
+        with open(htaccess_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+
+        rewrite_engine = False
+        conditions = []
+        directory_index = ['index.php', 'index.html', 'index.htm']
+
+        for line in lines:
+            line = line.split('#')[0].strip()
+            if not line: continue
+
+            parts = line.split()
+            directive = parts[0].upper()
+
+            if directive == 'DIRECTORYINDEX':
+                directory_index = parts[1:]
+                continue
+
+            if directive == 'REWRITEENGINE':
+                rewrite_engine = (parts[1].upper() == 'ON')
+                continue
+
+            if directive == 'REWRITECOND':
+                if len(parts) >= 3:
+                    flags = parts[3] if len(parts) > 3 else ""
+                    conditions.append((parts[1], parts[2], flags))
+                continue
+
+            if directive == 'REWRITERULE' and rewrite_engine:
+                if len(parts) >= 3:
+                    pattern = parts[1]
+                    substitution = parts[2]
+                    flags_raw = parts[3].upper() if len(parts) > 3 else ""
+
+                    rule_flags = {}
+                    if flags_raw.startswith('[') and flags_raw.endswith(']'):
+                        for flag in flags_raw.strip('[]').split(','):
+                            flag = flag.strip()
+                            if '=' in flag:
+                                k, v = flag.split('=', 1)
+                                rule_flags[k] = v
+                            else:
+                                rule_flags[flag] = True
+
+                    conditions_passed = True
+                    for cond_test_string, cond_pattern, cond_flags_raw in conditions:
+                        cond_flags = {}
+                        if cond_flags_raw.startswith('[') and cond_flags_raw.endswith(']'):
+                            for flag in cond_flags_raw.strip('[]').split(','):
+                                cond_flags[flag.strip()] = True
+
+                        test_val = cond_test_string
+                        test_val = test_val.replace('%{THE_REQUEST}', f"{self.command} {self.path} HTTP/1.1")
+                        test_val = test_val.replace('%{REQUEST_URI}', url_path.split('?')[0])
+                        test_val = test_val.replace('%{REQUEST_FILENAME}', os.path.join(DIRECTORY, url_path.split('?')[0].lstrip('/')))
+
+                        is_negated = cond_pattern.startswith('!')
+                        actual_pattern = cond_pattern[1:] if is_negated else cond_pattern
+
+                        cond_match = False
+                        if actual_pattern == '-f':
+                            cond_match = os.path.isfile(test_val)
+                        elif actual_pattern == '-d':
+                            cond_match = os.path.isdir(test_val)
+                        else:
+                            try:
+                                re_flags = re.IGNORECASE if 'NC' in cond_flags else 0
+                                cond_match = bool(re.search(actual_pattern, test_val, re_flags))
+                            except re.error:
+                                pass
+
+                        if (cond_match and is_negated) or (not cond_match and not is_negated):
+                            conditions_passed = False
+                            break
+
+                    if conditions_passed:
+                        try:
+                            re_flags = re.IGNORECASE if 'NC' in rule_flags else 0
+                            match = re.search(pattern, match_path, re_flags)
+
+                            if match:
+                                if 'F' in rule_flags:
+                                    return 403, ""
+
+                                if substitution != '-':
+                                    def apache_sub(m):
+                                        res = substitution
+                                        for i, grp in enumerate(m.groups(), 1):
+                                            res = res.replace(f'${i}', grp or '')
+                                        return res
+
+                                    new_path = re.sub(pattern, apache_sub, match_path, flags=re_flags)
+                                else:
+                                    new_path = match_path
+
+                                if 'R' in rule_flags:
+                                    r_val = rule_flags['R']
+                                    redirect_code = int(r_val) if r_val is not True else 302
+                                    if not new_path.startswith('http') and not new_path.startswith('/'):
+                                        new_path = '/' + new_path
+                                    return redirect_code, new_path
+
+                                match_path = new_path.lstrip('/') if new_path.startswith('/') else new_path
+
+                                if 'L' in rule_flags:
+                                    conditions = []
+                                    break
+                        except re.error:
+                            pass
+
+                    conditions = []
+
+        final_path = '/' + match_path
+
+        physical_path = os.path.join(DIRECTORY, match_path.split('?')[0])
+        if os.path.isdir(physical_path):
+            for index_file in directory_index:
+                if os.path.isfile(os.path.join(physical_path, index_file)):
+                    final_path = final_path.rstrip('/') + '/' + index_file
+                    break
+
+        return 200, final_path
+
+    def apply_rewrite(self):
+        parsed_url = urllib.parse.urlparse(self.path)
+        clean_path = parsed_url.path
+        query = parsed_url.query
+
+        status_code, rewritten_path = self.process_htaccess(clean_path)
+
+        if status_code in (301, 302, 303, 307, 308):
+            self.send_response(status_code)
+            self.send_header('Location', rewritten_path)
+            self.end_headers()
+            return True 
+
+        if status_code == 403:
+            self.send_error(403, "Forbidden by .htaccess rules")
+            return True
+
+        if '?' in rewritten_path:
+            base_path, new_query = rewritten_path.split('?', 1)
+            query = f"{new_query}&{query}" if query else new_query
+            rewritten_path = base_path
+
+        self.rewritten_path = rewritten_path
+        self.rewritten_query = query
+        self.path = f"{rewritten_path}?{query}" if query else rewritten_path
+
+        return False
+
     def translate_path(self, path):
         parsed_url = urllib.parse.urlparse(path)
         clean_path = parsed_url.path
-
-        if clean_path in ("/", "", "/index"):
-            clean_path = "index.html"
-
-        filepath = os.path.join(DIRECTORY, clean_path.lstrip("/"))
-
-        if not os.path.exists(filepath):
-            html_filepath = filepath + ".html"
-            if os.path.exists(html_filepath):
-                return html_filepath
-
-        return filepath
+        return os.path.join(DIRECTORY, clean_path.lstrip("/"))
 
     def do_GET(self):
-        parsed_url = urllib.parse.urlparse(self.path)
-        clean_path = parsed_url.path
+        if self.apply_rewrite():
+            return
 
-        if clean_path.endswith('.php'):
-            filepath = os.path.join(DIRECTORY, clean_path.lstrip("/"))
+        if self.rewritten_path.endswith('.php'):
+            filepath = os.path.join(DIRECTORY, self.rewritten_path.lstrip("/"))
             if os.path.exists(filepath):
-                self.run_php(filepath, parsed_url.query, method='GET')
+                self.run_php(filepath, self.rewritten_query, method='GET')
             else:
                 self.send_error(404, "PHP file not found")
             return
@@ -61,11 +212,11 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self):
-        parsed_url = urllib.parse.urlparse(self.path)
-        clean_path = parsed_url.path
+        if self.apply_rewrite():
+            return
 
-        if clean_path.endswith('.php'):
-            filepath = os.path.join(DIRECTORY, clean_path.lstrip("/"))
+        if self.rewritten_path.endswith('.php'):
+            filepath = os.path.join(DIRECTORY, self.rewritten_path.lstrip("/"))
             if os.path.exists(filepath):
                 content_length = int(self.headers.get('Content-Length', 0))
                 content_type = self.headers.get('Content-Type', '')
@@ -74,7 +225,7 @@ class NoCacheHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                 self.run_php(
                     filepath, 
-                    parsed_url.query, 
+                    self.rewritten_query, 
                     method='POST', 
                     post_data=post_data, 
                     content_type=content_type
