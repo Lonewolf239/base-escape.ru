@@ -41,10 +41,7 @@
             "language": "C#",
             "tags": [
                 "Library",
-                ".NET",
-                "Concurrency",
-                "Async",
-                "Thread-Safe"
+                ".NET"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/AsyncReaderWriterLock",
@@ -74,9 +71,7 @@
             "lastRelease": "2025-11-7",
             "tags": [
                 "Bot",
-                "Telegram",
-                "Support",
-                "Ticketing"
+                "Telegram"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PlazaSupportBot",
@@ -107,9 +102,8 @@
             "tags": [
                 "Library",
                 ".NET",
-                "ConfigFramework",
-                "Encryption",
-                "Thread-Safe"
+                "Configuration",
+                "Security"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/NeoIni",
@@ -150,9 +144,7 @@
             "tags": [
                 "Library",
                 ".NET",
-                "ConfigFramework",
-                "MIT",
-                "Thread-Safe"
+                "Configuration"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/NeoIniLight",
@@ -187,11 +179,7 @@
                 "CSS"
             ],
             "tags": [
-                "Website",
-                "Portfolio",
-                "Responsive",
-                "Multilingual",
-                "Frontend"
+                "Web"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/base-escape.ru",
@@ -220,11 +208,7 @@
             "tags": [
                 "Bot",
                 "Telegram",
-                "AI",
-                "Ollama",
-                "Memes",
-                "RP",
-                "Assistant"
+                "AI"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/InformantTGBot",
@@ -253,9 +237,7 @@
             "tags": [
                 "Library",
                 ".NET",
-                "Console",
-                "Terminal",
-                "TrueColor"
+                "Console"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/BeautifulConsole",
@@ -284,10 +266,7 @@
             "language": "C#",
             "tags": [
                 "Game",
-                "WinForms",
-                "Raycasting",
-                "FPS",
-                "DirectX"
+                "Desktop"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/SLIL",
@@ -316,9 +295,7 @@
             "tags": [
                 "Utility",
                 "Console",
-                "Encryption",
-                "AES-256",
-                "Compression"
+                "Security"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/CryptoLockX",
@@ -347,10 +324,7 @@
             "tags": [
                 "Utility",
                 "Console",
-                "Security",
-                "Password Manager",
-                "AES-256",
-                "Linux"
+                "Security"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PasswordManager",
@@ -380,10 +354,7 @@
             "lastRelease": "2025-11-14",
             "tags": [
                 "Bot",
-                "Telegram",
-                "Educational",
-                "Crypto Payments",
-                "Referral System"
+                "Telegram"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PlazaBot",
@@ -414,10 +385,8 @@
             "language": "C++",
             "tags": [
                 "Utility",
-                "Windows",
-                "WinAPI",
-                "Desktop",
-                "Configuration"
+                "Console",
+                "System"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/PCtoNormal",
@@ -445,10 +414,8 @@
             },
             "language": "C#",
             "tags": [
-                "Tool",
+                "Utility",
                 "Console",
-                "Terraria",
-                "Randomizer",
                 "Modding"
             ],
             "links": {
@@ -477,11 +444,9 @@
             },
             "language": "C#",
             "tags": [
-                "Tool",
-                "WinForms",
-                "7 Days to Die",
-                "Modding",
-                "Game Config"
+                "Utility",
+                "Desktop",
+                "Modding"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/7DtD_HP",
@@ -512,9 +477,7 @@
             "tags": [
                 "Utility",
                 "Console",
-                "Windows",
-                "WinAPI",
-                "Power Management"
+                "System"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/WPM",
@@ -543,10 +506,7 @@
             "language": "C#",
             "tags": [
                 "Game",
-                "WinForms",
-                "Collection",
-                "Arcade",
-                "Puzzle"
+                "Desktop"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/mini-games",
@@ -575,10 +535,7 @@
             "language": "Python",
             "tags": [
                 "Game",
-                "Arcade",
-                "Shooter",
-                "Pygame",
-                "Galaga"
+                "Desktop"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/GAAGA",
@@ -602,14 +559,12 @@
             "description": {
                 "ru": "Текстовая игра о противостоянии маньяку и культу. Первый завершённый проект, над которым велась работа больше года.",
                 "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
-                "de": "Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr gearbeitet wurde."
+                "de": "Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr arbeitete wurde."
             },
             "language": "C++",
             "tags": [
                 "Game",
-                "Console",
-                "Text Adventure",
-                "Interactive Fiction"
+                "Console"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/base_escape_v3.9",
@@ -641,9 +596,7 @@
                 "C#"
             ],
             "tags": [
-                "Archive",
-                "Collection",
-                "Legacy"
+                "Archive"
             ],
             "links": {
                 "github": "https://github.com/Lonewolf239/Archive",

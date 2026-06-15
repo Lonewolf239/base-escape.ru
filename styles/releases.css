@@ -58,8 +58,10 @@
 	border: 1px solid transparent;
 }
 
-.release-sidebar-item:hover {
-	background: rgba(255, 0, 170, 0.15);
+@media (hover: hover) and (pointer: fine) {
+	.release-sidebar-item:hover {
+		background: rgba(255, 0, 170, 0.15);
+	}
 }
 
 .release-sidebar-item.active {
@@ -167,8 +169,10 @@
 	text-decoration: none;
 }
 
-.release-body a:hover {
-	text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+	.release-body a:hover {
+		text-decoration: underline;
+	}
 }
 
 .release-body ul,
@@ -229,11 +233,13 @@
 	backdrop-filter: blur(4px);
 }
 
-.asset-item:hover {
-	background: rgba(255, 0, 170, 0.2);
-	border-color: #ff00aa;
-	transform: translateY(-2px);
-	box-shadow: 0 4px 15px rgba(255, 0, 170, 0.3);
+@media (hover: hover) and (pointer: fine) {
+	.asset-item:hover {
+		background: rgba(255, 0, 170, 0.2);
+		border-color: #ff00aa;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 15px rgba(255, 0, 170, 0.3);
+	}
 }
 
 .asset-info {
@@ -310,9 +316,11 @@
 	transition: all 0.2s;
 }
 
-.pagination-btn:hover:not(:disabled) {
-	background: rgba(255, 0, 170, 0.3);
-	box-shadow: 0 0 8px rgba(255, 0, 170, 0.3);
+@media (hover: hover) and (pointer: fine) {
+	.pagination-btn:hover:not(:disabled) {
+		background: rgba(255, 0, 170, 0.3);
+		box-shadow: 0 0 8px rgba(255, 0, 170, 0.3);
+	}
 }
 
 .pagination-btn:disabled {
@@ -348,8 +356,10 @@
 	transition: background 0.2s ease;
 }
 
-.diff-file-header:hover {
-	background: rgba(255, 0, 170, 0.15);
+@media (hover: hover) and (pointer: fine) {
+	.diff-file-header:hover {
+		background: rgba(255, 0, 170, 0.15);
+	}
 }
 
 .diff-toggle {

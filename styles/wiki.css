@@ -57,8 +57,10 @@
 	word-break: break-word;
 }
 
-.wiki-page-item:hover {
-	background: rgba(255, 0, 170, 0.15);
+@media (hover: hover) and (pointer: fine) {
+	.wiki-page-item:hover {
+		background: rgba(255, 0, 170, 0.15);
+	}
 }
 
 .wiki-page-item.active {
@@ -122,9 +124,11 @@
 	border-bottom: 1px dashed rgba(255, 0, 170, 0.5);
 }
 
-.wiki-content a:hover {
-	color: #ff00aa;
-	border-bottom-color: #ff00aa;
+@media (hover: hover) and (pointer: fine) {
+	.wiki-content a:hover {
+		color: #ff00aa;
+		border-bottom-color: #ff00aa;
+	}
 }
 
 .wiki-content code {

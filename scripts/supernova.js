@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const glitchTargets = [
         document.querySelector('nav'),
-        document.querySelector('.about-section'),
+        document.getElementById('projects-sidebar'),
         document.querySelector('.projects-grid'),
 		document.getElementById('lonewolf239'),
         document.querySelector('footer')

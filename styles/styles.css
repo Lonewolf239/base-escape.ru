@@ -68,16 +68,17 @@ nav button img {
 	transition: filter 0.2s;
 }
 
-nav button:hover {
-	background: rgba(255, 0, 170, 0.25);
-	border-color: #ff00aa;
-	box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
+@media (hover: hover) and (pointer: fine) {
+	nav button:hover {
+		background: rgba(255, 0, 170, 0.25);
+		border-color: #ff00aa;
+		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
+	}
 }
 
 nav button:active {
 	background: rgba(255, 0, 170, 0.4);
 }
-
 
 ::-webkit-scrollbar {
 	width: 6px;
@@ -96,9 +97,11 @@ nav button:active {
 	transition: background 0.2s;
 }
 
-::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 0, 170, 0.9);
-	box-shadow: 0 0 6px rgba(255, 0, 170, 0.8);
+@media (hover: hover) and (pointer: fine) {
+	::-webkit-scrollbar-thumb:hover {
+		background: rgba(255, 0, 170, 0.9);
+		box-shadow: 0 0 6px rgba(255, 0, 170, 0.8);
+	}
 }
 
 .scroll-top-btn {
@@ -130,11 +133,17 @@ nav button:active {
 	pointer-events: auto;
 }
 
-.scroll-top-btn:hover {
-	background: rgba(255, 0, 170, 0.25);
-	border-color: #ff00aa;
-	box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
-	transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+	.scroll-top-btn:hover {
+		background: rgba(255, 0, 170, 0.25);
+		border-color: #ff00aa;
+		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6), 0 2px 8px rgba(0, 0, 0, 0.2);
+		transform: scale(1.05);
+	}
+
+	.scroll-top-btn:hover .arrow-up {
+		transform: translateY(-2px);
+	}
 }
 
 .scroll-top-btn:active {
@@ -147,10 +156,6 @@ nav button:active {
 	color: white;
 	line-height: 1;
 	transition: transform 0.2s;
-}
-
-.scroll-top-btn:hover .arrow-up {
-	transform: translateY(-2px);
 }
 
 footer {
@@ -181,10 +186,13 @@ footer a,
 	transition: color 0.2s;
 }
 
-footer a:hover,
-#developer-name a:hover {
-	color: #ff00aa;
-	text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+
+	footer a:hover,
+	#developer-name a:hover {
+		color: #ff00aa;
+		text-decoration: underline;
+	}
 }
 
 @media (max-width: 768px) {
@@ -220,10 +228,12 @@ footer a:hover,
 		font-size: 24px;
 	}
 
-	.menu-toggle-btn:hover {
-		background: rgba(255, 0, 170, 0.25);
-		border-color: #ff00aa;
-		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+	@media (hover: hover) and (pointer: fine) {
+		.menu-toggle-btn:hover {
+			background: rgba(255, 0, 170, 0.25);
+			border-color: #ff00aa;
+			box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+		}
 	}
 
 	.nav-menu {
@@ -261,10 +271,12 @@ footer a:hover,
 		filter: brightness(0) invert(1);
 	}
 
-	.nav-menu button:hover {
-		background: rgba(255, 0, 170, 0.25);
-		border-color: #ff00aa;
-		box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+	@media (hover: hover) and (pointer: fine) {
+		.nav-menu button:hover {
+			background: rgba(255, 0, 170, 0.25);
+			border-color: #ff00aa;
+			box-shadow: 0 0 12px rgba(255, 0, 170, 0.6);
+		}
 	}
 
 	.nav-menu button:active {

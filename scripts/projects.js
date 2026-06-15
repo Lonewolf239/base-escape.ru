@@ -1,3 +1,13 @@
+let projectCardsCache = [];
+let activeTagFilter = 'all';
+let closeMobileMenu = () => {};
+
+const filterLabels = {
+	ru: { search: 'Поиск проектов...', allLangs: 'Все языки', allTags: 'Все теги', noResults: 'По вашему запросу ничего не найдено.' },
+	en: { search: 'Search projects...', allLangs: 'All languages', allTags: 'All tags', noResults: 'No projects found matching your criteria.' },
+	de: { search: 'Projekte suchen...', allLangs: 'Alle Sprachen', allTags: 'Alle Tags', noResults: 'Keine Projekte gefunden, die Ihren Kriterien entsprechen.' }
+};
+
 function getLocalizedValue(value, lang) {
 	if (typeof value === 'object' && value !== null)
 		return value[lang] || value.en || Object.values(value)[0] || '';
@@ -350,92 +360,6 @@ function createDescriptionToggle(project, lang, buttonLabels) {
 	return container;
 }
 
-function renderAbout(aboutData) {
-	const projectsGrid = document.querySelector('.projects-grid');
-	if (!projectsGrid || document.querySelector('.about-section')) return;
-
-	const htmlLang = document.documentElement.lang || 'en';
-	const currentLang = htmlLang.startsWith('en') ? 'en' : (htmlLang.startsWith('de') ? 'de' : 'ru');
-
-	const aboutContainer = document.createElement('div');
-	aboutContainer.className = 'about-section';
-
-	const avatar = document.createElement('img');
-	avatar.src = aboutData.avatar || '/images/avatar.png';
-	avatar.alt = 'Avatar';
-	avatar.className = 'about-avatar';
-	aboutContainer.appendChild(avatar);
-
-	const contentDiv = document.createElement('div');
-	contentDiv.className = 'about-content';
-
-	const title = document.createElement('h2');
-	title.textContent = getLocalizedValue(aboutData.title, currentLang);
-	title.className = 'about-title';
-	contentDiv.appendChild(title);
-
-	const description = document.createElement('p');
-	description.textContent = getLocalizedValue(aboutData.description, currentLang);
-	description.className = 'about-description';
-	contentDiv.appendChild(description);
-
-	if (aboutData.techStack?.length) {
-		const techDiv = document.createElement('div');
-		techDiv.className = 'about-tech';
-		
-		const techLabel = document.createElement('span');
-		techLabel.className = 'about-tech-label';
-		techLabel.textContent = currentLang === 'ru' ? 'Технологии:' : (currentLang === 'de' ? 'Technologien:' : 'Tech stack:');
-		techDiv.appendChild(techLabel);
-
-		const tagsDiv = document.createElement('div');
-		tagsDiv.className = 'about-tags';
-		const techFrag = document.createDocumentFragment();
-		
-		aboutData.techStack.forEach(tech => {
-			const tag = document.createElement('span');
-			tag.className = 'about-tag';
-			tag.textContent = tech;
-			techFrag.appendChild(tag);
-		});
-		
-		tagsDiv.appendChild(techFrag);
-		techDiv.appendChild(tagsDiv);
-		contentDiv.appendChild(techDiv);
-	}
-
-	if (aboutData.contacts && Object.keys(aboutData.contacts).length) {
-		const contactsDiv = document.createElement('div');
-		contactsDiv.className = 'about-contacts';
-		
-		const contactsLabel = document.createElement('span');
-		contactsLabel.className = 'about-contacts-label';
-		contactsLabel.textContent = currentLang === 'ru' ? 'Связаться:' : (currentLang === 'de' ? 'Kontakt:' : 'Contact:');
-		contactsDiv.appendChild(contactsLabel);
-
-		const linksDiv = document.createElement('div');
-		linksDiv.className = 'about-links';
-		const linksFrag = document.createDocumentFragment();
-		
-		Object.entries(aboutData.contacts).forEach(([key, url]) => {
-			if (!url) return;
-			const a = document.createElement('a');
-			a.href = url;
-			a.target = '_blank';
-			a.rel = 'noopener noreferrer';
-			a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
-			linksFrag.appendChild(a);
-		});
-		
-		linksDiv.appendChild(linksFrag);
-		contactsDiv.appendChild(linksDiv);
-		contentDiv.appendChild(contactsDiv);
-	}
-
-	aboutContainer.appendChild(contentDiv);
-	projectsGrid.parentNode.insertBefore(aboutContainer, projectsGrid);
-}
-
 const lazyObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -473,6 +397,223 @@ function renderSkeletons(container, count = 6) {
     }
 }
 
+function initMobileMenu(currentLang) {
+    const container = document.querySelector('.projects-container');
+    if (!container) return;
+
+    if (document.querySelector('.burger-btn')) return;
+
+    const burgerLabels = { ru: '☰ Меню', en: '☰ Menu', de: '☰ Menü' };
+
+    const burger = document.createElement('button');
+    burger.className = 'burger-btn';
+    burger.innerHTML = burgerLabels[currentLang] || burgerLabels.en;
+    container.insertBefore(burger, container.firstChild);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+    container.appendChild(overlay);
+
+    const sidebar = document.querySelector('#projects-sidebar');
+
+    function toggle() {
+        if(sidebar) sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = (sidebar && sidebar.classList.contains('active')) ? 'hidden' : '';
+    }
+
+    closeMobileMenu = () => {
+        if (sidebar && sidebar.classList.contains('active')) toggle();
+    };
+
+    burger.addEventListener('click', toggle);
+    overlay.addEventListener('click', toggle);
+}
+
+function renderSidebarAndFilters(aboutData, projects, currentLang) {
+    const sidebar = document.getElementById('projects-sidebar');
+    if (!sidebar) return;
+
+    sidebar.innerHTML = '';
+    initMobileMenu(currentLang);
+
+    if (aboutData) {
+        const aboutSection = document.createElement('div');
+        aboutSection.className = 'sidebar-about';
+
+        const avatarUrl = aboutData.avatar || '/images/icon.svg';
+        const titleText = getLocalizedValue(aboutData.title, currentLang);
+        const descText = getLocalizedValue(aboutData.description, currentLang);
+
+        aboutSection.innerHTML = `
+            <img src="${avatarUrl}" alt="Avatar" class="sidebar-avatar">
+            <h2>${titleText}</h2>
+            <p>${descText}</p>
+        `;
+
+        if (aboutData.contacts && Object.keys(aboutData.contacts).length) {
+            const linksDiv = document.createElement('div');
+            linksDiv.className = 'about-links';
+            linksDiv.style.justifyContent = 'center';
+
+            Object.entries(aboutData.contacts).forEach(([key, url]) => {
+                if (!url) return;
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+                linksDiv.appendChild(a);
+            });
+            aboutSection.appendChild(linksDiv);
+        }
+
+        sidebar.appendChild(aboutSection);
+    }
+
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'sidebar-content';
+
+    const labels = filterLabels[currentLang] || filterLabels.en;
+
+    const searchGroup = document.createElement('div');
+    searchGroup.className = 'sidebar-filter-group';
+    const searchInput = document.createElement('input');
+    searchInput.type = 'text';
+    searchInput.className = 'filter-control filter-input';
+    searchInput.placeholder = labels.search;
+    searchInput.id = 'projectSearch';
+    searchGroup.appendChild(searchInput);
+    contentWrapper.appendChild(searchGroup);
+
+    searchInput.addEventListener('input', () => filterProjects(currentLang));
+
+    const uniqueLangs = new Set();
+    const uniqueTags = new Set();
+    projects.forEach(p => {
+        if (p.language) {
+            const langs = Array.isArray(p.language) ? p.language : [p.language];
+            langs.forEach(l => uniqueLangs.add(l));
+        }
+        if (p.tags) p.tags.forEach(t => uniqueTags.add(t));
+    });
+
+    if (uniqueLangs.size > 0) {
+        const langGroup = document.createElement('div');
+        langGroup.className = 'sidebar-filter-group';
+        langGroup.innerHTML = `<h3>${currentLang === 'ru' ? 'Языки' : currentLang === 'de' ? 'Sprachen' : 'Languages'}</h3>`;
+
+        const langContainer = document.createElement('div');
+        langContainer.className = 'langs-scroll-container';
+
+        const allLangsBtn = document.createElement('button');
+        allLangsBtn.className = 'filter-lang-btn active';
+        allLangsBtn.textContent = labels.allLangs;
+        allLangsBtn.dataset.lang = 'all';
+        langContainer.appendChild(allLangsBtn);
+
+        Array.from(uniqueLangs).sort().forEach(lang => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-lang-btn';
+            btn.textContent = lang;
+            btn.dataset.lang = lang;
+            langContainer.appendChild(btn);
+        });
+
+        langContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-lang-btn')) {
+                document.querySelectorAll('.filter-lang-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                filterProjects(currentLang);
+                closeMobileMenu();
+            }
+        });
+
+        langGroup.appendChild(langContainer);
+        contentWrapper.appendChild(langGroup);
+    }
+
+    if (uniqueTags.size > 0) {
+        const tagGroup = document.createElement('div');
+        tagGroup.className = 'sidebar-filter-group';
+        tagGroup.innerHTML = `<h3>${currentLang === 'ru' ? 'Теги' : currentLang === 'de' ? 'Tags' : 'Tags'}</h3>`;
+
+        const tagsContainer = document.createElement('div');
+        tagsContainer.className = 'tags-scroll-container';
+
+        const allTagsBtn = document.createElement('button');
+        allTagsBtn.className = 'filter-tag-btn active';
+        allTagsBtn.textContent = labels.allTags;
+        allTagsBtn.dataset.tag = 'all';
+        tagsContainer.appendChild(allTagsBtn);
+
+        Array.from(uniqueTags).sort().forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-tag-btn';
+            btn.textContent = tag;
+            btn.dataset.tag = tag;
+            tagsContainer.appendChild(btn);
+        });
+
+        tagsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-tag-btn')) {
+                document.querySelectorAll('.filter-tag-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                activeTagFilter = e.target.dataset.tag;
+                filterProjects(currentLang);
+                closeMobileMenu();
+            }
+        });
+
+        tagGroup.appendChild(tagsContainer);
+        contentWrapper.appendChild(tagGroup);
+    }
+
+    sidebar.appendChild(contentWrapper);
+}
+
+function filterProjects(currentLang) {
+    const searchEl = document.getElementById('projectSearch');
+    const searchText = searchEl ? searchEl.value.toLowerCase() : '';
+
+    const activeLangBtn = document.querySelector('.filter-lang-btn.active');
+    const activeLang = activeLangBtn ? activeLangBtn.dataset.lang : 'all';
+
+    const selectedTag = activeTagFilter;
+
+    let visibleCount = 0;
+
+    projectCardsCache.forEach(item => {
+        const { data, element } = item;
+
+        const title = (getLocalizedValue(data.title, currentLang) || '').toLowerCase();
+        const desc = (getLocalizedValue(data.description, currentLang) || '').toLowerCase();
+        const matchText = title.includes(searchText) || desc.includes(searchText);
+
+        const pLangs = data.language ? (Array.isArray(data.language) ? data.language : [data.language]) : [];
+        const matchLang = activeLang === 'all' || pLangs.includes(activeLang);
+
+        const matchTag = selectedTag === 'all' || (data.tags && data.tags.includes(selectedTag));
+
+        if (matchText && matchLang && matchTag) {
+            element.style.display = ''; 
+            visibleCount++;
+        } else element.style.display = 'none'; 
+    });
+
+    const projectsGrid = document.querySelector('.projects-grid');
+    let noResultsMsg = document.querySelector('.no-results-msg');
+
+    if (visibleCount === 0) {
+        if (!noResultsMsg && projectsGrid) {
+            noResultsMsg = document.createElement('div');
+            noResultsMsg.className = 'no-results-msg';
+            noResultsMsg.textContent = (filterLabels[currentLang] || filterLabels.en).noResults;
+            projectsGrid.appendChild(noResultsMsg);
+        }
+    } else if (noResultsMsg) noResultsMsg.remove();
+}
+
 function loadProjects() {
     const projectsGrid = document.querySelector('.projects-grid');
     if (!projectsGrid) return;
@@ -492,10 +633,13 @@ function loadProjects() {
         .then(response => response.json())
         .then(data => {
             projectsGrid.innerHTML = '';
-
-            if (data.about) renderAbout(data.about);
+            projectCardsCache = [];
 
             const projects = data.projects || [];
+
+            if (data.about || projects.length > 0)
+                renderSidebarAndFilters(data.about, projects, currentLang);
+
             const subprojectsPool = data.subprojects_pool || {};
             const projectsFrag = document.createDocumentFragment();
 
@@ -597,6 +741,8 @@ function loadProjects() {
                 }
 
                 projectsFrag.appendChild(card);
+
+                projectCardsCache.push({ data: project, element: card });
 
                 lazyObserver.observe(card);
 
