@@ -7,7 +7,7 @@ let closeMobileMenu = () => {};
 document.addEventListener('DOMContentLoaded', initWiki);
 
 function initMobileMenu() {
-    const container = document.querySelector('.wiki-container');
+    const container = document.querySelector('.page-container');
     if (!container) return;
 
     const burger = document.createElement('button');

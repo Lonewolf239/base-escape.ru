@@ -16,7 +16,7 @@ const i18n = {
 document.addEventListener('DOMContentLoaded', initReleases);
 
 function initMobileMenu(lang, text) {
-    const container = document.querySelector('.releases-container');
+    const container = document.querySelector('.page-container');
     if (!container) return;
 
     const burger = document.createElement('button');

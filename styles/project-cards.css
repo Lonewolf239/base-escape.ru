@@ -1,15 +1,3 @@
-.projects-container {
-	display: grid;
-	grid-template-columns: 380px 1fr;
-	gap: 32px;
-	max-width: 1500px;
-	margin: 0 auto;
-	padding: 2rem;
-	position: relative;
-	z-index: 7;
-	align-items: start;
-}
-
 .projects-main {
 	min-width: 0;
 }
@@ -22,19 +10,8 @@
 }
 
 .sidebar {
-	background: rgba(20, 20, 30, 0.35);
-	backdrop-filter: blur(12px);
-	border-radius: 28px;
-	border: 1px solid rgba(255, 0, 170, 0.3);
 	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	position: sticky;
-	top: 80px;
-	height: fit-content;
-	transition:
-		border-color 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+	transition: border-color 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1),
 		box-shadow 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1),
 		background 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1),
 		left 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -1004,77 +981,6 @@
 	border-radius: 28px;
 }
 
-.burger-btn {
-	display: none;
-	background: rgba(255, 0, 170, 0.15);
-	border: 1px solid rgba(255, 0, 170, 0.5);
-	color: #fff;
-	padding: 10px 20px;
-	border-radius: 40px;
-	font-size: 1rem;
-	cursor: pointer;
-	margin-bottom: 20px;
-	width: 100%;
-	transition: all 0.3s ease;
-}
-
-@media (hover: hover) and (pointer: fine) {
-	.burger-btn:hover {
-		background: rgba(255, 0, 170, 0.3);
-		box-shadow: 0 0 12px rgba(255, 0, 170, 0.4);
-	}
-}
-
-.mobile-overlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.6);
-	backdrop-filter: blur(4px);
-	z-index: 90;
-	opacity: 0;
-	transition: opacity 0.3s ease;
-}
-
-.mobile-overlay.active {
-	display: block;
-	opacity: 1;
-}
-
-@media (max-width: 992px) {
-	.projects-container {
-		grid-template-columns: 1fr;
-		padding: 1rem;
-		gap: 20px;
-	}
-
-	.burger-btn {
-		display: block;
-	}
-
-	.sidebar {
-		position: fixed;
-		top: 0;
-		left: -100%;
-		width: 85%;
-		max-width: 400px;
-		height: 100vh;
-		z-index: 100;
-		border-radius: 0 24px 24px 0;
-		border: none;
-		border-right: 1px solid rgba(255, 0, 170, 0.3);
-		background: rgba(15, 15, 20, 0.98);
-		box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
-	}
-
-	.sidebar.active {
-		left: 0;
-	}
-}
-
 @media (max-width: 768px) {
 	.projects-grid {
 		grid-template-columns: 1fr;
@@ -1123,6 +1029,7 @@
 
 	.project-card p {
 		font-size: 0.85rem;
+		max-height: 100px;
 	}
 
 	.project-links a,

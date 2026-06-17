@@ -398,7 +398,7 @@ function renderSkeletons(container, count = 6) {
 }
 
 function initMobileMenu(currentLang) {
-    const container = document.querySelector('.projects-container');
+    const container = document.querySelector('.page-container');
     if (!container) return;
 
     if (document.querySelector('.burger-btn')) return;

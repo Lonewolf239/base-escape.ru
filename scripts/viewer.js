@@ -7,7 +7,7 @@ let closeMobileMenu = () => {};
 document.addEventListener('DOMContentLoaded', initViewer);
 
 function initMobileMenu() {
-    const container = document.querySelector('.ide-container');
+    const container = document.querySelector('.page-container');
     if (!container) return;
 
     const burger = document.createElement('button');
