@@ -106,7 +106,7 @@ async function loadPage(page, lang, text) {
                 sidebarList.innerHTML = `<div class="empty-folder" style="padding: 12px; text-align: center;">${text.empty}</div>`;
                 document.getElementById('release-content').innerHTML = '';
             } else {
-                currentPage--; 
+                currentPage--;
                 showLoader(false);
             }
             return;
