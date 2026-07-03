@@ -8,6 +8,13 @@ const filterLabels = {
 	de: { search: 'Projekte suchen...', allLangs: 'Alle Sprachen', allTags: 'Alle Tags', noResults: 'Keine Projekte gefunden, die Ihren Kriterien entsprechen.' }
 };
 
+const statusConfig = {
+    active: { color: '#00ffaa', label: { ru: 'Активен', en: 'Active', de: 'Aktiv' } },
+    paused: { color: '#ffea00', label: { ru: 'На паузе', en: 'Paused', de: 'Pausiert' } },
+    archived: { color: '#ff1744', label: { ru: 'Архив', en: 'Archived', de: 'Archiviert' } },
+    completed: { color: '#2979ff', label: { ru: 'Завершен', en: 'Completed', de: 'Abgeschlossen' } }
+};
+
 function getLocalizedValue(value, lang) {
 	if (typeof value === 'object' && value !== null)
 		return value[lang] || value.en || Object.values(value)[0] || '';
@@ -34,6 +41,37 @@ function formatDate(dateString, lang) {
 	} catch { return null; }
 }
 
+function createStatusBadge(status, lang) {
+    if (!status) return null;
+    const st = statusConfig[status.toLowerCase()] || statusConfig.active;
+
+    const badge = document.createElement('div');
+    badge.className = 'project-status-badge';
+
+    const dot = document.createElement('span');
+    dot.className = 'status-dot';
+    dot.style.backgroundColor = st.color;
+    dot.style.boxShadow = `0 0 8px ${st.color}`;
+
+    const text = document.createElement('span');
+    text.textContent = st.label[lang] || st.label.en;
+
+    badge.appendChild(dot);
+    badge.appendChild(text);
+    return badge;
+}
+
+function appendMetaBadge(topBar, text, icon, typeClass, isSubproject = false) {
+    let badge = topBar.querySelector(`.${typeClass}`);
+    if (!badge) {
+        badge = document.createElement('div');
+        const baseClass = isSubproject ? 'subproject-release-date' : 'project-release-date';
+        badge.className = `${baseClass} project-meta-badge ${typeClass}`;
+        topBar.appendChild(badge);
+    }
+    badge.innerHTML = `${icon ? `<span class="meta-icon">${icon}</span> ` : ''}${text}`;
+}
+
 async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproject = false, updateDate = true) {
 	if (!githubUrl || typeof githubUrl !== 'string') return;
 	
@@ -41,28 +79,19 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 	if (!match) return;
 
 	const [, owner, repo] = match;
+    const topBarClass = isSubproject ? 'subproject-top-bar' : 'project-top-bar';
+
+    let topBar = cardElement.querySelector(`.${topBarClass}`);
+    if (!topBar) {
+        topBar = document.createElement('div');
+        topBar.className = topBarClass;
+        cardElement.insertBefore(topBar, cardElement.firstChild);
+    }
 
 	const updateDateElement = (dateString) => {
 		const formattedDate = formatDate(dateString, lang);
 		if (!formattedDate) return;
-
-		const topBarClass = isSubproject ? 'subproject-top-bar' : 'project-top-bar';
-		const dateClass = isSubproject ? 'subproject-release-date' : 'project-release-date';
-
-		let topBar = cardElement.querySelector(`.${topBarClass}`);
-		if (!topBar) {
-			topBar = document.createElement('div');
-			topBar.className = topBarClass;
-			cardElement.insertBefore(topBar, cardElement.firstChild);
-		}
-
-		let releaseDate = topBar.querySelector(`.${dateClass}`);
-		if (!releaseDate) {
-			releaseDate = document.createElement('div');
-			releaseDate.className = dateClass;
-			topBar.appendChild(releaseDate);
-		}
-		releaseDate.textContent = formattedDate;
+        appendMetaBadge(topBar, formattedDate, '📅', 'date-badge', isSubproject);
 	};
 
 	const addChangelogButton = (isCommitFallback = false) => {
@@ -80,14 +109,24 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 			btn.className = 'btn-changelog';
 			btn.href = `/${lang}/releases?project=${repo}`;
 			
-			if (isCommitFallback)
-				btn.textContent = lang === 'ru' ? 'Коммиты' : lang === 'de' ? 'Commits' : 'Commits';
-			else
-				btn.textContent = lang === 'ru' ? 'Релизы' : lang === 'de' ? 'Releases' : 'Releases';
+			if (isCommitFallback) btn.textContent = lang === 'ru' ? 'Коммиты' : lang === 'de' ? 'Commits' : 'Commits';
+			else btn.textContent = lang === 'ru' ? 'Релизы' : lang === 'de' ? 'Releases' : 'Releases';
 			
 			linksContainer.appendChild(btn);
 		}
 	};
+
+    try {
+        const repoApiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+        const repoRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(repoApiUrl)}`);
+        if (repoRes.ok) {
+            const repoData = await repoRes.json();
+            if (repoData.stargazers_count > 0)
+                appendMetaBadge(topBar, repoData.stargazers_count, '⭐', 'github-stars-badge', isSubproject);
+            if (repoData.license && repoData.license.spdx_id && repoData.license.spdx_id !== 'NOASSERTION')
+                appendMetaBadge(topBar, repoData.license.spdx_id, '⚖️', 'license-badge', isSubproject);
+        }
+    } catch (error) { console.warn(`Could not fetch repo info for ${owner}/${repo}:`, error); }
 
 	try {
 		const releaseApiUrl = `https://api.github.com/repos/${owner}/${repo}/releases/latest`;
@@ -95,6 +134,10 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 
 		if (response.ok) {
 			const release = await response.json();
+
+            if (release.tag_name)
+                appendMetaBadge(topBar, release.tag_name, '🏷️', 'project-version-badge', isSubproject);
+
 			const releaseDate = release.published_at || release.created_at;
 			if (releaseDate) {
 				if (updateDate) updateDateElement(releaseDate);
@@ -141,25 +184,35 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
 		});
 	}
 
-	if (subproject.lastRelease) {
-		const formattedDate = formatDate(subproject.lastRelease, lang);
-		if (formattedDate) {
-			const releaseDate = document.createElement('div');
-			releaseDate.className = 'subproject-release-date';
-			releaseDate.textContent = formattedDate;
-			topBarFrag.appendChild(releaseDate);
-		}
-	}
-
-	if (topBarFrag.children.length) {
+    if (topBarFrag.children.length) {
 		topBar.appendChild(topBarFrag);
 		subCard.appendChild(topBar);
 	}
 
+    if (subproject.stars) appendMetaBadge(topBar, subproject.stars, '⭐', 'github-stars-badge', true);
+    if (subproject.license) appendMetaBadge(topBar, subproject.license, '⚖️', 'license-badge', true);
+    if (subproject.version) appendMetaBadge(topBar, subproject.version, '🏷️', 'project-version-badge', true);
+
+	if (subproject.lastRelease) {
+		const formattedDate = formatDate(subproject.lastRelease, lang);
+		if (formattedDate) appendMetaBadge(topBar, formattedDate, '📅', 'date-badge', true);
+	}
+
+    if (!topBar.parentElement && topBar.children.length)
+        subCard.appendChild(topBar);
+
+    const headerContainer = document.createElement('div');
+    headerContainer.className = 'project-header-container';
+
 	const title = getLocalizedValue(subproject.title, lang) || 'Untitled';
 	const h4 = document.createElement('h4');
 	h4.textContent = title;
-	subCard.appendChild(h4);
+	headerContainer.appendChild(h4);
+
+    const statusBadge = createStatusBadge(subproject.status, lang);
+    if (statusBadge) headerContainer.appendChild(statusBadge);
+
+    subCard.appendChild(headerContainer);
 
 	const description = getLocalizedValue(subproject.description, lang) || '';
 	if (description) {
@@ -595,7 +648,9 @@ function filterProjects(currentLang) {
 
         const matchTag = selectedTag === 'all' || (data.tags && data.tags.includes(selectedTag));
 
-        if (matchText && matchLang && matchTag) {
+        const statusMatch = data.status ? data.status.toLowerCase().includes(searchText) : false;
+
+        if ((matchText || statusMatch) && matchLang && matchTag) {
             element.style.display = ''; 
             visibleCount++;
         } else element.style.display = 'none'; 
@@ -664,24 +719,34 @@ function loadProjects() {
                     });
                 }
 
-                if (project.lastRelease) {
-                    const formattedDate = formatDate(project.lastRelease, currentLang);
-                    if (formattedDate) {
-                        const releaseDate = document.createElement('div');
-                        releaseDate.className = 'project-release-date';
-                        releaseDate.textContent = formattedDate;
-                        topBarFrag.appendChild(releaseDate);
-                    }
-                }
-
                 if (topBarFrag.children.length) {
                     topBar.appendChild(topBarFrag);
                     card.appendChild(topBar);
                 }
 
+                if (project.stars) appendMetaBadge(topBar, project.stars, '⭐', 'github-stars-badge', false);
+                if (project.license) appendMetaBadge(topBar, project.license, '⚖️', 'license-badge', false);
+                if (project.version) appendMetaBadge(topBar, project.version, '🏷️', 'project-version-badge', false);
+
+                if (project.lastRelease) {
+                    const formattedDate = formatDate(project.lastRelease, currentLang);
+                    if (formattedDate) appendMetaBadge(topBar, formattedDate, '📅', 'date-badge', false);
+                }
+
+                if (!topBar.parentElement && topBar.children.length)
+                    card.appendChild(topBar);
+
+                const headerContainer = document.createElement('div');
+                headerContainer.className = 'project-header-container';
+
                 const h3 = document.createElement('h3');
                 h3.textContent = getLocalizedValue(project.title, currentLang) || 'Untitled';
-                card.appendChild(h3);
+                headerContainer.appendChild(h3);
+
+                const statusBadge = createStatusBadge(project.status, currentLang);
+                if (statusBadge) headerContainer.appendChild(statusBadge);
+
+                card.appendChild(headerContainer);
 
                 const descriptionToggle = createDescriptionToggle(project, currentLang, buttonLabels);
                 if (descriptionToggle) card.appendChild(descriptionToggle);

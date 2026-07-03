@@ -38,6 +38,7 @@
                 "en": "Asynchronous reader-writer lock for .NET. Lightweight, cross-platform, with cancellation support and fair queuing.",
                 "de": "Asynchrone Lese-Schreib-Sperre für .NET. Leichtgewichtig, plattformübergreifend, mit Abbruchunterstützung und fairer Warteschlange."
             },
+            "status": "paused",
             "language": "C#",
             "tags": [
                 "Library",
@@ -67,6 +68,7 @@
                 "en": "Telegram bot for PlazaBot user support. Handles tickets and manages inquiries.",
                 "de": "Telegram-Bot für den Benutzersupport von PlazaBot. Bearbeitet Tickets und verwaltet Anfragen."
             },
+            "status": "archived",
             "language": "Python",
             "lastRelease": "2025-11-7",
             "tags": [
@@ -98,6 +100,7 @@
                 "en": "Configuration framework for .NET with INI-based persistence. Supports thread safety, AES-256 encryption, SHA-256 checksums, hot reload, and pluggable providers.",
                 "de": "Konfigurations-Framework für .NET mit INI-basierter Persistenz. Unterstützt Threadsicherheit, AES-256 Verschlüsselung, SHA-256 Prüfsummen, Hot Reload und austauschbare Provider."
             },
+            "status": "paused",
             "language": "C#",
             "tags": [
                 "Library",
@@ -140,6 +143,7 @@
                 "en": "Lightweight version of NeoIni with MIT license. No encryption or hot-reload, but with thread safety, atomic writes, and automatic backups. Perfect for open-source projects.",
                 "de": "Leichte Version von NeoIni mit MIT-Lizenz. Keine Verschlüsselung oder Hot-Reload, aber mit Threadsicherheit, atomaren Schreibvorgängen und automatischen Backups. Ideal für Open-Source-Projekte."
             },
+            "status": "paused",
             "language": "C#",
             "tags": [
                 "Library",
@@ -173,6 +177,7 @@
                 "en": "Personal portfolio website. Includes project showcase, multilingual support, built-in code viewer, and responsive design.",
                 "de": "Persönliche Portfolio-Website. Enthält Projektübersicht, mehrsprachige Unterstützung, integrierte Code-Ansicht und responsives Design."
             },
+            "status": "active",
             "language": [
                 "JavaScript",
                 "HTML",
@@ -204,6 +209,7 @@
                 "en": "Asynchronous Telegram bot for business chats. Features local AI (Ollama), memes/jokes, weather, RP commands (SFW/NSFW), away mode with auto-reply, and link saving. Full statistics and owner panel.",
                 "de": "Asynchroner Telegram-Bot für Geschäftschats. Bietet lokale KI (Ollama), Memes/Witze, Wetter, RP-Befehle (SFW/NSFW), Abwesenheitsmodus mit Auto-Antwort und Link-Speicherung. Vollständige Statistiken und Admin-Panel."
             },
+            "status": "active",
             "language": "Python",
             "tags": [
                 "Bot",
@@ -233,6 +239,7 @@
                 "en": "Library for building beautiful console applications on .NET. Supports true-color, cross-platform clipboard, and advanced window customization.",
                 "de": "Bibliothek zum Erstellen ansprechender Konsolenanwendungen auf .NET. Unterstützt True-Color, plattformübergreifende Zwischenablage und erweiterte Fensteranpassung."
             },
+            "status": "paused",
             "language": "C#",
             "tags": [
                 "Library",
@@ -263,6 +270,7 @@
                 "en": "DOOM-like shooter in C# and WinForms. Uses a custom raycasting engine, DirectX 10, and Y-axis camera offset.",
                 "de": "DOOM-ähnlicher Shooter in C# und WinForms. Verwendet eine eigene Raycasting-Engine, DirectX 10 und Y-Achsen-Kamera-Offset."
             },
+            "status": "archived",
             "language": "C#",
             "tags": [
                 "Game",
@@ -291,6 +299,7 @@
                 "en": "Console utility for encrypting and packing files. Uses AES-256 and Brotli compression.",
                 "de": "Konsolenprogramm zum Verschlüsseln und Packen von Dateien. Verwendet AES-256 und Brotli-Kompression."
             },
+            "status": "archived",
             "language": "C#",
             "tags": [
                 "Utility",
@@ -320,6 +329,7 @@
                 "en": "Console password manager. Stores data encrypted, supports search, synchronization, and automatic updates.",
                 "de": "Konsolen-Passwort-Manager. Speichert Daten verschlüsselt, unterstützt Suche, Synchronisierung und automatische Updates."
             },
+            "status": "completed",
             "language": "C#",
             "tags": [
                 "Utility",
@@ -350,6 +360,7 @@
                 "en": "Educational Telegram bot (~15k lines of code) demonstrating casino game architecture. Includes 8+ games, crypto payment integration, referral system, and admin panel.",
                 "de": "Pädagogischer Telegram-Bot (~15k Codezeilen) zur Demonstration der Spielarchitektur. Enthält 8+ Spiele, Kryptozahlungsintegration, Empfehlungssystem und Admin-Panel."
             },
+            "status": "archived",
             "language": "Python",
             "lastRelease": "2025-11-14",
             "tags": [
@@ -382,6 +393,7 @@
                 "en": "Utility for configuring the desktop on locked systems. Applies Windows dark theme, wallpaper, and Visual Studio settings.",
                 "de": "Dienstprogramm zum Konfigurieren des Desktops auf gesperrten Systemen. Wendet Windows-Dark-Theme, Hintergrundbild und Visual Studio-Einstellungen an."
             },
+            "status": "completed",
             "language": "C++",
             "tags": [
                 "Utility",
@@ -412,6 +424,7 @@
                 "en": "Character generator for Terraria. Instantly creates complete presets for new adventures.",
                 "de": "Charakter-Generator für Terraria. Erstellt im Handumdrehen komplette Voreinstellungen für neue Abenteuer."
             },
+            "status": "archived",
             "language": "C#",
             "tags": [
                 "Utility",
@@ -442,6 +455,7 @@
                 "en": "Utility for editing zombie stats in 7 Days to Die. Works through the game's configuration file.",
                 "de": "Dienstprogramm zum Bearbeiten der Zombie-Statistiken in 7 Days to Die. Arbeitet über die Konfigurationsdatei des Spiels."
             },
+            "status": "completed",
             "language": "C#",
             "tags": [
                 "Utility",
@@ -472,6 +486,7 @@
                 "en": "Console power plan manager for Windows. Supports brightness control.",
                 "de": "Konsolen-Energiesparplan-Manager für Windows. Unterstützt Helligkeitssteuerung."
             },
+            "status": "completed",
             "language": "C++",
             "lastRelease": "2024-11-24",
             "tags": [
@@ -503,6 +518,7 @@
                 "en": "Collection of 16 offline mini-games. Includes puzzles, arcade, and strategy games with sound support, high scores, and auto-updates.",
                 "de": "Sammlung von 16 Offline-Minispielen. Enthält Puzzles, Arcade- und Strategiespiele mit Soundunterstützung, Highscores und Auto-Updates."
             },
+            "status": "archived",
             "language": "C#",
             "tags": [
                 "Game",
@@ -532,6 +548,7 @@
                 "en": "Arcade shooter in the style of Galaga in Python. Supports two players, bonuses, weapon upgrades, and dynamic difficulty.",
                 "de": "Arcade-Shooter im Galaga-Stil in Python. Unterstützt zwei Spieler, Boni, Waffen-Upgrades und dynamischen Schwierigkeitsgrad."
             },
+            "status": "completed",
             "language": "Python",
             "tags": [
                 "Game",
@@ -561,6 +578,7 @@
                 "en": "A text-based game about confronting a maniac and a cult. The first completed project, worked on for over a year.",
                 "de": "Ein textbasiertes Spiel über die Konfrontation mit einem Wahnsinnigen und einem Kult. Das erste abgeschlossene Projekt, an dem über ein Jahr arbeitete wurde."
             },
+            "status": "archived",
             "language": "C++",
             "tags": [
                 "Game",
@@ -590,6 +608,7 @@
                 "en": "Git archive of 27 projects (2022-2024). Full clones with history — from early experiments to first working utilities.",
                 "de": "Git-Archiv von 27 Projekten (2022-2024). Vollständige Klone mit Historie — von frühen Experimenten bis zu ersten funktionsfähigen Anwendungen."
             },
+            "status": "archived",
             "language": [
                 "C++",
                 "Python",
