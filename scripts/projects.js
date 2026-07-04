@@ -172,9 +172,9 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
 	if (subproject.language) {
 		const languages = Array.isArray(subproject.language) ? subproject.language : [subproject.language];
 		languages.forEach(langCode => {
-			if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(langCode)) {
-				const langBadge = document.createElement('div');
-				const langClass = langCode.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+			if (['C#', 'C++', 'Python', 'PHP', 'HTML/CSS/JS'].includes(langCode)) {
+			    const langBadge = document.createElement('div');
+				const langClass = langCode.toLowerCase().replace('#', 'sharp').replace('++', 'pp').replace(/\//g, '-');
 				langBadge.className = `project-language-badge language-${langClass}`;
 				langBadge.style.fontSize = '0.65rem';
 				langBadge.style.padding = '2px 10px';
@@ -709,9 +709,9 @@ function loadProjects() {
                 if (project.language) {
                     const languages = Array.isArray(project.language) ? project.language : [project.language];
                     languages.forEach(lang => {
-                        if (['C#', 'C++', 'Python', 'JavaScript', 'HTML', 'CSS'].includes(lang)) {
-                            const langBadge = document.createElement('div');
-                            const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp');
+						if (['C#', 'C++', 'Python', 'PHP', 'HTML/CSS/JS'].includes(lang)) {
+						    const langBadge = document.createElement('div');
+						    const langClass = lang.toLowerCase().replace('#', 'sharp').replace('++', 'pp').replace(/\//g, '-');
                             langBadge.className = `project-language-badge language-${langClass}`;
                             langBadge.textContent = lang;
                             topBarFrag.appendChild(langBadge);

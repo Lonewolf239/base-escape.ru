@@ -775,9 +775,8 @@
 .language-csharp,
 .language-cpp,
 .language-python,
-.language-javascript,
-.language-html,
-.language-css {
+.language-php,
+.language-html-css-js {
 	border-width: 1px;
 	border-style: solid;
 	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
@@ -821,30 +820,21 @@
 		transform: translateY(-1px);
 	}
 
-	.language-javascript:hover {
+	.language-php:hover {
+		background: linear-gradient(135deg, rgba(136, 146, 191, 0.35), rgba(136, 146, 191, 0.12));
+		border-color: #a4b0e6;
+		box-shadow: 0 0 24px rgba(136, 146, 191, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4);
+		color: #ffffff;
+		text-shadow: 0 0 12px #8892BF, 0 0 4px #8892BF;
+		transform: translateY(-1px);
+	}
+
+	.language-html-css-js:hover {
+		background: linear-gradient(135deg, rgba(228, 77, 38, 0.3), rgba(38, 77, 228, 0.2), rgba(247, 223, 30, 0.3));
 		border-color: #ffea70;
+		box-shadow: 0 0 24px rgba(228, 77, 38, 0.4), 0 4px 15px rgba(0, 0, 0, 0.4);
 		color: #ffffff;
-		background: linear-gradient(135deg, rgba(247, 223, 30, 0.35), rgba(247, 223, 30, 0.12));
-		box-shadow: 0 0 24px rgba(247, 223, 30, 0.6), 0 4px 15px rgba(0, 0, 0, 0.4);
 		text-shadow: 0 0 12px #ffea70, 0 0 4px #f7df1e;
-		transform: translateY(-1px);
-	}
-
-	.language-html:hover {
-		background: linear-gradient(135deg, rgba(228, 77, 38, 0.35), rgba(228, 77, 38, 0.12));
-		border-color: #ff7043;
-		box-shadow: 0 0 24px #e44d26, 0 4px 15px rgba(0, 0, 0, 0.4);
-		color: #ffffff;
-		text-shadow: 0 0 12px #e44d26, 0 0 4px #e44d26;
-		transform: translateY(-1px);
-	}
-
-	.language-css:hover {
-		background: linear-gradient(135deg, rgba(38, 77, 228, 0.32), rgba(38, 77, 228, 0.1));
-		border-color: #5a7cff;
-		box-shadow: 0 0 24px #264de4, 0 4px 15px rgba(0, 0, 0, 0.4);
-		color: #e0e8ff;
-		text-shadow: 0 0 12px #264de4, 0 0 4px #264de4;
 		transform: translateY(-1px);
 	}
 }
@@ -863,25 +853,18 @@
 	text-shadow: 0 0 4px rgba(255, 180, 71, 0.4);
 }
 
-.language-javascript {
-	border-color: #f7df1e;
-	color: #fff3b0;
-	background: linear-gradient(135deg, rgba(247, 223, 30, 0.2), rgba(247, 223, 30, 0.05));
-	text-shadow: 0 0 6px rgba(247, 223, 30, 0.6);
+.language-php {
+	border-color: #8892BF;
+	background: linear-gradient(135deg, rgba(136, 146, 191, 0.15), rgba(136, 146, 191, 0.03));
+	color: #c2c8f0;
+	text-shadow: 0 0 4px rgba(136, 146, 191, 0.4);
 }
 
-.language-html {
-	border-color: #e44d26;
-	background: linear-gradient(135deg, rgba(228, 77, 38, 0.2), rgba(228, 77, 38, 0.05));
-	color: #ffaa88;
-	text-shadow: 0 0 6px #e44d26, 0 0 2px rgba(228, 77, 38, 0.6);
-}
-
-.language-css {
-	border-color: #264de4;
-	background: linear-gradient(135deg, rgba(38, 77, 228, 0.18), rgba(38, 77, 228, 0.04));
-	color: #88aaff;
-	text-shadow: 0 0 6px #264de4, 0 0 2px rgba(38, 77, 228, 0.6);
+.language-html-css-js {
+	border-color: #ffaa00;
+	background: linear-gradient(135deg, rgba(228, 77, 38, 0.15), rgba(38, 77, 228, 0.1), rgba(247, 223, 30, 0.15));
+	color: #ffffff;
+	text-shadow: 0 0 4px rgba(255, 170, 0, 0.4);
 }
 
 .skeleton-card {

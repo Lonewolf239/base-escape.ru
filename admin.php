@@ -283,7 +283,7 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
         let sortableInstance = null;
 
         const COMMON_TAGS = ['Library', '.NET', 'Bot', 'Telegram', 'Game', 'Console', 'Desktop', 'Utility', 'Security', 'Web'];
-        const COMMON_LANGS = ['C#', 'Python', 'C++', 'JavaScript', 'HTML', 'CSS'];
+		const COMMON_LANGS = ['C#', 'Python', 'C++', 'PHP', 'HTML/CSS/JS'];
         const COMMON_LINKS = ['github', 'nuget', 'code', 'download', 'wiki'];
 
         window.addEventListener('beforeunload', (e) => {
