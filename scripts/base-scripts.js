@@ -1,3 +1,144 @@
+let _secretBuffer = '';
+const _secretTrigger = 'admin';
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    _secretBuffer += e.key.toLowerCase();
+    if (_secretBuffer.length > _secretTrigger.length)
+        _secretBuffer = _secretBuffer.slice(-_secretTrigger.length);
+
+    if (_secretBuffer === _secretTrigger) {
+        _secretBuffer = '';
+        e.preventDefault();
+        showAdminLogin();
+    }
+});
+
+function showAdminLogin() {
+    if (document.getElementById('admin-modal')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'admin-modal';
+    modal.style.cssText = `
+        position: fixed; inset: 0; 
+        background: rgba(9, 9, 11, 0.8); 
+        backdrop-filter: blur(12px);
+        display: flex; justify-content: center; align-items: center; 
+        z-index: 9999;
+        animation: fadeIn 0.3s ease-out;
+    `;
+
+    const box = document.createElement('div');
+    box.style.cssText = `
+        background: rgba(20, 20, 30, 0.65);
+        border: 1px solid rgba(255, 0, 170, 0.5);
+        padding: 40px; 
+        border-radius: 28px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 0, 170, 0.2);
+        text-align: center; 
+        width: 340px;
+        backdrop-filter: blur(16px);
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+    `;
+
+    const decorLine = document.createElement('div');
+    decorLine.style.cssText = `
+        position: absolute; top: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, #ff00aa, #ff66cc, transparent);
+    `;
+
+    box.innerHTML = `
+        <h2 style="color: #fff; margin: 0 0 24px 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 0 10px rgba(255,0,170,0.5);">Access</h2>
+        <div style="position: relative; margin-bottom: 20px; width: 100%;">
+            <input type="password" id="admin-pass" placeholder="Password..." style="
+                width: 100%; padding: 12px 45px 12px 20px;
+                background: rgba(10, 10, 15, 0.5);
+                border: 1px solid rgba(255, 0, 170, 0.3); 
+                color: #fff; border-radius: 40px; box-sizing: border-box; 
+                outline: none; font-family: inherit; transition: all 0.3s;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            " onfocus="this.style.borderColor='#ff00aa'; this.style.boxShadow='0 0 15px rgba(255,0,170,0.4)'" onblur="this.style.borderColor='rgba(255,0,170,0.3)'; this.style.boxShadow='none'">
+            <button id="toggle-password" type="button" style="
+                position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+                background: none; border: none; color: rgba(255, 0, 170, 0.7);
+                cursor: pointer; font-size: 1.1rem; outline: none; padding: 0;
+                display: flex; align-items: center; justify-content: center;
+                transition: color 0.2s;
+            " onmouseover="this.style.color='#ff00aa'" onmouseout="this.style.color='rgba(255, 0, 170, 0.7)'">👁️</button>
+        </div>
+        <button id="admin-submit" style="
+            width: 100%; padding: 12px; background: rgba(255, 0, 170, 0.1); 
+            border: 1px solid #ff00aa; color: #fff; cursor: pointer; 
+            border-radius: 40px; transition: all 0.2s; font-weight: bold;
+            letter-spacing: 1px;
+        " onmouseover="this.style.background='rgba(255,0,170,0.3)'; this.style.boxShadow='0 0 15px rgba(255,0,170,0.5)'" onmouseout="this.style.background='rgba(255,0,170,0.1)'; this.style.boxShadow='none'">LOGIN</button>
+    `;
+
+    box.appendChild(decorLine);
+    modal.appendChild(box);
+    document.body.appendChild(modal);
+
+    const input = document.getElementById('admin-pass');
+    const submit = document.getElementById('admin-submit');
+    const toggleBtn = document.getElementById('toggle-password');
+
+    input.value = '';
+    input.focus();
+
+    toggleBtn.addEventListener('click', () => {
+        if (input.type === 'password') {
+            input.type = 'text';
+            toggleBtn.textContent = '🔒';
+        } else {
+            input.type = 'password';
+            toggleBtn.textContent = '👁️';
+        }
+    });
+
+    modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+
+    const escHandler = (e) => { 
+        if (e.key === 'Escape') {
+            modal.remove(); 
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+
+    const attemptLogin = async () => {
+        submit.textContent = 'CHECKING...';
+        try {
+            const res = await fetch('/admin.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'login', password: input.value })
+            });
+            const data = await res.json();
+
+            if (data.status === 'ok')
+                window.location.href = '/admin.php';
+            else {
+                input.style.borderColor = '#ff1744';
+                input.style.boxShadow = '0 0 15px rgba(255,23,68,0.5)';
+                submit.textContent = 'ACCESS DENIED';
+                submit.style.borderColor = '#ff1744';
+                setTimeout(() => {
+                    submit.textContent = 'LOGIN'; 
+                    submit.style.borderColor = '#ff00aa';
+                    input.style.borderColor = 'rgba(255,0,170,0.3)'; 
+                    input.style.boxShadow = 'none';
+                }, 1000);
+            }
+        } catch (e) { submit.textContent = 'NETWORK ERROR'; }
+    };
+
+    submit.addEventListener('click', attemptLogin);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
+}
+
 function createButton({ onClick, imgSrc, imgAlt, imgWidth = 24, imgHeight = 24, id, text }) {
     const button = document.createElement('button');
     if (id) button.id = id;
