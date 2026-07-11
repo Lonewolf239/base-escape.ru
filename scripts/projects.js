@@ -31,6 +31,20 @@ function isSafeUrl(url) {
 	} catch { return false; }
 }
 
+function getGithubBaseUrl(links, lang) {
+    if (!links || !links.github) return null;
+    let resolvedUrl = null;
+    if (typeof links.github === 'object' && links.github !== null) {
+        resolvedUrl = getLocalizedValue(links.github.url, lang) || getLocalizedValue(links.github, lang);
+    } else {
+        resolvedUrl = getLocalizedValue(links.github, lang);
+    }
+    if (resolvedUrl && isSafeUrl(resolvedUrl)) {
+        return resolvedUrl.replace(/\/$/, '').replace(/\.git$/, '');
+    }
+    return null;
+}
+
 function formatDate(dateString, lang) {
 	if (!dateString) return null;
 	try {
@@ -61,15 +75,33 @@ function createStatusBadge(status, lang) {
     return badge;
 }
 
-function appendMetaBadge(topBar, text, icon, typeClass, isSubproject = false) {
+function appendMetaBadge(topBar, text, icon, typeClass, isSubproject = false, url = null) {
     let badge = topBar.querySelector(`.${typeClass}`);
+    
+    if (badge && url && badge.tagName.toLowerCase() !== 'a') {
+        const newBadge = document.createElement('a');
+        newBadge.className = badge.className;
+        topBar.replaceChild(newBadge, badge);
+        badge = newBadge;
+    }
+
     if (!badge) {
-        badge = document.createElement('div');
+        badge = document.createElement(url ? 'a' : 'div');
         const baseClass = isSubproject ? 'subproject-release-date' : 'project-release-date';
         badge.className = `${baseClass} project-meta-badge ${typeClass}`;
         topBar.appendChild(badge);
     }
+    
+    if (url && badge.tagName.toLowerCase() === 'a') {
+        badge.href = url;
+        badge.target = '_blank';
+        badge.rel = 'noopener noreferrer';
+        badge.style.textDecoration = 'none';
+        badge.style.color = 'inherit';
+    }
+
     badge.innerHTML = `${icon ? `<span class="meta-icon">${icon}</span> ` : ''}${text}`;
+    return badge;
 }
 
 async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproject = false, updateDate = true) {
@@ -121,10 +153,16 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
         const repoRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(repoApiUrl)}`);
         if (repoRes.ok) {
             const repoData = await repoRes.json();
-            if (repoData.stargazers_count > 0)
-                appendMetaBadge(topBar, repoData.stargazers_count, '⭐', 'github-stars-badge', isSubproject);
-            if (repoData.license && repoData.license.spdx_id && repoData.license.spdx_id !== 'NOASSERTION')
-                appendMetaBadge(topBar, repoData.license.spdx_id, '⚖️', 'license-badge', isSubproject);
+            const cleanRepo = repo.replace(/\.git$/, '');
+            const ghBaseUrl = repoData.html_url || `https://github.com/${owner}/${cleanRepo}`;
+
+            if (repoData.stargazers_count > 0) {
+                appendMetaBadge(topBar, repoData.stargazers_count, '⭐', 'github-stars-badge', isSubproject, `${ghBaseUrl}/stargazers`);
+            }
+            if (repoData.license && repoData.license.spdx_id && repoData.license.spdx_id !== 'NOASSERTION') {
+                const licenseUrl = `${ghBaseUrl}/blob/${repoData.default_branch || 'main'}/LICENSE`;
+                appendMetaBadge(topBar, repoData.license.spdx_id, '⚖️', 'license-badge', isSubproject, licenseUrl);
+            }
         }
     } catch (error) { console.warn(`Could not fetch repo info for ${owner}/${repo}:`, error); }
 
@@ -135,8 +173,11 @@ async function fetchAndUpdateGitHubDate(githubUrl, cardElement, lang, isSubproje
 		if (response.ok) {
 			const release = await response.json();
 
-            if (release.tag_name)
-                appendMetaBadge(topBar, release.tag_name, '🏷️', 'project-version-badge', isSubproject);
+            if (release.tag_name) {
+                const cleanRepo = repo.replace(/\.git$/, '');
+                const tagUrl = release.html_url || `https://github.com/${owner}/${cleanRepo}/releases/tag/${release.tag_name}`;
+                appendMetaBadge(topBar, release.tag_name, '🏷️', 'project-version-badge', isSubproject, tagUrl);
+            }
 
 			const releaseDate = release.published_at || release.created_at;
 			if (releaseDate) {
@@ -189,9 +230,10 @@ function createSubprojectCard(subproject, lang, buttonLabels) {
 		subCard.appendChild(topBar);
 	}
 
-    if (subproject.stars) appendMetaBadge(topBar, subproject.stars, '⭐', 'github-stars-badge', true);
-    if (subproject.license) appendMetaBadge(topBar, subproject.license, '⚖️', 'license-badge', true);
-    if (subproject.version) appendMetaBadge(topBar, subproject.version, '🏷️', 'project-version-badge', true);
+    const ghBaseUrl = getGithubBaseUrl(subproject.links, lang);
+    if (subproject.stars) appendMetaBadge(topBar, subproject.stars, '⭐', 'github-stars-badge', true, ghBaseUrl ? `${ghBaseUrl}/stargazers` : null);
+    if (subproject.license) appendMetaBadge(topBar, subproject.license, '⚖️', 'license-badge', true, ghBaseUrl ? `${ghBaseUrl}/blob/main/LICENSE` : null);
+    if (subproject.version) appendMetaBadge(topBar, subproject.version, '🏷️', 'project-version-badge', true, ghBaseUrl ? `${ghBaseUrl}/releases/tag/${subproject.version}` : null);
 
 	if (subproject.lastRelease) {
 		const formattedDate = formatDate(subproject.lastRelease, lang);
@@ -724,9 +766,10 @@ function loadProjects() {
                     card.appendChild(topBar);
                 }
 
-                if (project.stars) appendMetaBadge(topBar, project.stars, '⭐', 'github-stars-badge', false);
-                if (project.license) appendMetaBadge(topBar, project.license, '⚖️', 'license-badge', false);
-                if (project.version) appendMetaBadge(topBar, project.version, '🏷️', 'project-version-badge', false);
+                const ghBaseUrl = getGithubBaseUrl(project.links, currentLang);
+                if (project.stars) appendMetaBadge(topBar, project.stars, '⭐', 'github-stars-badge', false, ghBaseUrl ? `${ghBaseUrl}/stargazers` : null);
+                if (project.license) appendMetaBadge(topBar, project.license, '⚖️', 'license-badge', false, ghBaseUrl ? `${ghBaseUrl}/blob/main/LICENSE` : null);
+                if (project.version) appendMetaBadge(topBar, project.version, '🏷️', 'project-version-badge', false, ghBaseUrl ? `${ghBaseUrl}/releases/tag/${project.version}` : null);
 
                 if (project.lastRelease) {
                     const formattedDate = formatDate(project.lastRelease, currentLang);
