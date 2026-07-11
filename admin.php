@@ -29,6 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'Неверный пароль']);
         }
         exit;
+	}
+
+	if (isset($input['action']) && $input['action'] === 'logout') {
+        while (ob_get_level()) { ob_end_clean(); } 
+        header('Content-Type: application/json');
+        session_destroy();
+        echo json_encode(['status' => 'ok']);
+        exit;
     }
 
     if (isset($input['action']) && $input['action'] === 'save') {
@@ -245,6 +253,8 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
             <button class="tab-btn" onclick="switchMode('raw')">Raw JSON</button>
         </div>
         <div class="controls">
+			<button class="btn" onclick="window.location.href='/'">🏠 На главную</button>
+			<div style="width: 1px; height: 20px; background: var(--border); margin: 0 5px;"></div>
             <button class="btn btn-warning" id="btn-undo" onclick="undo()" disabled>↩ Отменить</button>
             <button class="btn btn-warning" id="btn-redo" onclick="redo()" disabled>↪ Повторить</button>
             <div style="width: 1px; height: 20px; background: var(--border); margin: 0 5px;"></div>
@@ -285,6 +295,83 @@ if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {
         const COMMON_TAGS = ['Library', '.NET', 'Bot', 'Telegram', 'Game', 'Console', 'Desktop', 'Utility', 'Security', 'Web'];
 		const COMMON_LANGS = ['C#', 'Python', 'C++', 'PHP', 'HTML/CSS/JS'];
         const COMMON_LINKS = ['github', 'nuget', 'code', 'download', 'wiki'];
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                fetch('admin.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'logout' }),
+                    keepalive: true
+                });
+
+                showLockScreen();
+            }
+        });
+
+        function showLockScreen() {
+            if (document.getElementById('lock-screen')) return;
+
+            const workspace = document.querySelector('.workspace');
+            const header = document.querySelector('header');
+            if (workspace) workspace.style.display = 'none';
+            if (header) header.style.display = 'none';
+
+            const lock = document.createElement('div');
+            lock.id = 'lock-screen';
+            lock.style.cssText = `
+                position: fixed; inset: 0; 
+                background: var(--bg-main); 
+                z-index: 9999; display: flex; 
+                flex-direction: column; justify-content: center; align-items: center;
+            `;
+
+            lock.innerHTML = `
+                <div style="background: var(--bg-card); padding: 40px; border-radius: var(--border-radius); border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 340px;">
+                    <h2 style="color: var(--cyan); margin-bottom: 10px; font-weight: 800;">Блокировка</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem;">Вкладка была неактивна. Введите пароль.</p>
+
+                    <input type="password" id="lock-pass" class="form-input" style="width: 100%; margin-bottom: 15px; text-align: center;" placeholder="Пароль...">
+                    <button id="lock-btn" class="btn btn-success" style="width: 100%; justify-content: center; padding: 10px;">Разблокировать</button>
+                </div>
+            `;
+            document.body.appendChild(lock);
+
+            const passInput = document.getElementById('lock-pass');
+            const btn = document.getElementById('lock-btn');
+            setTimeout(() => passInput.focus(), 100);
+
+            const tryUnlock = async () => {
+                btn.textContent = 'Проверка...';
+                try {
+                    const res = await fetch('admin.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'login', password: passInput.value })
+                    });
+                    const data = await res.json();
+
+                    if (data.status === 'ok') {
+                        if (workspace) workspace.style.display = 'flex';
+                        if (header) header.style.display = 'flex';
+                        lock.remove();
+                    } else {
+                        passInput.style.borderColor = 'var(--danger)';
+                        btn.textContent = 'Неверный пароль';
+                        setTimeout(() => { 
+                            btn.textContent = 'Разблокировать'; 
+                            passInput.style.borderColor = 'var(--border)'; 
+                        }, 1000);
+                    }
+                } catch(e) {
+                    btn.textContent = 'Ошибка сети';
+                    setTimeout(() => btn.textContent = 'Разблокировать', 1000);
+                }
+            };
+
+            btn.addEventListener('click', tryUnlock);
+            passInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryUnlock(); });
+        }
 
         window.addEventListener('beforeunload', (e) => {
             if (hasUnsavedChanges) {
