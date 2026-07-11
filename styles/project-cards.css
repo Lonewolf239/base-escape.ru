@@ -384,15 +384,16 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 12px;
+	gap: 8px;
 	margin-bottom: 16px;
 }
 
 .project-release-date {
 	display: inline-flex;
 	align-items: center;
+	cursor: default;
 	gap: 8px;
-	padding: 5px 14px;
+	padding: 5px 10px;
 	border-radius: 40px;
 	font-size: 0.75rem;
 	font-weight: 500;
@@ -1022,8 +1023,9 @@
 .project-meta-badge {
 	display: inline-flex;
 	align-items: center;
+	cursor: default;
 	gap: 6px;
-	padding: 4px 10px;
+	padding: 4px 6px;
 	border-radius: 6px;
 	font-size: 0.75rem;
 	font-weight: 500;
@@ -1063,6 +1065,7 @@
 .project-status-badge {
 	display: inline-flex;
 	align-items: center;
+	cursor: default;
 	gap: 8px;
 	padding: 4px 12px;
 	border-radius: 20px;
@@ -1077,9 +1080,11 @@
 	transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.project-status-badge:hover {
-	background: rgba(0, 0, 0, 0.65);
-	border-color: rgba(255, 255, 255, 0.3);
+@media (hover: hover) and (pointer: fine) {
+	.project-status-badge:hover {
+		background: rgba(0, 0, 0, 0.65);
+		border-color: rgba(255, 255, 255, 0.3);
+	}
 }
 
 .status-dot {
@@ -1114,10 +1119,12 @@
 	color: #ffd700 !important;
 }
 
-.github-stars-badge:hover {
-	border-color: #ffd700 !important;
-	background: rgba(255, 215, 0, 0.15) !important;
-	box-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
+@media (hover: hover) and (pointer: fine) {
+	.github-stars-badge:hover {
+		border-color: #ffd700 !important;
+		background: rgba(255, 215, 0, 0.15) !important;
+		box-shadow: 0 0 10px rgba(255, 215, 0, 0.3) !important;
+	}
 }
 
 .license-badge {
@@ -1125,10 +1132,12 @@
 	color: #00ffff !important;
 }
 
-.license-badge:hover {
-	border-color: #00ffff !important;
-	background: rgba(0, 255, 255, 0.15) !important;
-	box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+@media (hover: hover) and (pointer: fine) {
+	.license-badge:hover {
+		border-color: #00ffff !important;
+		background: rgba(0, 255, 255, 0.15) !important;
+		box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
+	}
 }
 
 .project-version-badge {
@@ -1136,10 +1145,12 @@
 	color: #ff99dd !important;
 }
 
-.project-version-badge:hover {
-	border-color: #ff00aa !important;
-	background: rgba(255, 0, 170, 0.15) !important;
-	box-shadow: 0 0 10px rgba(255, 0, 170, 0.3) !important;
+@media (hover: hover) and (pointer: fine) {
+	.project-version-badge:hover {
+		border-color: #ff00aa !important;
+		background: rgba(255, 0, 170, 0.15) !important;
+		box-shadow: 0 0 10px rgba(255, 0, 170, 0.3) !important;
+	}
 }
 
 .project-language-badge {
@@ -1198,7 +1209,8 @@
 		flex-direction: row;
 		justify-content: flex-start;
 		align-items: center;
-		flex-wrap: wrap;
+		flex-wrap: nowrap;
+		overflow-x: auto;
 		margin-bottom: 12px;
 		gap: 8px;
 	}
