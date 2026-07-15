@@ -1,128 +1,138 @@
 .error-container {
-	max-width: 700px;
-	margin: 4rem auto;
-	padding: 2rem;
-	text-align: center;
-	background: rgba(20, 20, 30, 0.4);
-	backdrop-filter: blur(12px);
-	border-radius: 48px;
-	border: 1px solid rgba(255, 0, 170, 0.4);
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-	position: relative;
-	z-index: 7;
-	animation: fadeInUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    max-width: 700px;
+    margin: 4rem auto;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(20, 20, 30, 0.4);
+    backdrop-filter: blur(12px);
+    border-radius: 48px;
+    border: 1px solid rgba(255, 0, 170, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 7;
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
 @keyframes fadeInUp {
-	from {
-		opacity: 0;
-		transform: translateY(30px);
-	}
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
 
-	to {
-		opacity: 1;
-		transform: translateY(0);
-	}
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .error-code {
-	font-size: 8rem;
-	font-weight: 800;
-	line-height: 1;
-	background: linear-gradient(135deg, #ff00aa, #ff66cc);
-	-webkit-background-clip: text;
-	background-clip: text;
-	color: transparent;
-	text-shadow: 0 0 20px rgba(255, 0, 170, 0.5);
-	letter-spacing: 0.05em;
-	margin-bottom: 1rem;
-	animation: glitchText 1.5s infinite alternate;
+    font-size: 8rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(135deg, #ff00aa, #ff66cc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 20px rgba(255, 0, 170, 0.5);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    animation: glitchText 1.5s infinite alternate;
 }
 
 @keyframes glitchText {
-	0% {
-		text-shadow: -2px 0 #ff00aa, 2px 0 #00ffff;
-		transform: skew(0deg);
-	}
+    0% {
+        text-shadow:
+            -2px 0 #ff00aa,
+            2px 0 #00ffff;
+        transform: skew(0deg);
+    }
 
-	25% {
-		text-shadow: 2px 0 #ff00aa, -2px 0 #00ffff;
-		transform: skew(1deg);
-	}
+    25% {
+        text-shadow:
+            2px 0 #ff00aa,
+            -2px 0 #00ffff;
+        transform: skew(1deg);
+    }
 
-	50% {
-		text-shadow: -1px 0 #ff00aa, 1px 0 #00ffff;
-		transform: skew(-1deg);
-	}
+    50% {
+        text-shadow:
+            -1px 0 #ff00aa,
+            1px 0 #00ffff;
+        transform: skew(-1deg);
+    }
 
-	75% {
-		text-shadow: 1px 0 #ff00aa, -1px 0 #00ffff;
-		transform: skew(0.5deg);
-	}
+    75% {
+        text-shadow:
+            1px 0 #ff00aa,
+            -1px 0 #00ffff;
+        transform: skew(0.5deg);
+    }
 
-	100% {
-		text-shadow: -2px 0 #ff00aa, 2px 0 #00ffff;
-		transform: skew(0deg);
-	}
+    100% {
+        text-shadow:
+            -2px 0 #ff00aa,
+            2px 0 #00ffff;
+        transform: skew(0deg);
+    }
 }
 
 .error-icon {
-	font-size: 5rem;
-	margin-bottom: 1rem;
-	filter: drop-shadow(0 0 8px #ff00aa);
-	animation: pulseIcon 1.2s ease-in-out infinite alternate;
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 8px #ff00aa);
+    animation: pulseIcon 1.2s ease-in-out infinite alternate;
 }
 
 @keyframes pulseIcon {
-	from {
-		transform: scale(0.95);
-		filter: drop-shadow(0 0 4px #ff00aa);
-	}
+    from {
+        transform: scale(0.95);
+        filter: drop-shadow(0 0 4px #ff00aa);
+    }
 
-	to {
-		transform: scale(1.05);
-		filter: drop-shadow(0 0 16px #ff00aa);
-	}
+    to {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 16px #ff00aa);
+    }
 }
 
 .error-message-title {
-	font-size: 2rem;
-	font-weight: 700;
-	margin: 1rem 0;
-	color: #fff;
-	text-shadow: 0 0 5px rgba(255, 0, 170, 0.5);
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 1rem 0;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 0, 170, 0.5);
 }
 
 .error-description {
-	font-size: 1rem;
-	line-height: 1.6;
-	color: rgba(255, 255, 255, 0.85);
-	margin-bottom: 2rem;
-	max-width: 80%;
-	margin-left: auto;
-	margin-right: auto;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 2rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 @media (max-width: 768px) {
-	.error-container {
-		margin: 2rem 1rem;
-		padding: 1.5rem;
-	}
+    .error-container {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
 
-	.error-code {
-		font-size: 5rem;
-	}
+    .error-code {
+        font-size: 5rem;
+    }
 
-	.error-icon {
-		font-size: 3.5rem;
-	}
+    .error-icon {
+        font-size: 3.5rem;
+    }
 
-	.error-message-title {
-		font-size: 1.5rem;
-	}
+    .error-message-title {
+        font-size: 1.5rem;
+    }
 
-	.error-description {
-		max-width: 95%;
-		font-size: 0.9rem;
-	}
+    .error-description {
+        max-width: 95%;
+        font-size: 0.9rem;
+    }
 }

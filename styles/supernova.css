@@ -1,87 +1,87 @@
 @keyframes megaCameraCollapse {
-	0% {
-		transform: translate(0, 0) rotate(0deg);
-	}
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
 
-	10% {
-		transform: translate(-12px, 8px) rotate(-2deg) scale(1.02);
-	}
+    10% {
+        transform: translate(-12px, 8px) rotate(-2deg) scale(1.02);
+    }
 
-	20% {
-		transform: translate(14px, -10px) rotate(2.5deg);
-	}
+    20% {
+        transform: translate(14px, -10px) rotate(2.5deg);
+    }
 
-	30% {
-		transform: translate(-18px, -4px) rotate(-1.5deg) scale(0.98);
-	}
+    30% {
+        transform: translate(-18px, -4px) rotate(-1.5deg) scale(0.98);
+    }
 
-	40% {
-		transform: translate(10px, 14px) rotate(2deg);
-	}
+    40% {
+        transform: translate(10px, 14px) rotate(2deg);
+    }
 
-	50% {
-		transform: translate(-15px, -8px) rotate(-2.5deg);
-	}
+    50% {
+        transform: translate(-15px, -8px) rotate(-2.5deg);
+    }
 
-	60% {
-		transform: translate(18px, 4px) rotate(1deg);
-	}
+    60% {
+        transform: translate(18px, 4px) rotate(1deg);
+    }
 
-	70% {
-		transform: translate(-10px, 12px) rotate(3deg) scale(1.04);
-	}
+    70% {
+        transform: translate(-10px, 12px) rotate(3deg) scale(1.04);
+    }
 
-	80% {
-		transform: translate(8px, -12px) rotate(-2deg);
-	}
+    80% {
+        transform: translate(8px, -12px) rotate(-2deg);
+    }
 
-	90% {
-		transform: translate(-6px, 6px) rotate(0.5deg);
-	}
+    90% {
+        transform: translate(-6px, 6px) rotate(0.5deg);
+    }
 
-	100% {
-		transform: translate(0, 0) rotate(0deg);
-	}
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
 }
 
 .shake-active {
-	animation: megaCameraCollapse 0.7s infinite cubic-bezier(.36, .07, .19, .97);
+    animation: megaCameraCollapse 0.7s infinite
+        cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
 body.flash-active {
-	transition: none !important;
-	filter: brightness(5.0) contrast(2) saturate(3);
+    transition: none !important;
+    filter: brightness(5) contrast(2) saturate(3);
 }
 
 .glitch-stage-1 {
-	filter: contrast(1.5) saturate(3) hue-rotate(45deg);
+    filter: contrast(1.5) saturate(3) hue-rotate(45deg);
 }
 
 @keyframes screenTearStage2 {
+    0%,
+    100% {
+        transform: translateX(0);
+        filter: drop-shadow(0 0 0 transparent);
+    }
 
-	0%,
-	100% {
-		transform: translateX(0);
-		filter: drop-shadow(0 0 0 transparent);
-	}
+    20% {
+        transform: translateX(-10px);
+        filter: drop-shadow(10px 0 0 #00ffff);
+    }
 
-	20% {
-		transform: translateX(-10px);
-		filter: drop-shadow(10px 0 0 #00ffff);
-	}
+    40% {
+        transform: translateX(10px);
+        filter: drop-shadow(-10px 0 0 #ff00aa);
+    }
 
-	40% {
-		transform: translateX(10px);
-		filter: drop-shadow(-10px 0 0 #ff00aa);
-	}
+    60% {
+        transform: translateY(-5px);
+    }
 
-	60% {
-		transform: translateY(-5px);
-	}
-
-	80% {
-		transform: translateY(5px) skewX(2deg);
-	}
+    80% {
+        transform: translateY(5px) skewX(2deg);
+    }
 }
 
 .glitch-stage-2 nav,
@@ -89,12 +89,12 @@ body.flash-active {
 .glitch-stage-2 .projects-grid,
 .glitch-stage-2 footer,
 .glitch-stage-2 .bg-grid {
-	animation: screenTearStage2 0.15s infinite;
+    animation: screenTearStage2 0.15s infinite;
 }
 
 .glitch-stage-3 {
-	filter: invert(1) hue-rotate(180deg) brightness(2);
-	transform: scale(1.1) rotate(2deg);
+    filter: invert(1) hue-rotate(180deg) brightness(2);
+    transform: scale(1.1) rotate(2deg);
 }
 
 .glitch-stage-3 nav,
@@ -103,145 +103,158 @@ body.flash-active {
 .glitch-stage-3 footer,
 .glitch-stage-3 .bg-grid,
 .glitch-stage-3 canvas {
-	animation: screenTearStage2 0.05s infinite;
+    animation: screenTearStage2 0.05s infinite;
 }
 
 .freeze-all,
 .freeze-all *,
 .freeze-all *::before,
 .freeze-all *::after {
-	animation-play-state: paused !important;
-	transition: none !important;
+    animation-play-state: paused !important;
+    transition: none !important;
 }
 
 .supernova-nebula {
-	position: fixed;
-	transform: translate(-50%, -50%) scale(0);
-	opacity: 0;
-	width: 60px;
-	height: 60px;
-	z-index: 9998;
-	box-shadow:
-		0 0 200px 100px rgba(255, 0, 170, 0.55),
-		0 0 350px 180px rgba(0, 255, 255, 0.4),
-		0 0 600px 300px rgba(240, 100, 0, 0.25);
-	pointer-events: none;
-	animation: nebulaCosmicBloom 4.5s cubic-bezier(0.05, 0.75, 0.1, 1) forwards;
+    position: fixed;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    width: 60px;
+    height: 60px;
+    z-index: 9998;
+    box-shadow:
+        0 0 200px 100px rgba(255, 0, 170, 0.55),
+        0 0 350px 180px rgba(0, 255, 255, 0.4),
+        0 0 600px 300px rgba(240, 100, 0, 0.25);
+    pointer-events: none;
+    animation: nebulaCosmicBloom 4.5s cubic-bezier(0.05, 0.75, 0.1, 1) forwards;
 }
 
 @keyframes nebulaCosmicBloom {
-	0% {
-		transform: translate(-50%, -50%) scale(0.1);
-		opacity: 0;
-		filter: blur(30px);
-	}
+    0% {
+        transform: translate(-50%, -50%) scale(0.1);
+        opacity: 0;
+        filter: blur(30px);
+    }
 
-	10% {
-		transform: translate(-50%, -50%) scale(9.5);
-		opacity: 1;
-		filter: blur(12px);
-	}
+    10% {
+        transform: translate(-50%, -50%) scale(9.5);
+        opacity: 1;
+        filter: blur(12px);
+    }
 
-	100% {
-		transform: translate(-50%, -50%) scale(8.0);
-		opacity: 0.9;
-		filter: blur(6px);
-	}
+    100% {
+        transform: translate(-50%, -50%) scale(8);
+        opacity: 0.9;
+        filter: blur(6px);
+    }
 }
 
 .terminal-screen-overlay {
-	position: absolute !important;
-	inset: 0 !important;
-	width: 100% !important;
-	height: 100% !important;
-	background-color: transparent;
-	z-index: 999999 !important;
-	display: flex;
-	justify-content: flex-start;
-	align-items: flex-start;
-	padding: 40px;
-	box-sizing: border-box;
-	overflow-y: auto;
-	overflow-x: hidden;
-	margin: 0;
-	pointer-events: none !important;
-	cursor: none !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: transparent;
+    z-index: 999999 !important;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    pointer-events: none !important;
+    cursor: none !important;
 }
 
 .terminal-screen-overlay::before {
-	content: " " !important;
-	display: block !important;
-	position: fixed !important;
-	inset: 0 !important;
-	background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
-		linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05)) !important;
-	z-index: 9999999 !important;
-	background-size: 100% 5px, 6px 100% !important;
-	pointer-events: none !important;
+    content: " " !important;
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%),
+        linear-gradient(
+            90deg,
+            rgba(255, 0, 0, 0.05),
+            rgba(0, 255, 0, 0.02),
+            rgba(0, 0, 255, 0.05)
+        ) !important;
+    z-index: 9999999 !important;
+    background-size:
+        100% 5px,
+        6px 100% !important;
+    pointer-events: none !important;
 }
 
 .terminal-screen-overlay::after {
-	content: " " !important;
-	display: block !important;
-	position: fixed !important;
-	inset: 0 !important;
-	background: radial-gradient(circle, transparent 35%, rgba(0, 0, 0, 0.85) 110%) !important;
-	z-index: 9999998 !important;
-	pointer-events: none !important;
+    content: " " !important;
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    background: radial-gradient(
+        circle,
+        transparent 35%,
+        rgba(0, 0, 0, 0.85) 110%
+    ) !important;
+    z-index: 9999998 !important;
+    pointer-events: none !important;
 }
 
 .supernova-terminal {
-	display: block;
-	width: 100%;
-	max-width: 1000px;
-	font-family: 'Fira Code', 'Courier New', monospace !important;
-	font-size: 1.1rem;
-	line-height: 1.6;
-	color: #e4e4e7;
-	text-shadow: 0 0 6px rgba(228, 228, 231, 0.5);
-	text-align: left;
-	position: relative;
-	z-index: 9999991;
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    font-family: "Fira Code", "Courier New", monospace !important;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #e4e4e7;
+    text-shadow: 0 0 6px rgba(228, 228, 231, 0.5);
+    text-align: left;
+    position: relative;
+    z-index: 9999991;
 }
 
 .supernova-terminal .terminal-line {
-	display: block;
-	min-height: 1.6rem;
-	white-space: pre-wrap;
-	word-break: break-all;
-	margin-bottom: 4px;
-	color: #e4e4e7;
+    display: block;
+    min-height: 1.6rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin-bottom: 4px;
+    color: #e4e4e7;
 }
 
 .supernova-terminal .prompt-line {
-	color: #a1a1aa;
+    color: #a1a1aa;
 }
 
 .supernova-terminal .active-input-line {
-	color: #ffffff;
-	font-weight: bold;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 .supernova-terminal .terminal-cursor {
-	display: inline-block !important;
-	visibility: visible !important;
-	color: #00ffff !important;
-	text-shadow: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.5) !important;
-	margin-left: 6px;
-	user-select: all !important;
-	-webkit-user-select: all !important;
-	animation: hardwareCursorBlink 0.8s infinite !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    color: #00ffff !important;
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 20px rgba(0, 255, 255, 0.5) !important;
+    margin-left: 6px;
+    user-select: all !important;
+    -webkit-user-select: all !important;
+    animation: hardwareCursorBlink 0.8s infinite !important;
 }
 
 @keyframes hardwareCursorBlink {
+    0%,
+    49% {
+        opacity: 1;
+    }
 
-	0%,
-	49% {
-		opacity: 1;
-	}
-
-	50%,
-	100% {
-		opacity: 0;
-	}
+    50%,
+    100% {
+        opacity: 0;
+    }
 }

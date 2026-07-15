@@ -1,80 +1,149 @@
-const GITHUB_OWNER = 'Lonewolf239';
-let currentProject = '';
+const GITHUB_OWNER = "Lonewolf239";
+let currentProject = "";
 let listData = [];
 let closeMobileMenu = () => {};
 
 let currentPage = 1;
-let currentMode = 'releases';
+let currentMode = "releases";
 const PER_PAGE = 30;
 
 const i18n = {
-    ru: { latest: 'Последний', prerelease: 'Пре-релиз', assets: 'Файлы для скачивания', downloads: 'скачиваний', empty: 'Ни релизов, ни коммитов не найдено.', error: 'Ошибка загрузки: ', menu: '☰ Список', prev: '◄ Назад', next: 'Вперед ►', page: 'Стр.', commit: 'Коммит', commits_mode: 'Релизов нет. Показаны коммиты:', show_changes: 'Показать изменения', hide_changes: 'Скрыть изменения', loading_diff: 'Загрузка изменений...', view_commit: 'Посмотреть коммит', back_to_release: '◄ Назад к релизу', no_changed_files: 'Нет измененных файлов.', binary_file: 'Бинарный файл или изменения недоступны для отображения.' },
-    en: { latest: 'Latest', prerelease: 'Pre-release', assets: 'Assets', downloads: 'downloads', empty: 'No releases or commits found.', error: 'Error loading: ', menu: '☰ List', prev: '◄ Prev', next: 'Next ►', page: 'Page', commit: 'Commit', commits_mode: 'No releases. Showing commits:', show_changes: 'Show changes', hide_changes: 'Hide changes', loading_diff: 'Loading diff...', view_commit: 'View Commit', back_to_release: '◄ Back to Release', no_changed_files: 'No changed files found.', binary_file: 'Binary file or changes unavailable for display.' },
-    de: { latest: 'Neueste', prerelease: 'Pre-Release', assets: 'Dateien', downloads: 'Downloads', empty: 'Keine Releases oder Commits gefunden.', error: 'Fehler beim Laden: ', menu: '☰ Liste', prev: '◄ Zurück', next: 'Weiter ►', page: 'Seite', commit: 'Commit', commits_mode: 'Keine Releases. Zeige Commits:', show_changes: 'Änderungen anzeigen', hide_changes: 'Änderungen verbergen', loading_diff: 'Lade Änderungen...', view_commit: 'Commit ansehen', back_to_release: '◄ Zurück zum Release', no_changed_files: 'Keine geänderten Dateien gefunden.', binary_file: 'Binärdatei oder Änderungen nicht anzeigbar.' }
+    ru: {
+        latest: "Последний",
+        prerelease: "Пре-релиз",
+        assets: "Файлы для скачивания",
+        downloads: "скачиваний",
+        empty: "Ни релизов, ни коммитов не найдено.",
+        error: "Ошибка загрузки: ",
+        menu: "☰ Список",
+        prev: "◄ Назад",
+        next: "Вперед ►",
+        page: "Стр.",
+        commit: "Коммит",
+        commits_mode: "Релизов нет. Показаны коммиты:",
+        show_changes: "Показать изменения",
+        hide_changes: "Скрыть изменения",
+        loading_diff: "Загрузка изменений...",
+        view_commit: "Посмотреть коммит",
+        back_to_release: "◄ Назад к релизу",
+        no_changed_files: "Нет измененных файлов.",
+        binary_file: "Бинарный файл или изменения недоступны для отображения.",
+    },
+    en: {
+        latest: "Latest",
+        prerelease: "Pre-release",
+        assets: "Assets",
+        downloads: "downloads",
+        empty: "No releases or commits found.",
+        error: "Error loading: ",
+        menu: "☰ List",
+        prev: "◄ Prev",
+        next: "Next ►",
+        page: "Page",
+        commit: "Commit",
+        commits_mode: "No releases. Showing commits:",
+        show_changes: "Show changes",
+        hide_changes: "Hide changes",
+        loading_diff: "Loading diff...",
+        view_commit: "View Commit",
+        back_to_release: "◄ Back to Release",
+        no_changed_files: "No changed files found.",
+        binary_file: "Binary file or changes unavailable for display.",
+    },
+    de: {
+        latest: "Neueste",
+        prerelease: "Pre-Release",
+        assets: "Dateien",
+        downloads: "Downloads",
+        empty: "Keine Releases oder Commits gefunden.",
+        error: "Fehler beim Laden: ",
+        menu: "☰ Liste",
+        prev: "◄ Zurück",
+        next: "Weiter ►",
+        page: "Seite",
+        commit: "Commit",
+        commits_mode: "Keine Releases. Zeige Commits:",
+        show_changes: "Änderungen anzeigen",
+        hide_changes: "Änderungen verbergen",
+        loading_diff: "Lade Änderungen...",
+        view_commit: "Commit ansehen",
+        back_to_release: "◄ Zurück zum Release",
+        no_changed_files: "Keine geänderten Dateien gefunden.",
+        binary_file: "Binärdatei oder Änderungen nicht anzeigbar.",
+    },
 };
 
-document.addEventListener('DOMContentLoaded', initReleases);
+document.addEventListener("DOMContentLoaded", initReleases);
 
 function initMobileMenu(lang, text) {
-    const container = document.querySelector('.page-container');
+    const container = document.querySelector(".page-container");
     if (!container) return;
 
-    const burger = document.createElement('button');
-    burger.className = 'burger-btn';
+    const burger = document.createElement("button");
+    burger.className = "burger-btn";
     burger.innerHTML = text.menu;
     container.insertBefore(burger, container.firstChild);
 
-    const overlay = document.createElement('div');
-    overlay.className = 'mobile-overlay';
+    const overlay = document.createElement("div");
+    overlay.className = "mobile-overlay";
     container.appendChild(overlay);
 
-    const sidebar = document.querySelector('.sidebar');
+    const sidebar = document.querySelector(".sidebar");
 
     function toggle() {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        document.body.style.overflow = sidebar.classList.contains("active")
+            ? "hidden"
+            : "";
     }
 
     closeMobileMenu = () => {
-        if (sidebar && sidebar.classList.contains('active')) toggle();
+        if (sidebar && sidebar.classList.contains("active")) toggle();
     };
 
-    burger.addEventListener('click', toggle);
-    overlay.addEventListener('click', toggle);
+    burger.addEventListener("click", toggle);
+    overlay.addEventListener("click", toggle);
 }
 
 async function initReleases() {
     const params = new URLSearchParams(window.location.search);
-    currentProject = params.get('project');
-    const repoNameEl = document.getElementById('repo-name');
+    currentProject = params.get("project");
+    const repoNameEl = document.getElementById("repo-name");
 
-    const htmlLang = document.documentElement.lang || 'en';
-    const lang = htmlLang.startsWith('en') ? 'en' : (htmlLang.startsWith('de') ? 'de' : 'ru');
+    const htmlLang = document.documentElement.lang || "en";
+    const lang = htmlLang.startsWith("en")
+        ? "en"
+        : htmlLang.startsWith("de")
+          ? "de"
+          : "ru";
     const text = i18n[lang];
 
     initMobileMenu(lang, text);
 
     if (!currentProject) {
-        showError('Project not specified. Use ?project=...', text);
+        showError("Project not specified. Use ?project=...", text);
         return;
     }
 
-    if(repoNameEl) repoNameEl.textContent = currentProject;
+    if (repoNameEl) repoNameEl.textContent = currentProject;
 
     await loadPage(1, lang, text);
 }
 
 function showError(msg, text) {
-    const sidebarList = document.getElementById('releases-sidebar-list');
-    const content = document.getElementById('release-content');
-    if (sidebarList) sidebarList.innerHTML = `<div class="error-message" style="padding: 12px; text-align: center;">${msg}</div>`;
-    if (content) content.innerHTML = '';
+    const sidebarList = document.getElementById("releases-sidebar-list");
+    const content = document.getElementById("release-content");
+    if (sidebarList)
+        sidebarList.innerHTML = `<div class="error-message" style="padding: 12px; text-align: center;">${msg}</div>`;
+    if (content) content.innerHTML = "";
 }
 
 function showLoader(show) {
-    const sidebarList = document.getElementById('releases-sidebar-list');
-    if (show && sidebarList) sidebarList.innerHTML = '<div class="loader" style="padding: 12px; text-align: center;">Loading...</div>';
+    const sidebarList = document.getElementById("releases-sidebar-list");
+    if (show && sidebarList)
+        sidebarList.innerHTML =
+            '<div class="loader" style="padding: 12px; text-align: center;">Loading...</div>';
 }
 
 async function loadPage(page, lang, text) {
@@ -82,29 +151,33 @@ async function loadPage(page, lang, text) {
     currentPage = page;
 
     try {
-        if (currentMode === 'releases') {
+        if (currentMode === "releases") {
             const relPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/releases?per_page=${PER_PAGE}&page=${page}`;
-            const relRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(relPath)}`);
+            const relRes = await fetch(
+                `/github-proxy.php?path=${encodeURIComponent(relPath)}`,
+            );
             if (!relRes.ok) throw new Error(`HTTP ${relRes.status}`);
             listData = await relRes.json();
 
             if (page === 1 && (!listData || listData.length === 0))
-                currentMode = 'commits';
+                currentMode = "commits";
         }
 
-        if (currentMode === 'commits') {
+        if (currentMode === "commits") {
             const comPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits?per_page=${PER_PAGE}&page=${page}`;
-            const comRes = await fetch(`/github-proxy.php?path=${encodeURIComponent(comPath)}`);
+            const comRes = await fetch(
+                `/github-proxy.php?path=${encodeURIComponent(comPath)}`,
+            );
             if (!comRes.ok) throw new Error(`HTTP ${comRes.status}`);
             listData = await comRes.json();
         }
 
-        const sidebarList = document.getElementById('releases-sidebar-list');
+        const sidebarList = document.getElementById("releases-sidebar-list");
 
         if (!listData || listData.length === 0) {
             if (page === 1) {
                 sidebarList.innerHTML = `<div class="empty-folder" style="padding: 12px; text-align: center;">${text.empty}</div>`;
-                document.getElementById('release-content').innerHTML = '';
+                document.getElementById("release-content").innerHTML = "";
             } else {
                 currentPage--;
                 showLoader(false);
@@ -115,10 +188,10 @@ async function loadPage(page, lang, text) {
         renderSidebar(lang, text);
 
         if (listData.length > 0) {
-            if (currentMode === 'releases') renderReleaseContent(listData[0], lang, text);
+            if (currentMode === "releases")
+                renderReleaseContent(listData[0], lang, text);
             else renderCommitContent(listData[0], lang, text);
         }
-
     } catch (err) {
         console.error(err);
         showError(text.error + err.message, text);
@@ -126,36 +199,40 @@ async function loadPage(page, lang, text) {
 }
 
 function renderSidebar(lang, text) {
-    const sidebarList = document.getElementById('releases-sidebar-list');
-    sidebarList.innerHTML = '';
+    const sidebarList = document.getElementById("releases-sidebar-list");
+    sidebarList.innerHTML = "";
 
-    if (currentMode === 'commits') {
-        const notice = document.createElement('div');
-        notice.style.padding = '8px 12px';
-        notice.style.fontSize = '0.8rem';
-        notice.style.color = '#ffb347';
-        notice.style.borderBottom = '1px dashed rgba(255,179,71,0.3)';
-        notice.style.marginBottom = '8px';
-        notice.style.textAlign = 'center';
+    if (currentMode === "commits") {
+        const notice = document.createElement("div");
+        notice.style.padding = "8px 12px";
+        notice.style.fontSize = "0.8rem";
+        notice.style.color = "#ffb347";
+        notice.style.borderBottom = "1px dashed rgba(255,179,71,0.3)";
+        notice.style.marginBottom = "8px";
+        notice.style.textAlign = "center";
         notice.textContent = text.commits_mode;
         sidebarList.appendChild(notice);
     }
 
     listData.forEach((itemData, index) => {
-        const item = document.createElement('div');
-        item.className = 'release-sidebar-item';
-        if (index === 0) item.classList.add('active');
+        const item = document.createElement("div");
+        item.className = "release-sidebar-item";
+        if (index === 0) item.classList.add("active");
 
-        let name = '';
-        if (currentMode === 'releases') name = itemData.name || itemData.tag_name;
-        else name = itemData.commit.message.split('\n')[0];
-        item.textContent = name || 'Untitled';
+        let name = "";
+        if (currentMode === "releases")
+            name = itemData.name || itemData.tag_name;
+        else name = itemData.commit.message.split("\n")[0];
+        item.textContent = name || "Untitled";
 
-        item.addEventListener('click', () => {
-            document.querySelectorAll('.release-sidebar-item').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
+        item.addEventListener("click", () => {
+            document
+                .querySelectorAll(".release-sidebar-item")
+                .forEach((el) => el.classList.remove("active"));
+            item.classList.add("active");
 
-            if (currentMode === 'releases') renderReleaseContent(itemData, lang, text);
+            if (currentMode === "releases")
+                renderReleaseContent(itemData, lang, text);
             else renderCommitContent(itemData, lang, text);
 
             closeMobileMenu();
@@ -168,72 +245,77 @@ function renderSidebar(lang, text) {
 }
 
 function renderPagination(lang, text) {
-    let sidebar = document.querySelector('.sidebar');
-    let pagination = document.getElementById('sidebar-pagination');
+    let sidebar = document.querySelector(".sidebar");
+    let pagination = document.getElementById("sidebar-pagination");
 
     if (!pagination) {
-        pagination = document.createElement('div');
-        pagination.id = 'sidebar-pagination';
-        pagination.className = 'sidebar-footer';
+        pagination = document.createElement("div");
+        pagination.id = "sidebar-pagination";
+        pagination.className = "sidebar-footer";
         sidebar.appendChild(pagination);
     }
 
     pagination.innerHTML = `
-        <button id="page-prev" class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''}>${text.prev}</button>
+        <button id="page-prev" class="pagination-btn" ${currentPage === 1 ? "disabled" : ""}>${text.prev}</button>
         <span class="page-label">${text.page} ${currentPage}</span>
-        <button id="page-next" class="pagination-btn" ${listData.length < PER_PAGE ? 'disabled' : ''}>${text.next}</button>
+        <button id="page-next" class="pagination-btn" ${listData.length < PER_PAGE ? "disabled" : ""}>${text.next}</button>
     `;
 
-    document.getElementById('page-prev').addEventListener('click', () => {
+    document.getElementById("page-prev").addEventListener("click", () => {
         if (currentPage > 1) loadPage(currentPage - 1, lang, text);
     });
 
-    document.getElementById('page-next').addEventListener('click', () => {
+    document.getElementById("page-next").addEventListener("click", () => {
         if (listData.length === PER_PAGE) loadPage(currentPage + 1, lang, text);
     });
 }
 
 function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
 function renderReleaseContent(release, lang, text) {
-    const contentContainer = document.getElementById('release-content');
+    const contentContainer = document.getElementById("release-content");
     if (!contentContainer) return;
 
     if (window.marked) marked.setOptions({ breaks: true, gfm: true });
 
     const date = new Date(release.published_at || release.created_at);
     const formattedDate = date.toLocaleDateString(
-        lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', 
-        { year: 'numeric', month: 'long', day: 'numeric' }
+        lang === "ru" ? "ru-RU" : lang === "de" ? "de-DE" : "en-US",
+        { year: "numeric", month: "long", day: "numeric" },
     );
 
-    let badgeHtml = '';
+    let badgeHtml = "";
     if (release.prerelease)
-		badgeHtml = `<span class="badge badge-prerelease">${text.prerelease}</span>`;
+        badgeHtml = `<span class="badge badge-prerelease">${text.prerelease}</span>`;
     else if (currentPage === 1 && listData.indexOf(release) === 0)
         badgeHtml = `<span class="badge badge-latest">${text.latest}</span>`;
 
-    let rawHtmlBody = release.body ? marked.parse(release.body) : '<i>No description</i>';
-    let safeHtmlBody = window.DOMPurify ? DOMPurify.sanitize(rawHtmlBody) : rawHtmlBody;
+    let rawHtmlBody = release.body
+        ? marked.parse(release.body)
+        : "<i>No description</i>";
+    let safeHtmlBody = window.DOMPurify
+        ? DOMPurify.sanitize(rawHtmlBody)
+        : rawHtmlBody;
 
-    let assetsHtml = '';
+    let assetsHtml = "";
     if (release.assets && release.assets.length > 0) {
-        const assetsListHtml = release.assets.map(asset => {
-            const size = formatFileSize(asset.size);
-            const safeAssetName = escapeHtml(asset.name);
-            const ext = safeAssetName.split('.').pop().toLowerCase();
-            let icon = '📦';
-            if (['zip', 'rar', 'tar', 'gz'].includes(ext)) icon = '🗜️';
-            if (['exe', 'msi', 'apk'].includes(ext)) icon = '⚙️';
-            if (['pdf', 'txt', 'md'].includes(ext)) icon = '📄';
+        const assetsListHtml = release.assets
+            .map((asset) => {
+                const size = formatFileSize(asset.size);
+                const safeAssetName = escapeHtml(asset.name);
+                const ext = safeAssetName.split(".").pop().toLowerCase();
+                let icon = "📦";
+                if (["zip", "rar", "tar", "gz"].includes(ext)) icon = "🗜️";
+                if (["exe", "msi", "apk"].includes(ext)) icon = "⚙️";
+                if (["pdf", "txt", "md"].includes(ext)) icon = "📄";
 
-            return `
+                return `
                 <a href="${escapeHtml(asset.browser_download_url)}" target="_blank" class="asset-item">
                     <div class="asset-info">
                         <span class="asset-icon">${icon}</span>
@@ -245,7 +327,8 @@ function renderReleaseContent(release, lang, text) {
                     </div>
                 </a>
             `;
-        }).join('');
+            })
+            .join("");
 
         assetsHtml = `
             <div class="release-assets">
@@ -288,38 +371,41 @@ function renderReleaseContent(release, lang, text) {
         ${assetsHtml}
     `;
 
-    document.querySelectorAll('#release-content pre code').forEach((block) => {
-        if(window.hljs) hljs.highlightElement(block);
+    document.querySelectorAll("#release-content pre code").forEach((block) => {
+        if (window.hljs) hljs.highlightElement(block);
     });
 
-    const viewCommitBtn = document.getElementById('view-release-commit-btn');
+    const viewCommitBtn = document.getElementById("view-release-commit-btn");
     if (viewCommitBtn) {
-        viewCommitBtn.addEventListener('click', () => {
+        viewCommitBtn.addEventListener("click", () => {
             fetchAndRenderReleaseCommit(release, lang, text);
         });
     }
 }
 
 async function fetchAndRenderReleaseCommit(release, lang, text) {
-    const contentContainer = document.getElementById('release-content');
+    const contentContainer = document.getElementById("release-content");
     contentContainer.innerHTML = `<div class="loader" style="padding: 20px; text-align: center;">Loading commit...</div>`;
 
     try {
         const commitPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits/${release.tag_name}`;
-        const res = await fetch(`/github-proxy.php?path=${encodeURIComponent(commitPath)}`);
+        const res = await fetch(
+            `/github-proxy.php?path=${encodeURIComponent(commitPath)}`,
+        );
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const commitData = await res.json();
 
-        renderCommitContent(commitData, lang, text, () => renderReleaseContent(release, lang, text));
-
+        renderCommitContent(commitData, lang, text, () =>
+            renderReleaseContent(release, lang, text),
+        );
     } catch (err) {
         console.error(err);
         contentContainer.innerHTML = `<div class="error-message" style="text-align:center; padding: 20px;">${text.error} ${err.message}</div>`;
 
-        const backBtn = document.createElement('button');
-        backBtn.className = 'pagination-btn';
-        backBtn.style.marginTop = '16px';
+        const backBtn = document.createElement("button");
+        backBtn.className = "pagination-btn";
+        backBtn.style.marginTop = "16px";
         backBtn.textContent = text.back_to_release;
         backBtn.onclick = () => renderReleaseContent(release, lang, text);
         contentContainer.appendChild(backBtn);
@@ -327,25 +413,35 @@ async function fetchAndRenderReleaseCommit(release, lang, text) {
 }
 
 function renderCommitContent(commitItem, lang, text, onBack = null) {
-    const contentContainer = document.getElementById('release-content');
+    const contentContainer = document.getElementById("release-content");
     if (!contentContainer) return;
 
     const date = new Date(commitItem.commit.author.date);
     const formattedDate = date.toLocaleDateString(
-        lang === 'ru' ? 'ru-RU' : lang === 'de' ? 'de-DE' : 'en-US', 
-        { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+        lang === "ru" ? "ru-RU" : lang === "de" ? "de-DE" : "en-US",
+        {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        },
     );
 
-    let rawMsg = commitItem.commit.message || 'No commit message';
-    let safeHtmlBody = window.DOMPurify 
-        ? DOMPurify.sanitize(rawMsg.replace(/\n/g, '<br>')) 
-        : escapeHtml(rawMsg).replace(/\n/g, '<br>');
+    let rawMsg = commitItem.commit.message || "No commit message";
+    let safeHtmlBody = window.DOMPurify
+        ? DOMPurify.sanitize(rawMsg.replace(/\n/g, "<br>"))
+        : escapeHtml(rawMsg).replace(/\n/g, "<br>");
 
-    const authorName = commitItem.author ? commitItem.author.login : commitItem.commit.author.name;
-    const authorAvatar = commitItem.author ? commitItem.author.avatar_url : 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png';
-    const authorUrl = commitItem.author ? commitItem.author.html_url : '#';
+    const authorName = commitItem.author
+        ? commitItem.author.login
+        : commitItem.commit.author.name;
+    const authorAvatar = commitItem.author
+        ? commitItem.author.avatar_url
+        : "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png";
+    const authorUrl = commitItem.author ? commitItem.author.html_url : "#";
 
-    let backButtonHtml = '';
+    let backButtonHtml = "";
     if (onBack)
         backButtonHtml = `<button id="commit-back-btn" class="pagination-btn" style="margin-bottom: 20px;">${text.back_to_release}</button>`;
 
@@ -388,23 +484,30 @@ function renderCommitContent(commitItem, lang, text, onBack = null) {
     `;
 
     if (onBack)
-        document.getElementById('commit-back-btn').addEventListener('click', onBack);
+        document
+            .getElementById("commit-back-btn")
+            .addEventListener("click", onBack);
 
-    const diffBtn = document.getElementById('toggle-diff-btn');
-    const diffContainer = document.getElementById('commit-diff-container');
+    const diffBtn = document.getElementById("toggle-diff-btn");
+    const diffContainer = document.getElementById("commit-diff-container");
 
-    diffBtn.addEventListener('click', async () => {
-        if (diffContainer.style.display === 'none') {
-            diffContainer.style.display = 'flex';
+    diffBtn.addEventListener("click", async () => {
+        if (diffContainer.style.display === "none") {
+            diffContainer.style.display = "flex";
             diffBtn.textContent = text.hide_changes;
 
-            if (!diffContainer.hasAttribute('data-loaded')) {
+            if (!diffContainer.hasAttribute("data-loaded")) {
                 diffContainer.innerHTML = `<div class="loader" style="text-align: center; padding: 20px;">${text.loading_diff}</div>`;
-                await loadAndRenderDiff(commitItem.sha, diffContainer, lang, text);
-                diffContainer.setAttribute('data-loaded', 'true');
+                await loadAndRenderDiff(
+                    commitItem.sha,
+                    diffContainer,
+                    lang,
+                    text,
+                );
+                diffContainer.setAttribute("data-loaded", "true");
             }
         } else {
-            diffContainer.style.display = 'none';
+            diffContainer.style.display = "none";
             diffBtn.textContent = text.show_changes;
         }
     });
@@ -413,19 +516,21 @@ function renderCommitContent(commitItem, lang, text, onBack = null) {
 async function loadAndRenderDiff(sha, container, lang, text) {
     try {
         const commitPath = `https://api.github.com/repos/${GITHUB_OWNER}/${currentProject}/commits/${sha}`;
-        const res = await fetch(`/github-proxy.php?path=${encodeURIComponent(commitPath)}`);
+        const res = await fetch(
+            `/github-proxy.php?path=${encodeURIComponent(commitPath)}`,
+        );
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
-        container.innerHTML = '';
+        container.innerHTML = "";
 
         if (!data.files || data.files.length === 0) {
             container.innerHTML = `<div class="empty-folder" style="text-align:center;">${text.no_changed_files}</div>`;
             return;
         }
 
-        data.files.forEach(file => {
+        data.files.forEach((file) => {
             container.appendChild(createDiffElement(file, text));
         });
     } catch (err) {
@@ -435,11 +540,11 @@ async function loadAndRenderDiff(sha, container, lang, text) {
 }
 
 function createDiffElement(file, text) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'diff-file-wrapper';
+    const wrapper = document.createElement("div");
+    wrapper.className = "diff-file-wrapper";
 
-    const header = document.createElement('div');
-    header.className = 'diff-file-header';
+    const header = document.createElement("div");
+    header.className = "diff-file-header";
     header.innerHTML = `
         <span class="diff-toggle" style="transform: rotate(-90deg);">▼</span>
         <span class="diff-filename">${file.filename}</span>
@@ -449,17 +554,20 @@ function createDiffElement(file, text) {
         </span>
     `;
 
-    const content = document.createElement('div');
-    content.className = 'diff-file-content';
-    content.style.display = 'none';
+    const content = document.createElement("div");
+    content.className = "diff-file-content";
+    content.style.display = "none";
 
-    if (!file.patch) content.innerHTML = `<div class="diff-no-patch">${text.binary_file}</div>`;
+    if (!file.patch)
+        content.innerHTML = `<div class="diff-no-patch">${text.binary_file}</div>`;
     else content.appendChild(renderSplitDiff(file.patch));
 
-    header.addEventListener('click', () => {
-        const isCollapsed = content.style.display === 'none';
-        content.style.display = isCollapsed ? 'block' : 'none';
-        header.querySelector('.diff-toggle').style.transform = isCollapsed ? 'rotate(0deg)' : 'rotate(-90deg)';
+    header.addEventListener("click", () => {
+        const isCollapsed = content.style.display === "none";
+        content.style.display = isCollapsed ? "block" : "none";
+        header.querySelector(".diff-toggle").style.transform = isCollapsed
+            ? "rotate(0deg)"
+            : "rotate(-90deg)";
     });
 
     wrapper.appendChild(header);
@@ -468,24 +576,28 @@ function createDiffElement(file, text) {
 }
 
 function escapeHtml(unsafe) {
-    return (unsafe || '').toString()
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
+    return (unsafe || "")
+        .toString()
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 function highlightIntraLine(oldStr, newStr) {
     let start = 0;
     const minLen = Math.min(oldStr.length, newStr.length);
 
-    while (start < minLen && oldStr[start] === newStr[start])
-        start++;
+    while (start < minLen && oldStr[start] === newStr[start]) start++;
 
     let oldEnd = oldStr.length - 1;
     let newEnd = newStr.length - 1;
-    while (oldEnd >= start && newEnd >= start && oldStr[oldEnd] === newStr[newEnd]) {
+    while (
+        oldEnd >= start &&
+        newEnd >= start &&
+        oldStr[oldEnd] === newStr[newEnd]
+    ) {
         oldEnd--;
         newEnd--;
     }
@@ -496,18 +608,25 @@ function highlightIntraLine(oldStr, newStr) {
     const delMid = escapeHtml(oldStr.substring(start, oldEnd + 1));
     const addMid = escapeHtml(newStr.substring(start, newEnd + 1));
 
-    const left = prefix + (delMid ? `<span class="diff-char-del">${delMid}</span>` : '') + suffix;
-    const right = prefix + (addMid ? `<span class="diff-char-add">${addMid}</span>` : '') + suffix;
+    const left =
+        prefix +
+        (delMid ? `<span class="diff-char-del">${delMid}</span>` : "") +
+        suffix;
+    const right =
+        prefix +
+        (addMid ? `<span class="diff-char-add">${addMid}</span>` : "") +
+        suffix;
 
     return { left, right };
 }
 
 function renderSplitDiff(patch) {
-    const lines = patch.split('\n');
-    const table = document.createElement('table');
-    table.className = 'diff-table';
+    const lines = patch.split("\n");
+    const table = document.createElement("table");
+    table.className = "diff-table";
 
-    let leftLn = 0, rightLn = 0;
+    let leftLn = 0,
+        rightLn = 0;
 
     let deletions = [];
     let additions = [];
@@ -517,20 +636,23 @@ function renderSplitDiff(patch) {
         for (let i = 0; i < maxLen; i++) {
             const del = deletions[i];
             const add = additions[i];
-            const tr = document.createElement('tr');
+            const tr = document.createElement("tr");
 
-            let leftCode = '', rightCode = '';
-            let leftNumHtml = '', rightNumHtml = '';
-            let leftClass = 'diff-empty-bg', rightClass = 'diff-empty-bg';
+            let leftCode = "",
+                rightCode = "";
+            let leftNumHtml = "",
+                rightNumHtml = "";
+            let leftClass = "diff-empty-bg",
+                rightClass = "diff-empty-bg";
 
             if (del) {
                 leftNumHtml = del.ln;
-                leftClass = 'diff-del-bg';
+                leftClass = "diff-del-bg";
                 leftCode = del.text;
             }
             if (add) {
                 rightNumHtml = add.ln;
-                rightClass = 'diff-add-bg';
+                rightClass = "diff-add-bg";
                 rightCode = add.text;
             }
 
@@ -555,10 +677,10 @@ function renderSplitDiff(patch) {
         additions = [];
     }
 
-    lines.forEach(line => {
-        if (line.startsWith('\\')) {
+    lines.forEach((line) => {
+        if (line.startsWith("\\")) {
             flushBuffers();
-            const tr = document.createElement('tr');
+            const tr = document.createElement("tr");
             const safeLine = escapeHtml(line);
             tr.innerHTML = `
                 <td class="diff-num"></td>
@@ -570,35 +692,35 @@ function renderSplitDiff(patch) {
             return;
         }
 
-        if (line.startsWith('@@')) {
+        if (line.startsWith("@@")) {
             flushBuffers();
             const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/);
             if (match) {
                 leftLn = parseInt(match[1]) - 1;
                 rightLn = parseInt(match[2]) - 1;
             }
-            const tr = document.createElement('tr');
-            tr.className = 'diff-chunk-header';
+            const tr = document.createElement("tr");
+            tr.className = "diff-chunk-header";
             tr.innerHTML = `<td colspan="4">${escapeHtml(line)}</td>`;
             table.appendChild(tr);
             return;
         }
 
-        if (line.startsWith('-')) {
+        if (line.startsWith("-")) {
             leftLn++;
             deletions.push({ ln: leftLn, text: line.substring(1) });
-        } else if (line.startsWith('+')) {
+        } else if (line.startsWith("+")) {
             rightLn++;
             additions.push({ ln: rightLn, text: line.substring(1) });
         } else {
             flushBuffers();
             let safeLine = line;
-            if(safeLine.startsWith(' ')) safeLine = safeLine.substring(1);
+            if (safeLine.startsWith(" ")) safeLine = safeLine.substring(1);
 
-            leftLn++; 
+            leftLn++;
             rightLn++;
 
-            const tr = document.createElement('tr');
+            const tr = document.createElement("tr");
             safeLine = escapeHtml(safeLine);
             tr.innerHTML = `
                 <td class="diff-num">${leftLn}</td>

@@ -8,7 +8,7 @@ $adminPassword = '';
 if (file_exists($envPath)) {
     $envContent = file_get_contents($envPath);
     if (preg_match('/^ADMIN_PASSWORD=(.*)$/m', $envContent, $matches)) {
-        $adminPassword = trim($matches[1], " \t\n\r\0\x0B\"'");
+        $adminPassword = trim($matches[1], " \t\n\r\0\v\"'");
     }
 }
 
@@ -18,7 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
 
     if (isset($input['action']) && $input['action'] === 'login') {
-        while (ob_get_level()) { ob_end_clean(); } 
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         header('Content-Type: application/json');
 
         if ($input['password'] === $adminPassword && !empty($adminPassword)) {
@@ -29,10 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(['status' => 'error', 'message' => 'Неверный пароль']);
         }
         exit;
-	}
+    }
 
-	if (isset($input['action']) && $input['action'] === 'logout') {
-        while (ob_get_level()) { ob_end_clean(); } 
+    if (isset($input['action']) && $input['action'] === 'logout') {
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         header('Content-Type: application/json');
         session_destroy();
         echo json_encode(['status' => 'ok']);
@@ -40,7 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (isset($input['action']) && $input['action'] === 'save') {
-        while (ob_get_level()) { ob_end_clean(); } 
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
         header('Content-Type: application/json');
 
         if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true) {

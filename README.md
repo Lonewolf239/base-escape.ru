@@ -12,16 +12,16 @@ Personal developer portfolio with multilingual support (RU/EN/DE), embedded GitH
 
 ## Features
 
-| | Feature | Details |
-|---|---------|---------|
-| 🌍 | **Multilingual** | Automatic language detection (browser/URL) + manual switcher. Supports RU, EN, DE. |
-| 📦 | **Dynamic projects** | Project cards loaded from `projects.json`. No rebuild needed to add/update projects. |
-| 🔍 | **GitHub code viewer** | Browse repository files via GitHub API. Syntax highlighting, image preview, binary detection. |
-| 📖 | **Project Wiki** | Markdown-based documentation with internal `[[Wiki Links]]` and syntax highlighting. |
-| 🎨 | **Retro aesthetic** | Custom synthwave theme: animated grid, sun pulse, glitch effects, custom scrollbar. |
-| 🛡️ | **Security rules** | Apache `.htaccess` blocks access to `.json`, `.env`, `.log`, hidden files, and directory listing. |
-| 🧩 | **Zero dependencies** | Vanilla JS + CSS. No frameworks, no build step. |
-| 📱 | **Responsive** | Mobile-friendly layout with adaptive grid and touch controls. |
+|     | Feature                | Details                                                                                           |
+| --- | ---------------------- | ------------------------------------------------------------------------------------------------- |
+| 🌍  | **Multilingual**       | Automatic language detection (browser/URL) + manual switcher. Supports RU, EN, DE.                |
+| 📦  | **Dynamic projects**   | Project cards loaded from `projects.json`. No rebuild needed to add/update projects.              |
+| 🔍  | **GitHub code viewer** | Browse repository files via GitHub API. Syntax highlighting, image preview, binary detection.     |
+| 📖  | **Project Wiki**       | Markdown-based documentation with internal `[[Wiki Links]]` and syntax highlighting.              |
+| 🎨  | **Retro aesthetic**    | Custom synthwave theme: animated grid, sun pulse, glitch effects, custom scrollbar.               |
+| 🛡️  | **Security rules**     | Apache `.htaccess` blocks access to `.json`, `.env`, `.log`, hidden files, and directory listing. |
+| 🧩  | **Zero dependencies**  | Vanilla JS + CSS. No frameworks, no build step.                                                   |
+| 📱  | **Responsive**         | Mobile-friendly layout with adaptive grid and touch controls.                                     |
 
 ---
 
@@ -53,12 +53,14 @@ Personal developer portfolio with multilingual support (RU/EN/DE), embedded GitH
 ### Local development
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/Lonewolf239/lonewolf239.github.io
 cd lonewolf239.github.io
 ```
 
 2. Serve locally (requires Apache with `.htaccess` support for accurate testing):
+
 ```bash
 # Using PHP's built-in server (no .htaccess)
 php -S localhost:8000
@@ -75,57 +77,57 @@ Edit `projects.json`:
 
 ```json
 {
-    "title": {
+  "title": {
+    "ru": "Название",
+    "en": "Title",
+    "de": "Titel"
+  },
+  "description": {
+    "ru": "Описание на русском",
+    "en": "Description in English",
+    "de": "Beschreibung auf Deutsch"
+  },
+  "language": "C#",
+  "lastRelease": "2026-03-24",
+  "tags": ["Tag1", "Tag2"],
+  "links": {
+    "github": "https://github.com/...",
+    "code": {
+      "url": {
+        "ru": "/ru/viewer?project=RepoName",
+        "en": "/en/viewer?project=RepoName",
+        "de": "/de/viewer?project=RepoName"
+      },
+      "newTab": false
+    }
+  },
+  "subprojects": [
+    {
+      "title": {
         "ru": "Название",
         "en": "Title",
         "de": "Titel"
-    },
-    "description": {
+      },
+      "description": {
         "ru": "Описание на русском",
         "en": "Description in English",
         "de": "Beschreibung auf Deutsch"
-    },
-    "language": "C#",
-    "lastRelease": "2026-03-24",
-    "tags": ["Tag1", "Tag2"],
-    "links": {
+      },
+      "language": ["Python", "C++"],
+      "tags": ["Tag1", "Tag2"],
+      "links": {
         "github": "https://github.com/...",
         "code": {
-            "url": {
-                "ru": "/ru/viewer?project=RepoName",
-                "en": "/en/viewer?project=RepoName",
-                "de": "/de/viewer?project=RepoName"
-            },
-            "newTab": false
+          "url": {
+            "ru": "/ru/viewer?project=RepoName",
+            "en": "/en/viewer?project=RepoName",
+            "de": "/de/viewer?project=RepoName"
+          },
+          "newTab": false
         }
-    },
-    "subprojects": [
-        {
-            "title": {
-	            "ru": "Название",
-                "en": "Title",
-	            "de": "Titel"
-            },
-	        "description": {
-			    "ru": "Описание на русском",
-	            "en": "Description in English",
-	            "de": "Beschreibung auf Deutsch"
-            },
-	        "language": ["Python", "C++"],
-            "tags": ["Tag1", "Tag2"],
-	        "links": {
-                "github": "https://github.com/...",
-				"code": {
-				    "url": {
-                        "ru": "/ru/viewer?project=RepoName",
-                        "en": "/en/viewer?project=RepoName",
-                        "de": "/de/viewer?project=RepoName"
-                    },
-					"newTab": false
-                }
-            }
-        }
-    ]
+      }
+    }
+  ]
 }
 ```
 
@@ -149,6 +151,7 @@ Edit `projects.json`:
 ### Language detection
 
 Priority:
+
 1. URL path (`/en/...`)
 2. Browser `navigator.language`
 3. Fallback to English
@@ -164,6 +167,7 @@ The site is static — deploy to any static hosting:
 - **Any Apache/Nginx server**
 
 ⚠️ **Note:** `.htaccess` only works on Apache. For Nginx, manually configure:
+
 ```nginx
 location = /projects.json { return 403; }
 location ~ /\. { return 403; }

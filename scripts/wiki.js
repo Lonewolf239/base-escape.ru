@@ -1,51 +1,55 @@
 const wikiPagesCache = {};
-let currentProject = '';
+let currentProject = "";
 let pagesList = [];
 let displayNames = [];
 let closeMobileMenu = () => {};
 
-document.addEventListener('DOMContentLoaded', initWiki);
+document.addEventListener("DOMContentLoaded", initWiki);
 
 function initMobileMenu() {
-    const container = document.querySelector('.page-container');
+    const container = document.querySelector(".page-container");
     if (!container) return;
 
-    const burger = document.createElement('button');
-    burger.className = 'burger-btn';
-    burger.innerHTML = '☰ Pages list';
+    const burger = document.createElement("button");
+    burger.className = "burger-btn";
+    burger.innerHTML = "☰ Pages list";
     container.insertBefore(burger, container.firstChild);
 
-    const overlay = document.createElement('div');
-    overlay.className = 'mobile-overlay';
+    const overlay = document.createElement("div");
+    overlay.className = "mobile-overlay";
 
     container.appendChild(overlay);
 
-    const sidebar = document.querySelector('.sidebar');
+    const sidebar = document.querySelector(".sidebar");
 
     function toggle() {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+        document.body.style.overflow = sidebar.classList.contains("active")
+            ? "hidden"
+            : "";
     }
 
     closeMobileMenu = () => {
-        if (sidebar && sidebar.classList.contains('active')) toggle();
+        if (sidebar && sidebar.classList.contains("active")) toggle();
     };
 
-    burger.addEventListener('click', toggle);
-    overlay.addEventListener('click', toggle);
+    burger.addEventListener("click", toggle);
+    overlay.addEventListener("click", toggle);
 }
 
 async function initWiki() {
     initMobileMenu();
     const params = new URLSearchParams(window.location.search);
-    const project = params.get('project');
+    const project = params.get("project");
     if (!project) {
-        showError('Project not specified. Use the ?project=RepositoryName parameter');
+        showError(
+            "Project not specified. Use the ?project=RepositoryName parameter",
+        );
         return;
     }
     currentProject = project;
-    document.getElementById('repo-name').textContent = project;
+    document.getElementById("repo-name").textContent = project;
     await loadWikiPages();
 }
 
@@ -53,54 +57,62 @@ async function loadWikiPages() {
     showLoader(true);
     try {
         const targetUrl = `https://github.com/Lonewolf239/${currentProject}/wiki/_pages`;
-        const proxyUrl = `/github-proxy.php?path=` + encodeURIComponent(targetUrl);
+        const proxyUrl =
+            `/github-proxy.php?path=` + encodeURIComponent(targetUrl);
 
         const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error(`Wiki not found for project ${currentProject}`);
+        if (!response.ok)
+            throw new Error(`Wiki not found for project ${currentProject}`);
 
         const htmlText = await response.text();
         const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlText, 'text/html');
+        const doc = parser.parseFromString(htmlText, "text/html");
 
         const linkSelector = `a[href^="/Lonewolf239/${currentProject}/wiki"]`;
         const links = doc.querySelectorAll(linkSelector);
 
         const pages = new Set();
 
-        pages.add('Home');
+        pages.add("Home");
 
-        links.forEach(link => {
-            const href = link.getAttribute('href');
+        links.forEach((link) => {
+            const href = link.getAttribute("href");
 
-            if (href.endsWith('/wiki') || href.endsWith('/wiki/')) return;
+            if (href.endsWith("/wiki") || href.endsWith("/wiki/")) return;
 
-            const pageId = href.split('/').pop();
+            const pageId = href.split("/").pop();
 
-            if (pageId && !pageId.startsWith('_') && pageId.toLowerCase() !== 'home')
+            if (
+                pageId &&
+                !pageId.startsWith("_") &&
+                pageId.toLowerCase() !== "home"
+            )
                 pages.add(decodeURIComponent(pageId));
         });
 
         pagesList = Array.from(pages);
-        displayNames = pagesList.map(name => name.replace(/-/g, ' '));
+        displayNames = pagesList.map((name) => name.replace(/-/g, " "));
 
         renderPagesList(displayNames);
 
         await loadPage(displayNames[0]);
     } catch (err) {
         console.error(err);
-        showError('Error loading wiki pages list: ' + err.message);
-    } finally { showLoader(false); }
+        showError("Error loading wiki pages list: " + err.message);
+    } finally {
+        showLoader(false);
+    }
 }
 
 function renderPagesList(pages) {
-    const container = document.getElementById('pages-list');
+    const container = document.getElementById("pages-list");
     if (!container) return;
-    container.innerHTML = '';
-    pages.forEach(page => {
-        const div = document.createElement('div');
-        div.className = 'wiki-page-item';
+    container.innerHTML = "";
+    pages.forEach((page) => {
+        const div = document.createElement("div");
+        div.className = "wiki-page-item";
         div.textContent = page;
-        div.addEventListener('click', async () => {
+        div.addEventListener("click", async () => {
             await loadPage(page);
             closeMobileMenu();
         });
@@ -110,22 +122,81 @@ function renderPagesList(pages) {
 
 function transliterate(text) {
     const map = {
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e',
-        'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
-        'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-        'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '',
-        'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
-        'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'E',
-        'Ж': 'Zh', 'З': 'Z', 'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M',
-        'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U',
-        'Ф': 'F', 'Х': 'H', 'Ц': 'C', 'Ч': 'Ch', 'Ш': 'Sh', 'Щ': 'Sch', 'Ъ': '',
-        'Ы': 'Y', 'Ь': '', 'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
+        а: "a",
+        б: "b",
+        в: "v",
+        г: "g",
+        д: "d",
+        е: "e",
+        ё: "e",
+        ж: "zh",
+        з: "z",
+        и: "i",
+        й: "y",
+        к: "k",
+        л: "l",
+        м: "m",
+        н: "n",
+        о: "o",
+        п: "p",
+        р: "r",
+        с: "s",
+        т: "t",
+        у: "u",
+        ф: "f",
+        х: "h",
+        ц: "c",
+        ч: "ch",
+        ш: "sh",
+        щ: "sch",
+        ъ: "",
+        ы: "y",
+        ь: "",
+        э: "e",
+        ю: "yu",
+        я: "ya",
+        А: "A",
+        Б: "B",
+        В: "V",
+        Г: "G",
+        Д: "D",
+        Е: "E",
+        Ё: "E",
+        Ж: "Zh",
+        З: "Z",
+        И: "I",
+        Й: "Y",
+        К: "K",
+        Л: "L",
+        М: "M",
+        Н: "N",
+        О: "O",
+        П: "P",
+        Р: "R",
+        С: "S",
+        Т: "T",
+        У: "U",
+        Ф: "F",
+        Х: "H",
+        Ц: "C",
+        Ч: "Ch",
+        Ш: "Sh",
+        Щ: "Sch",
+        Ъ: "",
+        Ы: "Y",
+        Ь: "",
+        Э: "E",
+        Ю: "Yu",
+        Я: "Ya",
     };
-    return text.split('').map(ch => map[ch] || ch).join('');
+    return text
+        .split("")
+        .map((ch) => map[ch] || ch)
+        .join("");
 }
 
 function normalizePageName(pageName) {
-    return pageName.trim().replace(/ /g, '-');
+    return pageName.trim().replace(/ /g, "-");
 }
 
 function getPossibleFileNames(displayName) {
@@ -134,20 +205,24 @@ function getPossibleFileNames(displayName) {
     const lowerNormalized = normalized.toLowerCase();
     const lowerTranslit = translit.toLowerCase();
     const candidates = [normalized, translit, lowerNormalized, lowerTranslit];
-    const unique = [...new Set(candidates.filter(s => s.length > 0))];
-    return unique.flatMap(name => [name, encodeURIComponent(name)]);
+    const unique = [...new Set(candidates.filter((s) => s.length > 0))];
+    return unique.flatMap((name) => [name, encodeURIComponent(name)]);
 }
 
 async function loadPage(pageName) {
-    const contentDiv = document.getElementById('wiki-content');
+    const contentDiv = document.getElementById("wiki-content");
     if (!contentDiv) return;
     showLoaderInContent(true);
     try {
         let content = wikiPagesCache[pageName];
         if (!content) {
             const possibleNames = getPossibleFileNames(pageName);
-            const urls = possibleNames.map(name => 
-                `/github-proxy.php?path=` + encodeURIComponent(`https://raw.githubusercontent.com/wiki/Lonewolf239/${currentProject}/${name}.md`)
+            const urls = possibleNames.map(
+                (name) =>
+                    `/github-proxy.php?path=` +
+                    encodeURIComponent(
+                        `https://raw.githubusercontent.com/wiki/Lonewolf239/${currentProject}/${name}.md`,
+                    ),
             );
 
             let response = null;
@@ -157,14 +232,18 @@ async function loadPage(pageName) {
                     response = await fetch(url);
                     if (response.ok) break;
                     if (response.status === 404) {
-                        lastError = new Error(`HTTP 404 – file not found (${pageName}.md)`);
+                        lastError = new Error(
+                            `HTTP 404 – file not found (${pageName}.md)`,
+                        );
                         continue;
                     }
                     throw new Error(`HTTP ${response.status}`);
+                } catch (err) {
+                    lastError = err;
                 }
-                catch (err) { lastError = err; }
             }
-            if (!response || !response.ok) throw lastError || new Error('Failed to load page');
+            if (!response || !response.ok)
+                throw lastError || new Error("Failed to load page");
             content = await response.text();
             wikiPagesCache[pageName] = content;
         }
@@ -174,14 +253,16 @@ async function loadPage(pageName) {
         console.error(err);
         const safeMessage = escapeHtml(err.message);
         contentDiv.innerHTML = `<div class="error-message">Page loading error: ${safeMessage}</div>`;
-    } finally { showLoaderInContent(false); }
+    } finally {
+        showLoaderInContent(false);
+    }
 }
 
 function updateActivePage(pageName) {
-    const items = document.querySelectorAll('.wiki-page-item');
-    items.forEach(item => {
-        if (item.textContent === pageName) item.classList.add('active');
-        else item.classList.remove('active');
+    const items = document.querySelectorAll(".wiki-page-item");
+    items.forEach((item) => {
+        if (item.textContent === pageName) item.classList.add("active");
+        else item.classList.remove("active");
     });
 }
 
@@ -190,40 +271,44 @@ function processWikiLinks(markdown) {
     return markdown.replace(wikiLinkRegex, (match, pageName, displayText) => {
         const trimmedPage = pageName.trim();
         const normalizedLink = normalizePageName(trimmedPage);
-        const matchingNormalized = pagesList.find(p => {
+        const matchingNormalized = pagesList.find((p) => {
             const pLower = p.toLowerCase();
             const normalizedLinkLower = normalizedLink.toLowerCase();
             const translitNormalized = transliterate(p);
             const translitNormalizedLower = translitNormalized.toLowerCase();
             const translitLink = transliterate(normalizedLink);
             const translitLinkLower = translitLink.toLowerCase();
-            return p === normalizedLink ||
-                   pLower === normalizedLinkLower ||
-                   translitNormalized === translitLink ||
-                   translitNormalizedLower === translitLinkLower;
+            return (
+                p === normalizedLink ||
+                pLower === normalizedLinkLower ||
+                translitNormalized === translitLink ||
+                translitNormalizedLower === translitLinkLower
+            );
         });
         const text = displayText ? displayText.trim() : trimmedPage;
         if (matchingNormalized) {
-            const index = pagesList.findIndex(p => p === matchingNormalized);
-            const displayPageName = index !== -1 ? displayNames[index] : trimmedPage;
+            const index = pagesList.findIndex((p) => p === matchingNormalized);
+            const displayPageName =
+                index !== -1 ? displayNames[index] : trimmedPage;
             const safePage = escapeHtml(displayPageName);
             return `<a href="#" class="wiki-link" data-page="${safePage}">${escapeHtml(text)}</a>`;
-        } else return `<span class="wiki-link-missing">${escapeHtml(text)}</span>`;
+        } else
+            return `<span class="wiki-link-missing">${escapeHtml(text)}</span>`;
     });
 }
 
 async function displayMarkdown(markdown, pageName) {
-    const contentDiv = document.getElementById('wiki-content');
+    const contentDiv = document.getElementById("wiki-content");
     if (!contentDiv) return;
     const processedMarkdown = processWikiLinks(markdown);
 
-    if (typeof marked !== 'undefined') {
+    if (typeof marked !== "undefined") {
         marked.setOptions({
-            highlight: function(code, lang) {
+            highlight: function (code, lang) {
                 if (lang && hljs.getLanguage(lang))
                     return hljs.highlight(code, { language: lang }).value;
                 return hljs.highlightAuto(code).value;
-            }
+            },
         });
     }
 
@@ -233,51 +318,61 @@ async function displayMarkdown(markdown, pageName) {
 
     processLinksAndImages();
 
-    if (typeof hljs !== 'undefined') {
-        document.querySelectorAll('#wiki-content pre code').forEach(block => {
+    if (typeof hljs !== "undefined") {
+        document.querySelectorAll("#wiki-content pre code").forEach((block) => {
             hljs.highlightElement(block);
         });
     }
     attachWikiLinkHandlers();
-    const currentFileSpan = document.getElementById('current-file');
+    const currentFileSpan = document.getElementById("current-file");
     if (currentFileSpan) currentFileSpan.textContent = pageName;
 }
 
 function processLinksAndImages() {
-    const links = document.querySelectorAll('#wiki-content a');
-    links.forEach(link => {
-        if (!link.classList.contains('wiki-link') && !link.hasAttribute('data-processed')) {
-            const href = link.getAttribute('href');
+    const links = document.querySelectorAll("#wiki-content a");
+    links.forEach((link) => {
+        if (
+            !link.classList.contains("wiki-link") &&
+            !link.hasAttribute("data-processed")
+        ) {
+            const href = link.getAttribute("href");
             if (!href) return;
 
-            if (href.startsWith('http://') || href.startsWith('https://')) {
-                link.setAttribute('target', '_blank');
-                link.setAttribute('rel', 'noopener noreferrer');
-                link.setAttribute('data-processed', 'true');
-            } else if (!href.startsWith('#')) {
-                link.classList.add('wiki-link');
-                let pageName = href.replace(/\.md$/i, '');
+            if (href.startsWith("http://") || href.startsWith("https://")) {
+                link.setAttribute("target", "_blank");
+                link.setAttribute("rel", "noopener noreferrer");
+                link.setAttribute("data-processed", "true");
+            } else if (!href.startsWith("#")) {
+                link.classList.add("wiki-link");
+                let pageName = href.replace(/\.md$/i, "");
                 const decoded = decodeURIComponent(pageName);
 
-                const index = pagesList.findIndex(p => 
-                    p.toLowerCase() === decoded.toLowerCase() || 
-                    p.replace(/-/g, ' ').toLowerCase() === decoded.toLowerCase()
+                const index = pagesList.findIndex(
+                    (p) =>
+                        p.toLowerCase() === decoded.toLowerCase() ||
+                        p.replace(/-/g, " ").toLowerCase() ===
+                            decoded.toLowerCase(),
                 );
 
                 if (index !== -1) pageName = displayNames[index];
-                else pageName = decoded.replace(/-/g, ' ');
+                else pageName = decoded.replace(/-/g, " ");
 
-                link.setAttribute('data-page', pageName);
-                link.removeAttribute('href');
-                link.setAttribute('data-processed', 'true');
+                link.setAttribute("data-page", pageName);
+                link.removeAttribute("href");
+                link.setAttribute("data-processed", "true");
             }
         }
     });
 
-    const images = document.querySelectorAll('#wiki-content img');
-    images.forEach(img => {
-        const src = img.getAttribute('src');
-        if (src && !src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('data:')) {
+    const images = document.querySelectorAll("#wiki-content img");
+    images.forEach((img) => {
+        const src = img.getAttribute("src");
+        if (
+            src &&
+            !src.startsWith("http://") &&
+            !src.startsWith("https://") &&
+            !src.startsWith("data:")
+        ) {
             const rawUrl = `https://raw.githubusercontent.com/wiki/Lonewolf239/${currentProject}/${src}`;
             img.src = `/github-proxy.php?path=` + encodeURIComponent(rawUrl);
         }
@@ -285,44 +380,47 @@ function processLinksAndImages() {
 }
 
 function attachWikiLinkHandlers() {
-    const links = document.querySelectorAll('.wiki-link');
-    links.forEach(link => {
-        link.removeEventListener('click', wikiLinkClickHandler);
-        link.addEventListener('click', wikiLinkClickHandler);
+    const links = document.querySelectorAll(".wiki-link");
+    links.forEach((link) => {
+        link.removeEventListener("click", wikiLinkClickHandler);
+        link.addEventListener("click", wikiLinkClickHandler);
     });
 }
 
 async function wikiLinkClickHandler(e) {
     e.preventDefault();
-    const pageName = this.getAttribute('data-page');
-    if (pageName && displayNames.includes(pageName))
-        await loadPage(pageName);
+    const pageName = this.getAttribute("data-page");
+    if (pageName && displayNames.includes(pageName)) await loadPage(pageName);
 }
 
 function showLoader(show) {
-    const container = document.getElementById('pages-list');
+    const container = document.getElementById("pages-list");
     if (!container) return;
-    if (show) container.innerHTML = '<div class="loader">Loading list of pages...</div>';
+    if (show)
+        container.innerHTML =
+            '<div class="loader">Loading list of pages...</div>';
 }
 
 function showLoaderInContent(show) {
-    const container = document.getElementById('wiki-content');
+    const container = document.getElementById("wiki-content");
     if (!container) return;
     if (show) container.innerHTML = '<div class="loader">Page loading...</div>';
 }
 
 function showError(message) {
-    const pagesContainer = document.getElementById('pages-list');
-    const contentDiv = document.getElementById('wiki-content');
-    if (pagesContainer) pagesContainer.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
-    if (contentDiv) contentDiv.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
+    const pagesContainer = document.getElementById("pages-list");
+    const contentDiv = document.getElementById("wiki-content");
+    if (pagesContainer)
+        pagesContainer.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
+    if (contentDiv)
+        contentDiv.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
 }
 
 function escapeHtml(str) {
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
+    return str.replace(/[&<>]/g, function (m) {
+        if (m === "&") return "&amp;";
+        if (m === "<") return "&lt;";
+        if (m === ">") return "&gt;";
         return m;
     });
 }
